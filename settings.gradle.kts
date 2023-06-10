@@ -1,4 +1,6 @@
 pluginManagement {
+    includeBuild("build-logic")
+
     repositories {
         google()
         mavenCentral()
@@ -13,5 +15,9 @@ dependencyResolutionManagement {
     }
 }
 
-include(":app")
 rootProject.name = "foodsapp"
+include(":app")
+include(":core:network")
+include(":core:designsystem")
+include(":core:database")
+include(":feature:settings")

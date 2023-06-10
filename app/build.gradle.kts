@@ -1,5 +1,7 @@
+
 plugins {
-    id("com.android.application")
+//    id("com.android.application")
+    id("foods.android.application.compose")
 }
 
 android {
@@ -32,17 +34,31 @@ android {
 
 dependencies {
 
-    implementation ("androidx.appcompat:appcompat:1.2.0")
-    implementation ("com.google.android.material:material:1.2.1")
-    implementation ("androidx.annotation:annotation:1.1.0")
-    implementation ("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    testImplementation ("junit:junit:4.+")
-    androidTestImplementation ("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.3.0")
-    implementation ("com.squareup.okhttp3:okhttp:3.12.0")
-    implementation ("com.google.code.gson:gson:2.8.5")
+    implementation(libs.google.android.material)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.test.espresso.core)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.google.gson)
+    implementation(libs.github.glide)
+    androidTestImplementation(libs.androidx.test.ext)
 
-    implementation ("com.github.bumptech.glide:glide:4.15.1")
+
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui.util)
+    implementation(libs.androidx.compose.ui.test.junit4)
+    implementation(libs.androidx.compose.ui.test.manifest)
+
+
+
 }
