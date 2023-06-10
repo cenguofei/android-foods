@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.example.network.netstate
-
-import kotlinx.coroutines.flow.Flow
-
-/**
- * Reports on if synchronization is in progress
- */
-interface SyncManager {
-    val isSyncing: Flow<Boolean>
-    fun requestSync()
-
-
-
-
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
 }
+
+rootProject.name = "build-logic"
+include(":convention")
