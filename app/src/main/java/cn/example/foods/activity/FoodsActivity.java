@@ -305,7 +305,10 @@ public class FoodsActivity extends AppCompatActivity {
 
     private void initData() {
         OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url(ItFxqConstants.FOOD_URL).build();
+        Request request = new Request.Builder()
+                .url(ItFxqConstants.FOOD_URL)
+                .build();
+
         Call call = okHttpClient.newCall(request);
 
         call.enqueue(new Callback() {
