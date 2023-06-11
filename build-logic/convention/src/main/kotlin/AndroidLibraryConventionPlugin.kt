@@ -14,6 +14,7 @@
  *   limitations under the License.
  */
 
+import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
@@ -54,6 +55,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             dependencies {
                 add("androidTestImplementation", kotlin("test"))
                 add("testImplementation", kotlin("test"))
+            }
+
+            extensions.configure<LibraryExtension> {
+                configureKotlinAndroid(this)
+//                defaultConfig.targetSdk = 33
+//                configureGradleManagedDevices(this)
             }
         }
     }

@@ -1,4 +1,10 @@
+
 plugins {
+
+//    id("foods.android.application")
+//    id("foods.android.application.compose")
+
+    id("foods.android.library")
     id("foods.android.library.compose")
 }
 
@@ -19,4 +25,5 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
 
     implementation(libs.coil.kt.compose)
+
 }

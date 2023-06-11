@@ -25,12 +25,12 @@ group = "com.example.build_logic"
 // Configure the build-logic plugins to target JDK 17
 // This matches the JDK used to build the project, and is not related to what is running on device.
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 
@@ -46,6 +46,11 @@ gradlePlugin {
             id = "foods.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
+        register("androidApplication") {
+            id = "foods.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+
         register("androidLibrary") {
             id = "foods.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
@@ -60,15 +65,20 @@ gradlePlugin {
             implementationClass = "AndroidHiltConventionPlugin"
         }
 
+//        register("kotlinxSerialization") {
+//            id = "foods.kotlin.serialization"
+//            implementationClass = "KotlinxSerializationConventionPlugin"
+//        }
+
 
 
         register("androidRoom") {
             id = "nowinandroid.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
-        register("jvmLibrary") {
-            id = "nowinandroid.jvm.library"
-            implementationClass = "JvmLibraryConventionPlugin"
-        }
+//        register("jvmLibrary") {
+//            id = "nowinandroid.jvm.library"
+//            implementationClass = "JvmLibraryConventionPlugin"
+//        }
     }
 }

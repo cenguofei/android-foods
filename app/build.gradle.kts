@@ -1,19 +1,21 @@
-
 plugins {
-//    id("com.android.application")
+    id("foods.android.application")
     id("foods.android.application.compose")
+    id("foods.android.hilt")
+
+//    kotlin("kapt")
+//    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.example.namespace"
 
-    compileSdk = 33
-    buildToolsVersion = "30.0.2"
+//    compileSdk = 33
 
     defaultConfig {
         applicationId = "cn.example.foods"
-        minSdk = 29
-        targetSdk = 33
+//        minSdk = 29
+//        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -26,9 +28,15 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//    }
+
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
     }
 }
 
@@ -46,6 +54,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext)
 
 
+    //compose
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
@@ -59,6 +68,15 @@ dependencies {
     implementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.viewmodel.compose)
+//    implementation(libs.androidx.lifecycle.livedata)
+
+    implementation(libs.accompanist.systemuicontroller)
 
 
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:model"))
+//    implementation("com.google.dagger:hilt-android:2.44")
+//    annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
 }
