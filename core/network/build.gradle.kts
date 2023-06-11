@@ -17,4 +17,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.square.retrofit2)
+    implementation(libs.square.retrofit2.converter.gson)
+
+    api(project(":core:common"))
+
 }

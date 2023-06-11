@@ -6,6 +6,13 @@ androidxComposeMaterial3 = "1.0.1"
 androidxAnnotation = "1.6.0"
 androidxConstrantlayout = "2.2.0-alpha07"
 androidxLifecycle = "2.5.1"
+androidxHiltNavigationCompose = "1.0.0"
+androidxNavigation = "2.5.3"
+androidxComposeCompiler = "1.4.2"
+androidxComposeBom = "2023.01.00"
+androidxEspresso = "3.5.1"
+androidxTestExt = "1.1.4"
+androidxDatastore = "1.0.0"
 
 accompanist = "0.31.3-beta"
 
@@ -14,8 +21,7 @@ okhttp = "4.11.0"
 retrofit = "2.9.0"
 gson = "2.10.1"
 
-androidxComposeCompiler = "1.4.2"
-androidxComposeBom = "2023.01.00"
+
 
 coil = "2.2.2"
 
@@ -30,8 +36,7 @@ hiltExt = "1.0.0"
 androidxCore = "1.9.0"
 androidDesugarJdkLibs = "1.2.2"
 androidGradlePlugin = "8.0.1"
-androidxEspresso = "3.5.1"
-androidxTestExt = "1.1.4"
+
 
 jacoco = "0.8.7"
 junit4 = "4.13.2"
@@ -41,6 +46,8 @@ junit4 = "4.13.2"
 ksp = "1.8.20-1.0.11"
 protobufPlugin = "0.9.3"
 #room = "2.5.0"
+
+retrofit2 = "2.9.0"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
@@ -56,6 +63,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidxTestExt" }
+
 
 androidx-compose-bom = { group = "androidx.compose", name =  "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
@@ -76,6 +84,11 @@ androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 androidx-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore"}
+
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
@@ -93,6 +106,10 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+square-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
+square-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2" }
+
 #hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 #hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 #hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }

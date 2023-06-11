@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.namespace.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.example.foods.R;
 import cn.example.foods.adapter.OrderAdapter;
 import cn.example.foods.entity.FoodEntity;
 import cn.example.foods.entity.OrderDetailEntity;

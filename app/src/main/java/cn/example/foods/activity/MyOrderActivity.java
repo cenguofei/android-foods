@@ -1,5 +1,6 @@
 package cn.example.foods.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.namespace.R;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.example.foods.R;
 import cn.example.foods.adapter.MyOrderAdapter;
 import cn.example.foods.entity.OrderEntity;
 import cn.example.foods.utils.CommonUtils;
@@ -90,6 +91,7 @@ public class MyOrderActivity extends AppCompatActivity {
     }
 
     class MyOrderHandler extends Handler {
+        @SuppressLint("NewApi")
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);

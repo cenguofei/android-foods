@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.namespace.R;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.example.foods.R;
 import cn.example.foods.adapter.CarAdapter;
 import cn.example.foods.adapter.FoodAdapter;
 import cn.example.foods.entity.FoodEntity;

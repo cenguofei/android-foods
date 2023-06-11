@@ -8,10 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.namespace.R;
 
 import java.util.List;
 
+import cn.example.foods.R;
 import cn.example.foods.entity.FoodEntity;
 
 

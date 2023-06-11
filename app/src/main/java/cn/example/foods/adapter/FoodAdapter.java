@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.namespace.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.example.foods.R;
 import cn.example.foods.entity.FoodEntity;
 
 

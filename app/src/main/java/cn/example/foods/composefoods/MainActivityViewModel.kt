@@ -1,4 +1,4 @@
-package cn.example.foods
+package cn.example.foods.composefoods
 
 import androidx.lifecycle.ViewModel
 import com.example.model.UserData

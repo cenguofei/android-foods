@@ -6,6 +6,7 @@ xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"/>
 
 <application
+    android:name="cn.example.foods.FoodsApp"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
@@ -14,38 +15,38 @@ xmlns:tools="http://schemas.android.com/tools">
     tools:targetApi="31"
     android:usesCleartextTraffic="true"
     android:theme="@style/Theme.Foodsapp">
-    <activity
-        android:name="cn.example.foods.activity.MyActivity"
-        android:parentActivityName="cn.example.foods.activity.MainActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="cn.example.foods.activity.MainActivity" />
-    </activity>
-    <activity android:name="cn.example.foods.activity.OrderActivity" android:parentActivityName="cn.example.foods.activity.FoodsActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="cn.example.foods.activity.FoodsActivity" />
-    </activity>
-    <activity android:name="cn.example.foods.activity.FoodsActivity" android:parentActivityName="cn.example.foods.activity.MainActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="cn.example.foods.activity.MainActivity" />
-    </activity>
-    <activity android:name="cn.example.foods.activity.MyOrderActivity" android:parentActivityName="cn.example.foods.activity.MyActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="cn.example.foods.activity.MyActivity" />
-    </activity>
-    <activity android:name="cn.example.foods.activity.MainActivity"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+<!--    <activity-->
+<!--        android:name="cn.example.foods.activity.MyActivity"-->
+<!--        android:parentActivityName="cn.example.foods.activity.MainActivity">-->
+<!--        <meta-data-->
+<!--            android:name="android.support.PARENT_ACTIVITY"-->
+<!--            android:value="cn.example.foods.activity.MainActivity" />-->
+<!--    </activity>-->
+<!--    <activity android:name="cn.example.foods.activity.OrderActivity" android:parentActivityName="cn.example.foods.activity.FoodsActivity">-->
+<!--        <meta-data-->
+<!--            android:name="android.support.PARENT_ACTIVITY"-->
+<!--            android:value="cn.example.foods.activity.FoodsActivity" />-->
+<!--    </activity>-->
+<!--    <activity android:name="cn.example.foods.activity.FoodsActivity" android:parentActivityName="cn.example.foods.activity.MainActivity">-->
+<!--        <meta-data-->
+<!--            android:name="android.support.PARENT_ACTIVITY"-->
+<!--            android:value="cn.example.foods.activity.MainActivity" />-->
+<!--    </activity>-->
+<!--    <activity android:name="cn.example.foods.activity.MyOrderActivity" android:parentActivityName="cn.example.foods.activity.MyActivity">-->
+<!--        <meta-data-->
+<!--            android:name="android.support.PARENT_ACTIVITY"-->
+<!--            android:value="cn.example.foods.activity.MyActivity" />-->
+<!--    </activity>-->
+<!--    <activity android:name="cn.example.foods.activity.MainActivity"-->
+<!--        android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
 
-    </activity>
+<!--    </activity>-->
 
+<!--    <activity-->
+<!--        android:name="cn.example.foods.activity.RegActivity"-->
+<!--        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />-->
     <activity
-        android:name="cn.example.foods.activity.RegActivity"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-    <activity
-        android:name="cn.example.foods.activity.LoginActivity"
+        android:name="cn.example.foods.composefoods.MainActivity"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:exported="true">
         <intent-filter>

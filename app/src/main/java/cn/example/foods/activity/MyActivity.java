@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.namespace.R;
 
+import cn.example.foods.R;
 import cn.example.foods.entity.UserEntity;
 import cn.example.foods.utils.CommonUtils;
 

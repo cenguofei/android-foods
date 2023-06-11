@@ -9,10 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.namespace.R;
 
 import java.util.List;
 
+import cn.example.foods.R;
 import cn.example.foods.entity.OrderEntity;
 
 

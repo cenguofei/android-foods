@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.namespace"
+    namespace = "cn.example.foods"
 
 //    compileSdk = 33
 
@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
@@ -74,9 +75,12 @@ dependencies {
 
     implementation(libs.accompanist.systemuicontroller)
 
+    implementation(libs.androidx.navigation.compose)
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
+    implementation(project(":core:network"))
+
 //    implementation("com.google.dagger:hilt-android:2.44")
 //    annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
 }
