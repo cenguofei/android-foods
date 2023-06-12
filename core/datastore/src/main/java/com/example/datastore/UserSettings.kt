@@ -50,3 +50,4 @@ class SystemSettings @Inject constructor(
 data class UserSettings(
     val isFirstUse:Boolean
 )
+

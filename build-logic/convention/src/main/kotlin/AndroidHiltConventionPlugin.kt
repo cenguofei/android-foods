@@ -24,10 +24,11 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
+                apply("org.jetbrains.kotlin.kapt")
+
                 apply("com.google.dagger.hilt.android")
                 // KAPT must go last to avoid build warnings.
                 // See: https://stackoverflow.com/questions/70550883/warning-the-following-options-were-not-recognized-by-any-processor-dagger-f
-                apply("org.jetbrains.kotlin.kapt")
 
 //                apply("kotlin-kapt")
 //                apply("dagger.hilt.android.plugin")
@@ -41,11 +42,12 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
 //                "kaptAndroidTest"(libs.findLibrary("hilt.compiler").get())
 
 
-                "implementation"(libs.findLibrary("hilt.android").get())
-                "kapt"(libs.findLibrary("hilt.android.compiler").get())
+                "implementation"("com.google.dagger:hilt-android:2.44")
+                "kapt"("com.google.dagger:hilt-android-compiler:2.44")
+//                "implementation"(libs.findLibrary("hilt.android").get())
+//                "kapt"(libs.findLibrary("hilt.android.compiler").get())
 //                "kaptAndroidTest"(libs.findLibrary("hilt.compiler").get())
             }
-
 
         }
     }

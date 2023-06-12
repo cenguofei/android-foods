@@ -1,6 +1,6 @@
 package com.example.common.di
 
-class Util {
+class Util22 {
     fun test() {
 
     }

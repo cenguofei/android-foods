@@ -2,9 +2,6 @@ package com.example.network.remote.repository
 
 import com.example.network.remote.model.Food
 import com.example.network.remote.model.Order
-import com.example.network.remote.model.User
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -13,7 +10,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface RemoteService {
+interface RemoteApii {
 
     companion object {
         const val BASE_URL = "http://10.129.67.213:80/"

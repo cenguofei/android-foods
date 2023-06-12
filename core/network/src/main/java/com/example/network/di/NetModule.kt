@@ -2,7 +2,8 @@ package com.example.network.di
 
 import com.example.network.netstate.ConnectivityManagerNetworkMonitor
 import com.example.network.netstate.NetworkMonitor
-import com.example.network.remote.repository.RemoteService
+import com.example.network.remote.repository.RemoteRepository
+import com.example.network.remote.repository.RemoteApii
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -24,20 +25,9 @@ interface NetModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RetrofitModule {
+object RetrofitModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(RemoteService.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun providesRemoteService(
-        retrofit: Retrofit
-    ):RemoteService = retrofit.create(RemoteService::class.java)
+    fun providesRemoteRepository() : RemoteRepository = RemoteRepository()
 }

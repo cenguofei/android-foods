@@ -12,3 +12,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
 }
+
+kapt {
+    correctErrorTypes = true
+}

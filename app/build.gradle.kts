@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("foods.android.application")
     id("foods.android.application.compose")
     id("org.jetbrains.kotlin.android")
 //    id("org.jetbrains.kotlin.android")
-//    id("foods.android.hilt")
+    id("foods.android.hilt")
 
 //    kotlin("kapt")
 //    id("com.google.dagger.hilt.android")
@@ -33,25 +35,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
-    }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    //    compileOptions {
+//    compileOptions {
 //        sourceCompatibility = JavaVersion.VERSION_1_8
 //        targetCompatibility = JavaVersion.VERSION_1_8
 //    }
@@ -69,6 +53,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    //    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
+//    }
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+//    buildFeatures {
+//        compose = true
+//    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.3.2"
+//    }
     //    compileOptions {
 //        sourceCompatibility = JavaVersion.VERSION_11
 //        targetCompatibility = JavaVersion.VERSION_11
@@ -130,5 +127,9 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
 
 //    implementation("com.google.dagger:hilt-android:2.44")
-//    annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+//    kapt("com.google.dagger:hilt-android-compiler:2.44")
+}
+
+kapt {
+    correctErrorTypes = true
 }

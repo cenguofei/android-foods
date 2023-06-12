@@ -12,8 +12,6 @@ android {
 }
 
 dependencies {
-
-//    implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
@@ -22,5 +20,8 @@ dependencies {
     implementation(libs.square.retrofit2.converter.gson)
 
     api(project(":core:common"))
+}
 
+kapt {
+    correctErrorTypes = true
 }

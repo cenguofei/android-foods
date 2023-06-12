@@ -1,6 +1,6 @@
 plugins {
     id("foods.android.library")
-    id("foods.android.hilt")
+//    id("foods.android.hilt")
     //serialization
 //    id("foods.kotlin.serialization")
 

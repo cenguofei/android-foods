@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,12 +36,14 @@ import com.example.network.remote.model.OrderDetail
 import com.example.network.remote.model.User
 import com.example.network.remote.repository.RemoteRepository
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.flow.collect
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Date
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val remote = RemoteRepository()
+
+    @Inject lateinit var remoteRepository: RemoteRepository
 
     private val viewModel: MainActivityViewModel by viewModels()
 
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
 //                        windowSizeClass = calculateWindowSizeClass(this),
 ////                        userNewsResourceRepository = userNewsResourceRepository,
 //                    )
-                    TestRemoteService(remote)
+                    TestRemoteService(remoteRepository)
                 }
             }
         }
@@ -127,11 +128,11 @@ private fun shouldUseDarkTheme(
 @Preview
 @Composable
 fun Fix() {
-    TestRemoteService(remoteService = RemoteRepository())
+//    TestRemoteService(remoteRepository = RemoteRepository())
 }
 
 @Composable
-fun TestRemoteService(remoteService: RemoteRepository) {
+fun TestRemoteService(remoteRepository: RemoteRepository) {
     Log.v("http_test","TestRemoteService")
     val coroutineScope = rememberCoroutineScope()
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
@@ -141,7 +142,7 @@ fun TestRemoteService(remoteService: RemoteRepository) {
             .background(Color.Blue.copy(alpha = 0.5f))) {
             TestButton("login") {
                 coroutineScope.launch {
-                    val hashMap = remoteService.login(username = "cgf", password = "abc")
+                    val hashMap = remoteRepository.login(username = "cgf", password = "abc")
                     hashMap.string()
                 }
             }
@@ -149,7 +150,7 @@ fun TestRemoteService(remoteService: RemoteRepository) {
             TestButton("register exist") {
                 coroutineScope.launch {
                     val hashMap =
-                        remoteService.register(
+                        remoteRepository.register(
                             User(username = "cgf", password = "abc", email = "qq.com", tel = "111")
                         )
                     hashMap.string()
@@ -158,7 +159,7 @@ fun TestRemoteService(remoteService: RemoteRepository) {
 
             TestButton("postOrder") {
                 coroutineScope.launch {
-                    val postOrder = remoteService.postOrder(
+                    val postOrder = remoteRepository.postOrder(
                         order
                     )
                     postOrder.string()
@@ -167,7 +168,7 @@ fun TestRemoteService(remoteService: RemoteRepository) {
 
             TestButton("register") {
                 coroutineScope.launch {
-                    val hashMap = remoteService.register(
+                    val hashMap = remoteRepository.register(
                         User(
                             username = "chenguofei",
                             password = "aaa",
@@ -181,7 +182,7 @@ fun TestRemoteService(remoteService: RemoteRepository) {
 
             TestButton("getAllFood") {
                 coroutineScope.launch {
-                    remoteService.getAllFood().collect {
+                    remoteRepository.getAllFood().collect {
                         Log.v("http_test",it.toString())
                     }
                 }
@@ -196,7 +197,7 @@ fun TestRemoteService(remoteService: RemoteRepository) {
 
             TestButton("getUserOrders") {
                 coroutineScope.launch {
-                    remoteService.getUserOrders("admin").collect { v ->
+                    remoteRepository.getUserOrders("admin").collect { v ->
                         v.string()
                     }
                 }

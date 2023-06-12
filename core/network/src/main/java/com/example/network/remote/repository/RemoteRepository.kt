@@ -6,25 +6,21 @@ import com.example.network.remote.model.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.Query
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class RemoteRepository constructor(
-//    @Inject private val remoteService: RemoteService,
-) {
-    private val remoteService: RemoteService = Retrofit.Builder()
-        .baseUrl(RemoteService.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build().create(RemoteService::class.java)
+@Singleton
+class RemoteRepository @Inject constructor() {
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val remoteService: RemoteApii = Retrofit.Builder()
+        .baseUrl(RemoteApii.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(RemoteApii::class.java)
 
 
     suspend fun getAllFood() : Flow<List<Food>> = flow {
