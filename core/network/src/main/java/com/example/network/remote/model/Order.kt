@@ -6,8 +6,8 @@ import java.util.Date
 data class Order(
     var id:Long,
     var orderNum:String, //订单号
-    var isPayed:String, //是否付款
-    var createTime:Date,
+    var isPay:String, //是否付款
+    var createTime:Date?,
     var price:Double,
     var address:String,
     var username:String, //下单人

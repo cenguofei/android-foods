@@ -8,7 +8,7 @@ androidxConstrantlayout = "2.2.0-alpha07"
 androidxLifecycle = "2.5.1"
 androidxHiltNavigationCompose = "1.0.0"
 androidxNavigation = "2.5.3"
-androidxComposeCompiler = "1.4.2"
+androidxComposeCompiler = "1.4.0-alpha01"
 androidxComposeBom = "2023.01.00"
 androidxEspresso = "3.5.1"
 androidxTestExt = "1.1.4"
@@ -30,7 +30,7 @@ kotlinxCoroutines = "1.6.4"
 kotlinxDatetime = "0.4.0"
 kotlinxSerializationJson = "1.5.0"
 
-hilt = "2.44"
+hilt = "2.44.2"
 hiltExt = "1.0.0"
 
 androidxCore = "1.9.0"
@@ -83,6 +83,7 @@ androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
 
 androidx-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidxActivity" }
 
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }

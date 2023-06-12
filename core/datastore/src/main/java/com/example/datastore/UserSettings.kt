@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 class SystemSettings @Inject constructor(
     @ApplicationContext val context: Context,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
     companion object {
         val IS_FIRST_USE = booleanPreferencesKey("isFirstUse")

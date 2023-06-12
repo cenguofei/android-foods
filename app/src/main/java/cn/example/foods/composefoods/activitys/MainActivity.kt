@@ -1,19 +1,19 @@
-package cn.example.foods.composefoods
+package cn.example.foods.composefoods.activitys
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -23,71 +23,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import cn.example.foods.composefoods.MainActivityUiState
+import cn.example.foods.composefoods.MainActivityViewModel
 import com.example.designsystem.theme.FoodsTheme
 import com.example.model.DarkThemeConfig
 import com.example.model.ThemeBrand
-import com.example.network.netstate.NetworkMonitor
+import com.example.network.remote.model.Order
+import com.example.network.remote.model.OrderDetail
 import com.example.network.remote.model.User
-import com.example.network.remote.repository.RemoteService
+import com.example.network.remote.repository.RemoteRepository
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
-import javax.inject.Inject
+import java.util.Date
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    @Inject lateinit var networkMonitor: NetworkMonitor
-
-    @Inject lateinit var remoteService: RemoteService
+    private val remote = RemoteRepository()
 
     private val viewModel: MainActivityViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState.Loading)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        // Update the uiState
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState
-                    .onEach {
-                        uiState = it
-                    }
-                    .collect { }
-            }
-        }
-
-        // Keep the splash screen on-screen until the UI state is loaded. This condition is
-        // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
-        // the UI.
-//        splashScreen.setKeepOnScreenCondition {
-//            when (uiState) {
-//                Loading -> true
-//                is Success -> false
-//            }
-//        }
-
-        // Turn off the decor fitting system windows, which allows us to handle insets,
-        // including IME animations
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-
         setContent {
+            val uiState: MainActivityUiState by remember {
+                mutableStateOf(MainActivityUiState.Loading)
+            }
 
             val systemUiController = rememberSystemUiController()
             val darkTheme = shouldUseDarkTheme(uiState)
 
             // Update the dark content of the system bars to match the theme
             DisposableEffect(systemUiController, darkTheme) {
-                systemUiController.systemBarsDarkContentEnabled = !darkTheme
+//                systemUiController.systemBarsDarkContentEnabled = !darkTheme
                 onDispose {}
             }
 
@@ -102,13 +76,11 @@ class MainActivity : ComponentActivity() {
 //                        windowSizeClass = calculateWindowSizeClass(this),
 ////                        userNewsResourceRepository = userNewsResourceRepository,
 //                    )
-                    TestRemoteService(remoteService)
+                    TestRemoteService(remote)
                 }
             }
         }
     }
-
-
 }
 
 /**
@@ -152,16 +124,24 @@ private fun shouldUseDarkTheme(
     }
 }
 
+@Preview
+@Composable
+fun Fix() {
+    TestRemoteService(remoteService = RemoteRepository())
+}
 
 @Composable
-fun TestRemoteService(remoteService: RemoteService) {
-
+fun TestRemoteService(remoteService: RemoteRepository) {
+    Log.v("http_test","TestRemoteService")
     val coroutineScope = rememberCoroutineScope()
-    Scaffold { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
+    Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+        Log.v("http_test","Scaffold")
+        Column(modifier = Modifier
+            .padding(paddingValues)
+            .background(Color.Blue.copy(alpha = 0.5f))) {
             TestButton("login") {
                 coroutineScope.launch {
-                    val hashMap = remoteService.login(User(username = "admin", password = "abc"))
+                    val hashMap = remoteService.login(username = "cgf", password = "abc")
                     hashMap.string()
                 }
             }
@@ -169,8 +149,19 @@ fun TestRemoteService(remoteService: RemoteService) {
             TestButton("register exist") {
                 coroutineScope.launch {
                     val hashMap =
-                        remoteService.register(User(username = "admin", password = "abc"))
+                        remoteService.register(
+                            User(username = "cgf", password = "abc", email = "qq.com", tel = "111")
+                        )
                     hashMap.string()
+                }
+            }
+
+            TestButton("postOrder") {
+                coroutineScope.launch {
+                    val postOrder = remoteService.postOrder(
+                        order
+                    )
+                    postOrder.string()
                 }
             }
 
@@ -178,10 +169,10 @@ fun TestRemoteService(remoteService: RemoteService) {
                 coroutineScope.launch {
                     val hashMap = remoteService.register(
                         User(
-                            username = "aaa",
+                            username = "chenguofei",
                             password = "aaa",
-                            email = "aaa",
-                            tel = "aaa"
+                            email = "feifei@qq.com",
+                            tel = "10086"
                         )
                     )
                     hashMap.string()
@@ -190,22 +181,30 @@ fun TestRemoteService(remoteService: RemoteService) {
 
             TestButton("getAllFood") {
                 coroutineScope.launch {
-                    val allFood = remoteService.getAllFood()
-                    Log.v("http_test",allFood.toString())
+                    remoteService.getAllFood().collect {
+                        Log.v("http_test",it.toString())
+                    }
                 }
             }
 
+//            TestButton("postOrder") {
+//                coroutineScope.launch {
+//                    val allFood = remoteService.postOrder(Order(1000L,"111",""))
+//                    Log.v("http_test",allFood.toString())
+//                }
+//            }
+
             TestButton("getUserOrders") {
                 coroutineScope.launch {
-                    val allFood = remoteService.getUserOrders("admin")
-                    Log.v("http_test",allFood.toString())
+                    remoteService.getUserOrders("admin").collect { v ->
+                        v.string()
+                    }
                 }
             }
         }
     }
 }
-
-fun <K,V>HashMap<K,V>.string() {
+fun <K,V>Map<K,V>.string() {
     val builder = StringBuilder()
     builder.append("{")
     keys.forEach {
@@ -218,7 +217,18 @@ fun <K,V>HashMap<K,V>.string() {
 
 @Composable
 fun TestButton(text:String,onClick:()-> Unit) {
-    OutlinedButton(onClick = onClick) {
-        Text(text = text)
+    Button(onClick = onClick,modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)) {
+        Text(text = text,color = Color.Black)
     }
 }
+
+val order = Order(
+    999L, "999", "1", null, 50.0, "address", "cgf", "10086",
+    listOf(
+        OrderDetail(
+            888L,"小菜",2.1,"2222222",1
+        )
+    )
+)

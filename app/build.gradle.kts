@@ -1,7 +1,9 @@
 plugins {
     id("foods.android.application")
     id("foods.android.application.compose")
-    id("foods.android.hilt")
+    id("org.jetbrains.kotlin.android")
+//    id("org.jetbrains.kotlin.android")
+//    id("foods.android.hilt")
 
 //    kotlin("kapt")
 //    id("com.google.dagger.hilt.android")
@@ -20,6 +22,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -28,16 +33,46 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-//    compileOptions {
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.2"
+    }
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    //    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
+//    }
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+//    buildFeatures {
+//        compose = true
+//    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.3.2"
+//    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    //    compileOptions {
 //        sourceCompatibility = JavaVersion.VERSION_11
 //        targetCompatibility = JavaVersion.VERSION_11
 //    }
-
-    packaging {
-        resources {
-            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-        }
-    }
 }
 
 dependencies {
@@ -51,8 +86,13 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.google.gson)
     implementation(libs.github.glide)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
     androidTestImplementation(libs.androidx.test.ext)
-
 
     //compose
     implementation(libs.androidx.compose.material)
@@ -70,6 +110,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.activity)
     implementation(libs.androidx.viewmodel.compose)
 //    implementation(libs.androidx.lifecycle.livedata)
 
@@ -80,6 +121,13 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
     implementation(project(":core:network"))
+
+
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
 
 //    implementation("com.google.dagger:hilt-android:2.44")
 //    annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
