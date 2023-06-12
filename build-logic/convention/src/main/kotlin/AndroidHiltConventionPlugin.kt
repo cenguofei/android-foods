@@ -25,31 +25,14 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.kapt")
-
                 apply("com.google.dagger.hilt.android")
-                // KAPT must go last to avoid build warnings.
-                // See: https://stackoverflow.com/questions/70550883/warning-the-following-options-were-not-recognized-by-any-processor-dagger-f
-
-//                apply("kotlin-kapt")
-//                apply("dagger.hilt.android.plugin")
             }
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
-
-//                "implementation"(libs.findLibrary("hilt.android").get())
-//                "kapt"(libs.findLibrary("hilt.compiler").get())
-//                "kaptAndroidTest"(libs.findLibrary("hilt.compiler").get())
-
-
                 "implementation"("com.google.dagger:hilt-android:2.44")
                 "kapt"("com.google.dagger:hilt-android-compiler:2.44")
-//                "implementation"(libs.findLibrary("hilt.android").get())
-//                "kapt"(libs.findLibrary("hilt.android.compiler").get())
-//                "kaptAndroidTest"(libs.findLibrary("hilt.compiler").get())
             }
-
         }
     }
-
 }

@@ -110,14 +110,19 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.viewmodel.compose)
 //    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     implementation(libs.accompanist.systemuicontroller)
-
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.pager.indicators)
+    implementation(libs.accompanist.navigation.animation)
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
     implementation(project(":core:network"))
+    implementation(project(":core:datastore"))
+    implementation(project(":feature:start"))
 
 
     testImplementation("junit:junit:4.13.2")

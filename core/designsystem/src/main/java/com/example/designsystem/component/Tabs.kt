@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
  * @param text The text label content.
  */
 @Composable
-fun NiaTab(
+fun FoodsTab(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -72,7 +72,7 @@ fun NiaTab(
  *
  * @param selectedTabIndex The index of the currently selected tab.
  * @param modifier Modifier to be applied to the tab row.
- * @param tabs The tabs inside this tab row. Typically this will be multiple [NiaTab]s. Each element
+ * @param tabs The tabs inside this tab row. Typically this will be multiple [FoodsTab]s. Each element
  * inside this lambda will be measured and placed evenly across the row, each taking up equal space.
  */
 @Composable

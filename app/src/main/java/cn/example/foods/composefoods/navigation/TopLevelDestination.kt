@@ -16,8 +16,10 @@
 
 package cn.example.foods.composefoods.navigation
 
+import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.designsystem.icon.NiaIcons
+import cn.example.foods.R
+import com.example.designsystem.icon.FoodsIcons
 
 /**
  * Type for the top level destinations in the application. Each of these destinations
@@ -27,19 +29,24 @@ import com.example.designsystem.icon.NiaIcons
 enum class TopLevelDestination(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val iconTextId: Int = 1,
-    val titleTextId: Int = 1,
+    @StringRes val iconTextId: Int = R.string.foods,
+    @StringRes val titleTextId: Int = R.string.foods,
 ) {
-    FOR_YOU(
-        selectedIcon = NiaIcons.Upcoming,
-        unselectedIcon = NiaIcons.UpcomingBorder,
+    HOME(
+        selectedIcon = FoodsIcons.Upcoming,
+        unselectedIcon = FoodsIcons.UpcomingBorder,
     ),
-    BOOKMARKS(
-        selectedIcon = NiaIcons.Bookmarks,
-        unselectedIcon = NiaIcons.BookmarksBorder,
-    ),
-    INTERESTS(
-        selectedIcon = NiaIcons.Grid3x3,
-        unselectedIcon = NiaIcons.Grid3x3,
+//    BOOKMARKS(
+//        selectedIcon = NiaIcons.Bookmarks,
+//        unselectedIcon = NiaIcons.BookmarksBorder,
+//    ),
+    SETTINGS(
+        selectedIcon = FoodsIcons.Grid3x3,
+        unselectedIcon = FoodsIcons.Grid3x3,
     ),
 }
+
+
+val home = "home"
+
+val settings = "settings"

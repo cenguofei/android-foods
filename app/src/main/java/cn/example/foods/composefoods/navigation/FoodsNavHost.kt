@@ -16,30 +16,25 @@
 
 package cn.example.foods.composefoods.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
 import cn.example.foods.composefoods.ui.FoodsAppState
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 
-/**
- * Top-level navigation graph. Navigation is organized as explained at
- * https://d.android.com/jetpack/compose/nav-adaptive
- *
- * The navigation graph defined in this file defines the different top level routes. Navigation
- * within each route is handled using state and Back Handlers.
- */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NiaNavHost(
+fun FoodsNavHost(
     appState: FoodsAppState,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
     startDestination: String = "forYouNavigationRoute",
+    onShowSnackbar: suspend (String, String?) -> Boolean,
 ) {
-    val navController = appState.navController
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier,
-    ) {
-    }
+//    val navController = appState.navController
+//    AnimatedNavHost(
+//        navController = navController,
+//        startDestination = startDestination,
+//        modifier = modifier,
+//    ) {
+//    }
 }

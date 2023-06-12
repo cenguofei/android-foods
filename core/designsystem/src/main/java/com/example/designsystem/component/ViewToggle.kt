@@ -28,7 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.icon.NiaIcons
+import com.example.designsystem.icon.FoodsIcons
 
 /**
  * Now in Android view toggle button with included trailing icon as well as compact and expanded
@@ -43,7 +43,7 @@ import com.example.designsystem.icon.NiaIcons
  * @param expandedText The text label content to show in compact mode.
  */
 @Composable
-fun NiaViewToggleButton(
+fun FoodsViewToggleButton(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -60,11 +60,11 @@ fun NiaViewToggleButton(
         ),
         contentPadding = NiaViewToggleDefaults.ViewToggleButtonContentPadding,
     ) {
-        NiaViewToggleButtonContent(
+        FoodsViewToggleButtonContent(
             text = if (expanded) expandedText else compactText,
             trailingIcon = {
                 Icon(
-                    imageVector = if (expanded) NiaIcons.ViewDay else NiaIcons.ShortText,
+                    imageVector = if (expanded) FoodsIcons.ViewDay else FoodsIcons.ShortText,
                     contentDescription = null,
                 )
             },
@@ -80,7 +80,7 @@ fun NiaViewToggleButton(
  * @param trailingIcon The button trailing icon content. Default is `null` for no trailing icon.
  */
 @Composable
-private fun NiaViewToggleButtonContent(
+private fun FoodsViewToggleButtonContent(
     text: @Composable () -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {

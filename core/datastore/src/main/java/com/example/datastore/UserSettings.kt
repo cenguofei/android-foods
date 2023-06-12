@@ -11,43 +11,52 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SystemSettings @Inject constructor(
+class UserSettings @Inject constructor(
     @ApplicationContext val context: Context,
 ) {
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private var scope: CoroutineScope
+    var isFirstUse:MutableStateFlow<Boolean>
+        private set
 
     companion object {
-        val IS_FIRST_USE = booleanPreferencesKey("isFirstUse")
 
+        val IS_FIRST_USE = booleanPreferencesKey("isFirstUse")
     }
 
-    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    init {
+        isFirstUse = MutableStateFlow(true)
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        isFirstUse()
+    }
     private val Context.datastore: DataStore<Preferences> by preferencesDataStore("settings",scope = scope)
 
 
-    private var _userSettings = context.datastore.data
-        .map {
-            val isFirstUse = it[IS_FIRST_USE]
-            UserSettings(
-                isFirstUse ?: false
-            )
+    private fun isFirstUse() {
+        scope.launch {
+            isFirstUse.value = context.datastore.data
+                .map { it[IS_FIRST_USE] ?: true }
+                .distinctUntilChanged()
+                .firstOrNull() ?: true
         }
-    val userSettings = _userSettings
+    }
 
     fun updateUseState(isFirstUse: Boolean) {
         scope.launch(dispatcher) {
             context.datastore.edit { preferences ->
                 preferences[IS_FIRST_USE] = isFirstUse
             }
+            this@UserSettings.isFirstUse.value = false
         }
     }
 }
-
-data class UserSettings(
-    val isFirstUse:Boolean
-)
 

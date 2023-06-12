@@ -26,34 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- <activity -->
-        <!-- android:name="cn.example.foods.activity.MyActivity" -->
-        <!-- android:parentActivityName="cn.example.foods.activity.MainActivity"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:value="cn.example.foods.activity.MainActivity" /> -->
-        <!-- </activity> -->
-        <!-- <activity android:name="cn.example.foods.activity.OrderActivity" android:parentActivityName="cn.example.foods.activity.FoodsActivity"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:value="cn.example.foods.activity.FoodsActivity" /> -->
-        <!-- </activity> -->
-        <!-- <activity android:name="cn.example.foods.activity.FoodsActivity" android:parentActivityName="cn.example.foods.activity.MainActivity"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:value="cn.example.foods.activity.MainActivity" /> -->
-        <!-- </activity> -->
-        <!-- <activity android:name="cn.example.foods.activity.MyOrderActivity" android:parentActivityName="cn.example.foods.activity.MyActivity"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:value="cn.example.foods.activity.MyActivity" /> -->
-        <!-- </activity> -->
-        <!-- <activity android:name="cn.example.foods.activity.MainActivity" -->
-        <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar"> -->
-        <!-- </activity> -->
-        <!-- <activity -->
-        <!-- android:name="cn.example.foods.activity.RegActivity" -->
-        <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> -->
 
     </application>
 

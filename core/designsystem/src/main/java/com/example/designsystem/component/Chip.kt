@@ -27,7 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.icon.NiaIcons
+import com.example.designsystem.icon.FoodsIcons
 
 /**
  * Now in Android filter chip with included leading checked icon as well as text content slot.
@@ -41,7 +41,7 @@ import com.example.designsystem.icon.NiaIcons
  */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun NiaFilterChip(
+fun FoodsFilterChip(
     selected: Boolean,
     onSelectedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -61,7 +61,7 @@ fun NiaFilterChip(
         leadingIcon = if (selected) {
             {
                 Icon(
-                    imageVector = NiaIcons.Check,
+                    imageVector = FoodsIcons.Check,
                     contentDescription = null,
                 )
             }

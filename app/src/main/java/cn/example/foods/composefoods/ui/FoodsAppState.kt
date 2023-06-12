@@ -12,13 +12,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.TopLevelDestination
+import cn.example.foods.composefoods.navigation.home
+import cn.example.foods.composefoods.navigation.settings
 import com.example.network.netstate.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
@@ -26,9 +31,9 @@ import kotlinx.coroutines.flow.stateIn
 fun rememberFoodsAppState(
     windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
-//    userNewsResourceRepository: UserNewsResourceRepository,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
+    sourceContainer: SourceContainer,
 ): FoodsAppState {
     NavigationTrackingSideEffect(navController)
     return remember(
@@ -36,14 +41,13 @@ fun rememberFoodsAppState(
         coroutineScope,
         windowSizeClass,
         networkMonitor,
-//        userNewsResourceRepository,
     ) {
         FoodsAppState(
             navController,
             coroutineScope,
             windowSizeClass,
             networkMonitor,
-//            userNewsResourceRepository,
+            sourceContainer
         )
     }
 }
@@ -51,22 +55,21 @@ fun rememberFoodsAppState(
 @Stable
 class FoodsAppState(
     val navController: NavHostController,
-    val coroutineScope: CoroutineScope,
-    val windowSizeClass: WindowSizeClass,
+    coroutineScope: CoroutineScope,
+    private val windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
-//    userNewsResourceRepository: UserNewsResourceRepository,
+    val sourceContainer: SourceContainer,
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-//    val currentTopLevelDestination: TopLevelDestination?
-//        @Composable get() = when (currentDestination?.route) {
-//            forYouNavigationRoute -> FOR_YOU
-//            bookmarksRoute -> BOOKMARKS
-//            interestsRoute -> INTERESTS
-//            else -> null
-//        }
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() = when (currentDestination?.route) {
+            home -> TopLevelDestination.HOME
+            settings -> TopLevelDestination.SETTINGS
+            else -> null
+        }
 
     val shouldShowBottomBar: Boolean
         get() = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
@@ -86,7 +89,7 @@ class FoodsAppState(
      * Map of top level destinations to be used in the TopBar, BottomBar and NavRail. The key is the
      * route.
      */
-//    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
+    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
     /**
      * The top level destinations that have unread news resources.
@@ -126,16 +129,25 @@ class FoodsAppState(
                 restoreState = true
             }
 
-//            when (topLevelDestination) {
-//                TopLevelDestination.FOR_YOU -> navController.navigateToForYou(topLevelNavOptions)
-//                TopLevelDestination.BOOKMARKS -> navController.navigateToBookmarks(topLevelNavOptions)
-//                TopLevelDestination.INTERESTS -> navController.navigateToInterestsGraph(topLevelNavOptions)
-//            }
+            when (topLevelDestination) {
+                TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
+                TopLevelDestination.SETTINGS -> navController.navigateToSettings(topLevelNavOptions)
+            }
     }
 
-//    fun navigateToSearch() {
+    fun navigateToSearch() {
 //        navController.navigateToSearch()
-//    }
+    }
+}
+
+private fun NavHostController.navigateToSettings(topLevelNavOptions: NavOptions) {
+
+
+}
+
+private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
+
+
 }
 
 /**

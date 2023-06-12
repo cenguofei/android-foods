@@ -48,7 +48,7 @@ import kotlin.math.tan
  * @param content The background content.
  */
 @Composable
-fun NiaBackground(
+fun FoodsBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -74,7 +74,7 @@ fun NiaBackground(
  * @param content The background content.
  */
 @Composable
-fun NiaGradientBackground(
+fun FoodsGradientBackground(
     modifier: Modifier = Modifier,
     gradientColors: GradientColors = LocalGradientColors.current,
     content: @Composable () -> Unit,
@@ -151,7 +151,7 @@ annotation class ThemePreviews
 @Composable
 fun BackgroundDefault() {
     FoodsTheme(disableDynamicTheming = true) {
-        NiaBackground(Modifier.size(100.dp), content = {})
+        FoodsBackground(Modifier.size(100.dp), content = {})
     }
 }
 
@@ -159,7 +159,7 @@ fun BackgroundDefault() {
 @Composable
 fun BackgroundDynamic() {
     FoodsTheme(disableDynamicTheming = false) {
-        NiaBackground(Modifier.size(100.dp), content = {})
+        FoodsBackground(Modifier.size(100.dp), content = {})
     }
 }
 
@@ -167,7 +167,7 @@ fun BackgroundDynamic() {
 @Composable
 fun BackgroundAndroid() {
     FoodsTheme(androidTheme = true) {
-        NiaBackground(Modifier.size(100.dp), content = {})
+        FoodsBackground(Modifier.size(100.dp), content = {})
     }
 }
 
@@ -175,7 +175,7 @@ fun BackgroundAndroid() {
 @Composable
 fun GradientBackgroundDefault() {
     FoodsTheme(disableDynamicTheming = true) {
-        NiaGradientBackground(Modifier.size(100.dp), content = {})
+        FoodsGradientBackground(Modifier.size(100.dp), content = {})
     }
 }
 
@@ -183,7 +183,7 @@ fun GradientBackgroundDefault() {
 @Composable
 fun GradientBackgroundDynamic() {
     FoodsTheme(disableDynamicTheming = false) {
-        NiaGradientBackground(Modifier.size(100.dp), content = {})
+        FoodsGradientBackground(Modifier.size(100.dp), content = {})
     }
 }
 
@@ -191,6 +191,6 @@ fun GradientBackgroundDynamic() {
 @Composable
 fun GradientBackgroundAndroid() {
     FoodsTheme(androidTheme = true) {
-        NiaGradientBackground(Modifier.size(100.dp), content = {})
+        FoodsGradientBackground(Modifier.size(100.dp), content = {})
     }
 }

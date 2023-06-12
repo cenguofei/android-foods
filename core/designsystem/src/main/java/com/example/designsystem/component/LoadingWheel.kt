@@ -51,7 +51,7 @@ import com.example.designsystem.theme.FoodsTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun NiaLoadingWheel(
+fun FoodsLoadingWheel(
     contentDesc: String,
     modifier: Modifier = Modifier,
 ) {
@@ -140,7 +140,7 @@ fun NiaOverlayLoadingWheel(
         modifier = modifier
             .size(60.dp),
     ) {
-        NiaLoadingWheel(
+        FoodsLoadingWheel(
             contentDesc = contentDesc,
         )
     }
@@ -151,7 +151,7 @@ fun NiaOverlayLoadingWheel(
 fun NiaLoadingWheelPreview() {
     FoodsTheme {
         Surface {
-            NiaLoadingWheel(contentDesc = "LoadingWheel")
+            FoodsLoadingWheel(contentDesc = "LoadingWheel")
         }
     }
 }

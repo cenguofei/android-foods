@@ -34,11 +34,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.designsystem.icon.NiaIcons
+import com.example.designsystem.icon.FoodsIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NiaTopAppBar(
+fun FoodsTopAppBar(
     @StringRes titleRes: Int,
     navigationIcon: ImageVector,
     navigationIconContentDescription: String?,
@@ -79,7 +79,7 @@ fun NiaTopAppBar(
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NiaTopAppBar(
+fun FoodsTopAppBar(
     @StringRes titleRes: Int,
     actionIcon: ImageVector,
     actionIconContentDescription: String?,
@@ -107,11 +107,11 @@ fun NiaTopAppBar(
 @Preview("Top App Bar")
 @Composable
 private fun NiaTopAppBarPreview() {
-    NiaTopAppBar(
+    FoodsTopAppBar(
         titleRes = R.string.untitled,
-        navigationIcon = NiaIcons.Search,
+        navigationIcon = FoodsIcons.Search,
         navigationIconContentDescription = "Navigation icon",
-        actionIcon = NiaIcons.MoreVert,
+        actionIcon = FoodsIcons.MoreVert,
         actionIconContentDescription = "Action icon",
     )
 }

@@ -17,6 +17,7 @@
 package com.example.designsystem.theme
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -37,10 +38,13 @@ import androidx.compose.ui.unit.dp
  */
 @VisibleForTesting
 val LightDefaultColorScheme = lightColorScheme(
-    primary = Purple40,
+//    primary = Purple40,
+    primary = ClassicRed,
     onPrimary = Color.White,
-    primaryContainer = Purple90,
-    onPrimaryContainer = Purple10,
+//    primaryContainer = Purple90,
+    primaryContainer = Red90,
+//    onPrimaryContainer = Purple10,
+    onPrimaryContainer = Red10,
     secondary = Orange40,
     onSecondary = Color.White,
     secondaryContainer = Orange90,
@@ -199,10 +203,12 @@ fun FoodsTheme(
     // Color scheme
     val colorScheme = when {
         androidTheme -> if (darkTheme) DarkAndroidColorScheme else LightAndroidColorScheme
-        !disableDynamicTheming && supportsDynamicTheming() -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+        //TODO disable dynamic for test
+//        !disableDynamicTheming && supportsDynamicTheming() -> {
+//            Log.v("cgf","use dynamic theme")
+//            val context = LocalContext.current
+//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//        }
 
         else -> if (darkTheme) DarkDefaultColorScheme else LightDefaultColorScheme
     }
@@ -243,7 +249,7 @@ fun FoodsTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = NiaTypography,
+            typography = FoodsTypography,
             content = content,
         )
     }

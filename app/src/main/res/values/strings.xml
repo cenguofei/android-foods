@@ -12,4 +12,6 @@
     <string name="saveUser">saveUser</string>
     <string name="title_activity_compose">ComposeActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="not_connected">⚠️ You aren’t connected to the internet</string>
+    <string name="foods">Food</string>
 </resources>

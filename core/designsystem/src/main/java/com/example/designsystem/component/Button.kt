@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
  * @param content The button content.
  */
 @Composable
-fun NiaButton(
+fun FoodsButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -73,14 +73,14 @@ fun NiaButton(
  * @param leadingIcon The button leading icon content. Pass `null` here for no leading icon.
  */
 @Composable
-fun NiaButton(
+fun FoodsButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     text: @Composable () -> Unit,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
-    NiaButton(
+    FoodsButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
