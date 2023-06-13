@@ -14,4 +14,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="not_connected">⚠️ You aren’t connected to the internet</string>
     <string name="foods">Food</string>
+    <string name="search">Search</string>
+    <string name="search_meal">Search Foods</string>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@android:style/Theme.Light.NoTitleBar"
-    tools:context="cn.example.foods.activity.RegActivity">
+    tools:context="cn.example.foods.first.activity.RegActivity">
 
 
     <LinearLayout

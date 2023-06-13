@@ -39,7 +39,7 @@ import com.example.designsystem.icon.FoodsIcons
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsTopAppBar(
-    @StringRes titleRes: Int,
+    @StringRes titleRes: Int?,
     navigationIcon: ImageVector,
     navigationIconContentDescription: String?,
     actionIcon: ImageVector,
@@ -50,7 +50,7 @@ fun FoodsTopAppBar(
     onActionClick: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = stringResource(id = titleRes)) },
+        title = { titleRes?.let { Text(text = stringResource(id = it))} },
         navigationIcon = {
             IconButton(onClick = onNavigationClick) {
                 Icon(

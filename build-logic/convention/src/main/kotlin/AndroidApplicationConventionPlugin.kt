@@ -67,18 +67,11 @@ internal fun Project.configureKotlinAndroid(
             // https://developer.android.com/studio/write/java11-minimal-support-table
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
-//            isCoreLibraryDesugaringEnabled = true
         }
 
     }
 
     configureKotlin()
-
-    val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
-//    dependencies {
-//        add("coreLibraryDesugaring", libs.findLibrary("android.desugarJdkLibs").get())
-//    }
 }
 
 /**

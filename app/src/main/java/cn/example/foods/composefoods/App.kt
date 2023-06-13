@@ -207,7 +207,7 @@ private fun FoodsNavRail(
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(destination.iconTextId)) },
+                label = { destination.iconTextId?.let { Text(stringResource(it)) } },
                 modifier = Modifier
             )
         }
@@ -241,7 +241,7 @@ private fun FoodsBottomBar(
                         contentDescription = null,
                     )
                 },
-                label = { Text(stringResource(destination.iconTextId)) },
+                label = { destination.iconTextId?.let { Text(stringResource(it)) } },
                 modifier = Modifier
             )
         }

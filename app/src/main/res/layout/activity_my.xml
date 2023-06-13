@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.example.foods.activity.MyActivity">
+    tools:context="cn.example.foods.first.activity.MyActivity">
 
 
     <!-- TODO: Update blank fragment layout -->

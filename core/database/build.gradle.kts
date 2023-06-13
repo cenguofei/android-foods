@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.example.database"
 }
 
 dependencies {

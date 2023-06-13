@@ -29,24 +29,26 @@ import com.example.designsystem.icon.FoodsIcons
 enum class TopLevelDestination(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    @StringRes val iconTextId: Int = R.string.foods,
-    @StringRes val titleTextId: Int = R.string.foods,
+    @StringRes val iconTextId: Int? = null,
+    @StringRes val titleTextId: Int? = null,
 ) {
-    HOME(
-        selectedIcon = FoodsIcons.Upcoming,
-        unselectedIcon = FoodsIcons.UpcomingBorder,
-    ),
-//    BOOKMARKS(
-//        selectedIcon = NiaIcons.Bookmarks,
-//        unselectedIcon = NiaIcons.BookmarksBorder,
+//    SEARCH(
+//        unselectedIcon = FoodsIcons.Search,
+//        selectedIcon = FoodsIcons.SearchFilled,
+//        iconTextId = R.string.search,
+//        titleTextId = R.string.search_meal
 //    ),
-    SETTINGS(
-        selectedIcon = FoodsIcons.Grid3x3,
-        unselectedIcon = FoodsIcons.Grid3x3,
-    ),
+    HOME(
+        unselectedIcon = FoodsIcons.Home,
+        selectedIcon = FoodsIcons.HomeFilled
+    )
+//    SETTINGS(
+//        unselectedIcon = FoodsIcons.Settings,
+//        selectedIcon = FoodsIcons.SettingsFilled,
+//    )
 }
 
 
-val home = "home"
+const val home = "home"
 
-val settings = "settings"
+const val settings = "settings"

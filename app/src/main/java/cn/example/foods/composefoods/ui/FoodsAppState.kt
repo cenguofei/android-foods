@@ -67,7 +67,6 @@ class FoodsAppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             home -> TopLevelDestination.HOME
-            settings -> TopLevelDestination.SETTINGS
             else -> null
         }
 
@@ -131,7 +130,6 @@ class FoodsAppState(
 
             when (topLevelDestination) {
                 TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
-                TopLevelDestination.SETTINGS -> navController.navigateToSettings(topLevelNavOptions)
             }
     }
 

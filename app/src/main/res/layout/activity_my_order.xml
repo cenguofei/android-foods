@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.example.foods.activity.MyOrderActivity">
+    tools:context="cn.example.foods.first.activity.MyOrderActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"

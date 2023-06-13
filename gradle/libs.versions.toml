@@ -10,7 +10,7 @@ androidxHiltNavigationCompose = "1.0.0"
 androidxNavigation = "2.5.3"
 androidxComposeCompiler = "1.4.0-alpha01"
 androidxComposeBom = "2023.01.00"
-androidxEspresso = "3.5.1"
+androidxEspressoCore = "3.5.1"
 androidxTestExt = "1.1.4"
 androidxDatastore = "1.0.0"
 androidxComposeFoundation = "1.5.0-beta02"
@@ -41,6 +41,8 @@ androidGradlePlugin = "8.0.1"
 
 jacoco = "0.8.7"
 junit4 = "4.13.2"
+junit = "4.13.2"
+androidxJunitTestExt = "1.1.3"
 #kotlinxCoroutines = "1.6.4"
 #kotlinxDatetime = "0.4.0"
 #kotlinxSerializationJson = "1.5.0"
@@ -64,7 +66,6 @@ github-glide = { group = "com.github.bumptech.glide", name = "glide", version.re
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidxTestExt" }
 
 
@@ -93,6 +94,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 
 #androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
@@ -124,6 +126,12 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 
 square-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
 square-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2" }
+
+test-junit = { group = "junit", name = "junit", version.ref = "junit"}
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunitTestExt"}
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspressoCore" }
+
+
 
 #hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 #hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }

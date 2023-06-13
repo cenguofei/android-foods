@@ -17,6 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface NetModule {
 
+    @Singleton
     @Binds
     fun bindsConnectivityManagerNetMonitor(
         networkMonitor: ConnectivityManagerNetworkMonitor
