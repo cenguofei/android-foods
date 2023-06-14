@@ -11,23 +11,22 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
-import cn.example.foods.composefoods.FoodsApp
-import cn.example.foods.composefoods.MainActivityUiState
 import cn.example.foods.composefoods.MainActivityViewModel
 import cn.example.foods.composefoods.datasource.SourceContainer
+import cn.example.foods.composefoods.ui.FoodsApp
 import cn.example.foods.logv
+import com.example.datastore.SettingsUiState
+import com.example.datastore.SettingsViewModel
+import com.example.model.storagemodel.DarkThemeConfig
+import com.example.model.storagemodel.ThemeBrand
 import com.example.designsystem.theme.FoodsTheme
-import com.example.model.DarkThemeConfig
-import com.example.model.ThemeBrand
 import com.example.network.netstate.NetworkMonitor
 import com.example.start.StartScreen
+import com.example.start.splash.FoodsSplashScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -41,7 +40,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var sourceContainer: SourceContainer
 
-    private val viewModel: MainActivityViewModel by viewModels()
+    @Inject
+    lateinit var settingsViewModel:SettingsViewModel
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +50,10 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val uiState: MainActivityUiState by remember {
-                mutableStateOf(MainActivityUiState.Loading)
-            }
+            val uiState: State<SettingsUiState> = settingsViewModel.settingsUiState.collectAsState()
 
             val systemUiController = rememberSystemUiController()
-            val darkTheme = shouldUseDarkTheme(uiState)
+            val darkTheme = shouldUseDarkTheme(uiState.value)
 
             LaunchedEffect(systemUiController, darkTheme) {
                 systemUiController.systemBarsDarkContentEnabled = !darkTheme
@@ -65,32 +63,37 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider {
                 FoodsTheme(
                     darkTheme = darkTheme,
-                    androidTheme = shouldUseAndroidTheme(uiState),
-                    disableDynamicTheming = shouldDisableDynamicTheming(uiState),
+                    androidTheme = shouldUseAndroidTheme(uiState.value),
+                    disableDynamicTheming = shouldDisableDynamicTheming(uiState.value),
                 ) {
-                    val isFirstUse = sourceContainer.userSettings.isFirstUse.collectAsState()
-
-                    "${isFirstUse.value}".logv("start_screen")
-
-                    Crossfade(isFirstUse.value) {
-                        if (it) {
-                            val updateUserUseState = {
-                                sourceContainer.userSettings.updateUseState(false)
+                    Crossfade(uiState) { settingsState ->
+                        when(settingsState.value) {
+                            is SettingsUiState.Loading -> {
+                                FoodsSplashScreen()
                             }
-                            StartScreen(
-                                onSignUpClick = {
-                                    updateUserUseState()
-                                },
-                                onBeginClick = {
-                                    updateUserUseState()
+                            is SettingsUiState.Success -> {
+                                if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
+                                    val updateUserUseState = {
+                                        settingsViewModel.updateUseState(false)
+                                        settingsViewModel.updateUserInitialThemeBehavior()
+                                    }
+                                    StartScreen(
+                                        onSignUpClick = {
+                                            updateUserUseState()
+                                        },
+                                        onBeginClick = {
+                                            updateUserUseState()
+                                        }
+                                    )
+                                } else {
+                                    FoodsApp(
+                                        networkMonitor = networkMonitor,
+                                        windowSizeClass = calculateWindowSizeClass(this),
+                                        sourceContainer = sourceContainer,
+                                        settingsViewModel = settingsViewModel
+                                    )
                                 }
-                            )
-                        } else {
-                            FoodsApp(
-                                networkMonitor = networkMonitor,
-                                windowSizeClass = calculateWindowSizeClass(this),
-                                sourceContainer = sourceContainer,
-                            )
+                            }
                         }
                     }
                 }
@@ -104,10 +107,10 @@ class MainActivity : ComponentActivity() {
  */
 @Composable
 private fun shouldUseAndroidTheme(
-    uiState: MainActivityUiState,
+    uiState: SettingsUiState,
 ): Boolean = when (uiState) {
-    MainActivityUiState.Loading -> false
-    is MainActivityUiState.Success -> when (uiState.userData.themeBrand) {
+    SettingsUiState.Loading -> false
+    is SettingsUiState.Success -> when (uiState.settings.brand) {
         ThemeBrand.DEFAULT -> false
         ThemeBrand.ANDROID -> true
     }
@@ -118,10 +121,10 @@ private fun shouldUseAndroidTheme(
  */
 @Composable
 private fun shouldDisableDynamicTheming(
-    uiState: MainActivityUiState,
+    uiState: SettingsUiState,
 ): Boolean = when (uiState) {
-    MainActivityUiState.Loading -> false
-    is MainActivityUiState.Success -> !uiState.userData.useDynamicColor
+    SettingsUiState.Loading -> false
+    is SettingsUiState.Success -> !uiState.settings.useDynamicColor
 }
 
 /**
@@ -130,10 +133,10 @@ private fun shouldDisableDynamicTheming(
  */
 @Composable
 private fun shouldUseDarkTheme(
-    uiState: MainActivityUiState,
+    uiState: SettingsUiState,
 ): Boolean = when (uiState) {
-    MainActivityUiState.Loading -> isSystemInDarkTheme()
-    is MainActivityUiState.Success -> when (uiState.userData.darkThemeConfig) {
+    SettingsUiState.Loading -> isSystemInDarkTheme()
+    is SettingsUiState.Success -> when (uiState.settings.darkThemeConfig) {
         DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
         DarkThemeConfig.LIGHT -> false
         DarkThemeConfig.DARK -> true

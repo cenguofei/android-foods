@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 fun FoodieText(
     modifier: Modifier = Modifier
 ) {
+
     val annotatedString = buildAnnotatedString {
         pushStyle(SpanStyle(color = Color.Black))
         append("Food")

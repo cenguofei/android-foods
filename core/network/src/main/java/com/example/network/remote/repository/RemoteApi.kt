@@ -1,7 +1,8 @@
 package com.example.network.remote.repository
 
-import com.example.network.remote.model.Food
-import com.example.network.remote.model.Order
+import com.example.network.remote.remoteModel.Food
+import com.example.network.remote.remoteModel.Order
+import com.example.network.remote.remoteModel.User
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -10,10 +11,12 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface RemoteApii {
+interface RemoteApi {
 
     companion object {
         const val BASE_URL = "http://10.129.67.213:80/"
+
+        const val IMAGE_BASE_URL = BASE_URL + "food/showimg/"
     }
 
     @GET("frontfood/all")

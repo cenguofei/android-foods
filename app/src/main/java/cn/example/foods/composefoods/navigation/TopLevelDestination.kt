@@ -41,6 +41,10 @@ enum class TopLevelDestination(
     HOME(
         unselectedIcon = FoodsIcons.Home,
         selectedIcon = FoodsIcons.HomeFilled
+    ),
+    NONE(
+        unselectedIcon = FoodsIcons.Grid3x3,
+        selectedIcon = FoodsIcons.Grid3x3
     )
 //    SETTINGS(
 //        unselectedIcon = FoodsIcons.Settings,
@@ -48,7 +52,3 @@ enum class TopLevelDestination(
 //    )
 }
 
-
-const val home = "home"
-
-const val settings = "settings"

@@ -62,15 +62,19 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.ui.util)
-    implementation(libs.androidx.compose.ui.test.junit4)
+    implementation(libs.androidx.compose.ui.test.junit4) {
+        exclude(group = "kotlin-stdlib")
+    }
     implementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
+//    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.pager.indicators)
@@ -85,6 +89,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:ysq"))
     implementation(project(":feature:lwh"))
+    implementation(project(":feature:login"))
 
 
     testImplementation(libs.test.junit)

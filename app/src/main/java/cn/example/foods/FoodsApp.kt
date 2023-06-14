@@ -1,6 +1,7 @@
 package cn.example.foods
 
 import android.app.Application
+import com.example.network.remote.remoteModel.User
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -10,4 +11,6 @@ class FoodsApp : Application() {
         super.onCreate()
 
     }
+
+    var currentUser:User = User.NONE
 }

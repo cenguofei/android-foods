@@ -1,6 +1,5 @@
-package com.example.network.remote.model
+package com.example.network.remote.remoteModel
 
-import kotlinx.serialization.Serializable
 import java.util.Date
 
 data class Order(

@@ -200,6 +200,7 @@ fun FoodsTheme(
     disableDynamicTheming: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    "darkTheme:$darkTheme, androidTheme:$androidTheme, disableDynamicTheming:$disableDynamicTheming".logv()
     // Color scheme
     val colorScheme = when {
         androidTheme -> if (darkTheme) DarkAndroidColorScheme else LightAndroidColorScheme
@@ -241,6 +242,11 @@ fun FoodsTheme(
         !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
         else -> TintTheme()
     }
+
+    "gradientColors:$gradientColors".logv()
+    "backgroundTheme:$backgroundTheme".logv()
+    "tintTheme:$tintTheme".logv()
+    "colorScheme:$colorScheme".logv()
     // Composition locals
     CompositionLocalProvider(
         LocalGradientColors provides gradientColors,
@@ -253,6 +259,10 @@ fun FoodsTheme(
             content = content,
         )
     }
+}
+
+private fun String.logv() {
+    Log.v("theme_test",this)
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)

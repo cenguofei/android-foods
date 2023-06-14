@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">foodsapp</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -16,4 +16,6 @@
     <string name="foods">Food</string>
     <string name="search">Search</string>
     <string name="search_meal">Search Foods</string>
+    <string name="use_dynamic_color">Use Dynamic Color</string>
+    <string name="dark_mode_preference">Dark Mode Preference</string>
 </resources>

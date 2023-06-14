@@ -23,9 +23,11 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.icon.FoodsIcons
 
@@ -73,28 +75,28 @@ fun FoodsFilterChip(
             borderColor = MaterialTheme.colorScheme.onBackground,
             selectedBorderColor = MaterialTheme.colorScheme.onBackground,
             disabledBorderColor = MaterialTheme.colorScheme.onBackground.copy(
-                alpha = NiaChipDefaults.DisabledChipContentAlpha,
+                alpha = FoodsChipDefaults.DisabledChipContentAlpha,
             ),
             disabledSelectedBorderColor = MaterialTheme.colorScheme.onBackground.copy(
-                alpha = NiaChipDefaults.DisabledChipContentAlpha,
+                alpha = FoodsChipDefaults.DisabledChipContentAlpha,
             ),
-            selectedBorderWidth = NiaChipDefaults.ChipBorderWidth,
+            selectedBorderWidth = FoodsChipDefaults.ChipBorderWidth,
         ),
         colors = FilterChipDefaults.filterChipColors(
             labelColor = MaterialTheme.colorScheme.onBackground,
             iconColor = MaterialTheme.colorScheme.onBackground,
             disabledContainerColor = if (selected) {
                 MaterialTheme.colorScheme.onBackground.copy(
-                    alpha = NiaChipDefaults.DisabledChipContainerAlpha,
+                    alpha = FoodsChipDefaults.DisabledChipContainerAlpha,
                 )
             } else {
                 Color.Transparent
             },
             disabledLabelColor = MaterialTheme.colorScheme.onBackground.copy(
-                alpha = NiaChipDefaults.DisabledChipContentAlpha,
+                alpha = FoodsChipDefaults.DisabledChipContentAlpha,
             ),
             disabledLeadingIconColor = MaterialTheme.colorScheme.onBackground.copy(
-                alpha = NiaChipDefaults.DisabledChipContentAlpha,
+                alpha = FoodsChipDefaults.DisabledChipContentAlpha,
             ),
             selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
             selectedLabelColor = MaterialTheme.colorScheme.onBackground,
@@ -106,10 +108,17 @@ fun FoodsFilterChip(
 /**
  * Now in Android chip default values.
  */
-object NiaChipDefaults {
+object FoodsChipDefaults {
     // TODO: File bug
     // FilterChip default values aren't exposed via FilterChipDefaults
     const val DisabledChipContainerAlpha = 0.12f
     const val DisabledChipContentAlpha = 0.38f
     val ChipBorderWidth = 1.dp
+}
+
+
+@Preview
+@Composable
+private fun ChipPreview() {
+    FoodsFilterChip(selected = true, onSelectedChange = {}, label = { Text(text = "Lable")})
 }

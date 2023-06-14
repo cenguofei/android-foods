@@ -20,7 +20,5 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:datastore"))
 
-//    implementation(libs.accompanist.pager)
-//    implementation(libs.accompanist.pager.indicators)
     implementation(libs.lottie.compose)
 }

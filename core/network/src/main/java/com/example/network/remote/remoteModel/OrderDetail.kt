@@ -1,4 +1,4 @@
-package com.example.network.remote.model
+package com.example.network.remote.remoteModel
 
 data class OrderDetail(
     var id:Long,

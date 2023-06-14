@@ -18,60 +18,66 @@
 
 package com.example.designsystem.component
 
+//noinspection SuspiciousImport
 import android.R
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.AppBarDefaults
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.contentColorFor
+import androidx.compose.material.primarySurface
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.example.designsystem.icon.FoodsIcons
+import com.example.designsystem.theme.LocalBackgroundTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsTopAppBar(
-    @StringRes titleRes: Int?,
-    navigationIcon: ImageVector,
-    navigationIconContentDescription: String?,
-    actionIcon: ImageVector,
-    actionIconContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
-    onNavigationClick: () -> Unit = {},
-    onActionClick: () -> Unit = {},
+    startContent: @Composable RowScope.() -> Unit,
+    endContent: @Composable RowScope.() -> Unit,
+    backgroundColor: Color = androidx.compose.material.MaterialTheme.colors.primarySurface,
+    contentColor: Color = contentColorFor(backgroundColor),
+    elevation: Dp = AppBarDefaults.TopAppBarElevation,
+    contentPadding: PaddingValues = AppBarDefaults.ContentPadding,
 ) {
-    CenterAlignedTopAppBar(
-        title = { titleRes?.let { Text(text = stringResource(id = it))} },
-        navigationIcon = {
-            IconButton(onClick = onNavigationClick) {
-                Icon(
-                    imageVector = navigationIcon,
-                    contentDescription = navigationIconContentDescription,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = onActionClick) {
-                Icon(
-                    imageVector = actionIcon,
-                    contentDescription = actionIconContentDescription,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-        },
-        colors = colors,
-        modifier = modifier.testTag("niaTopAppBar"),
-    )
+    TopAppBar(
+        modifier = modifier.testTag("foodsTopAppBar"),
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        elevation = elevation,
+        contentPadding = contentPadding
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            startContent()
+            endContent()
+        }
+    }
 }
 
 /**
@@ -100,18 +106,5 @@ fun FoodsTopAppBar(
         },
         colors = colors,
         modifier = modifier.testTag("niaTopAppBar"),
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview("Top App Bar")
-@Composable
-private fun NiaTopAppBarPreview() {
-    FoodsTopAppBar(
-        titleRes = R.string.untitled,
-        navigationIcon = FoodsIcons.Search,
-        navigationIconContentDescription = "Navigation icon",
-        actionIcon = FoodsIcons.MoreVert,
-        actionIconContentDescription = "Action icon",
     )
 }

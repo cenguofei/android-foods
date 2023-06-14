@@ -1,13 +1,12 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
+import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isUseJvmIr
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
-
-//    dependencies {
-//        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
-//    }
 }
 
 // Lists all plugins used throughout the project without applying them.

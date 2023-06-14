@@ -5,7 +5,9 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
@@ -17,13 +19,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import cn.example.foods.composefoods.datasource.SourceContainer
+import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
-import cn.example.foods.composefoods.navigation.home
-import cn.example.foods.composefoods.navigation.settings
+import com.example.datastore.SettingsViewModel
 import com.example.network.netstate.NetworkMonitor
+import com.example.network.remote.remoteModel.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
@@ -34,6 +36,7 @@ fun rememberFoodsAppState(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
     sourceContainer: SourceContainer,
+    settingsViewModel: SettingsViewModel,
 ): FoodsAppState {
     NavigationTrackingSideEffect(navController)
     return remember(
@@ -41,13 +44,15 @@ fun rememberFoodsAppState(
         coroutineScope,
         windowSizeClass,
         networkMonitor,
+        settingsViewModel
     ) {
         FoodsAppState(
             navController,
             coroutineScope,
             windowSizeClass,
             networkMonitor,
-            sourceContainer
+            sourceContainer,
+            settingsViewModel
         )
     }
 }
@@ -59,6 +64,7 @@ class FoodsAppState(
     private val windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
     val sourceContainer: SourceContainer,
+    val settingsViewModel: SettingsViewModel
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -66,7 +72,7 @@ class FoodsAppState(
 
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
-            home -> TopLevelDestination.HOME
+            Screens.HOME.route -> TopLevelDestination.HOME
             else -> null
         }
 
@@ -118,69 +124,60 @@ class FoodsAppState(
                 // Pop up to the start destination of the graph to
                 // avoid building up a large stack of destinations
                 // on the back stack as users select items
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                // Avoid multiple copies of the same destination when
-                // reselecting the same item
-                launchSingleTop = true
-                // Restore state when reselecting a previously selected item
-                restoreState = true
+
+//                popUpTo(navController.graph.findStartDestination().id) {
+//                    saveState = true
+//                    inclusive = false
+//                }
+//                // Avoid multiple copies of the same destination when
+//                // reselecting the same item
+//                launchSingleTop = true
+//                // Restore state when reselecting a previously selected item
+//                restoreState = true
             }
 
             when (topLevelDestination) {
                 TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
+                else -> {
+
+                }
             }
+    }
+
+    fun navigateToLoginDestination() {
+        navController.navigate(Screens.LOGIN.route)
     }
 
     fun navigateToSearch() {
 //        navController.navigateToSearch()
     }
-}
 
-private fun NavHostController.navigateToSettings(topLevelNavOptions: NavOptions) {
-
-
+    private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)
+    val currentUser = _currentUser
+    fun setCurrentUser(user: User) {
+        _currentUser.value = user
+    }
 }
 
 private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
-
-
+    Log.v("navigation_test","NavHostController.navigateToHome(topLevelNavOptions: NavOptions)")
+    navigate(route = Screens.HOME.route,navOptions = topLevelNavOptions)
 }
 
 /**
- * Stores information about navigation events to be used with JankStats
- */
-//@Composable
-//private fun NavigationTrackingSideEffect(navController: NavHostController) {
-//    TrackDisposableJank(navController) { metricsHolder ->
-//        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-//            metricsHolder.state?.putState("Navigation", destination.route.toString())
-//        }
-//
-//        navController.addOnDestinationChangedListener(listener)
-//
-//        onDispose {
-//            navController.removeOnDestinationChangedListener(listener)
-//        }
-//    }
-//}
-
-
-/**
- * Stores information about navigation events to be used with JankStats
+ * Stores information about navigation events.
  */
 @Composable
 private fun NavigationTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
-        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-            Log.v("Navigation",destination.route.toString())
+        val listener = NavController.OnDestinationChangedListener { _,destination,arguments ->
+            Log.v("navigation_events","Destination:${destination.route.toString()},arguments:$arguments")
         }
 
         navController.addOnDestinationChangedListener(listener)
+
         onDispose {
             navController.removeOnDestinationChangedListener(listener)
         }
     }
 }
-

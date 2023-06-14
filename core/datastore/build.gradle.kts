@@ -11,6 +11,8 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(project(mapOf("path" to ":core:model")))
 }
 
 kapt {
