@@ -101,7 +101,7 @@ fun LoginScreen(
                         append("\uD83D\uDE0B")
                         append("w")
                     },
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.ExtraBold),
                     modifier = Modifier.padding(top = 30.dp)
                 )
             }

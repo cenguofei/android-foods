@@ -21,7 +21,7 @@ fun HomeScreen(
             ShimmerList()
         }
         is NetworkResult.Success<*> ->{
-            SuccessContent(foods.data)
+            SuccessContent(foods.data, onSearch = {})
         }
         is NetworkResult.Error -> {
             onShowError(foods.error?.cause?.message ?: stringResource(id = R.string.unkown_erro))

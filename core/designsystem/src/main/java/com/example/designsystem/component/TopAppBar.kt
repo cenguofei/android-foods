@@ -57,7 +57,7 @@ fun FoodsTopAppBar(
     modifier: Modifier = Modifier,
     startContent: @Composable RowScope.() -> Unit,
     endContent: @Composable RowScope.() -> Unit,
-    backgroundColor: Color = androidx.compose.material.MaterialTheme.colors.primarySurface,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = AppBarDefaults.TopAppBarElevation,
     contentPadding: PaddingValues = AppBarDefaults.ContentPadding,
