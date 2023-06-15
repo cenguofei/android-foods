@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.network.remote.remoteModel.Order
-import com.example.network.remote.remoteModel.OrderDetail
-import com.example.network.remote.remoteModel.User
+import com.example.model.remoteModel.Order
+import com.example.model.remoteModel.OrderDetail
+import com.example.model.remoteModel.User
 import com.example.network.remote.repository.RemoteRepository
 import kotlinx.coroutines.launch
 

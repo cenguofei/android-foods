@@ -21,6 +21,7 @@ import android.util.Log
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -237,10 +238,17 @@ fun FoodsTheme(
         else -> defaultBackgroundTheme
     }
 
-    val tintTheme = when {
+    var tintTheme = when {
         androidTheme -> TintTheme()
         !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
         else -> TintTheme()
+    }
+//    val tintTheme = TintTheme(MaterialTheme.colorScheme.primary)
+
+    val contentTheme = if (darkTheme) {
+        MaterialTheme.colorScheme.surface
+    } else {
+        MaterialTheme.colorScheme.onSurface
     }
 
     "gradientColors:$gradientColors".logv()
@@ -252,6 +260,7 @@ fun FoodsTheme(
         LocalGradientColors provides gradientColors,
         LocalBackgroundTheme provides backgroundTheme,
         LocalTintTheme provides tintTheme,
+        LocalContentColor provides contentTheme
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

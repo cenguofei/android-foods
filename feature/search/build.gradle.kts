@@ -33,3 +33,6 @@ dependencies {
     implementation(project(mapOf("path" to ":core:network")))
     implementation(project(mapOf("path" to ":core:common")))
 }
+kapt {
+    correctErrorTypes = true
+}

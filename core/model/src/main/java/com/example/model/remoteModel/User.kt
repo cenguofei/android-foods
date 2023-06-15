@@ -1,8 +1,10 @@
-package com.example.network.remote.remoteModel
+package com.example.model.remoteModel
 
-import kotlinx.serialization.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-@Serializable
+
+@Parcelize
 data class User(
     var id:Int = 0,
     var username:String = "",
@@ -11,8 +13,9 @@ data class User(
     var tel:String = "", //电话
     var createTime:String = "",
     var sex:Boolean = false,
-    var headImg:String = ""
-) {
+    var headImg:String = "",
+    val img:Int = 0,
+) : Parcelable {
     companion object {
         val NONE = User(username = "Foods For You")
     }

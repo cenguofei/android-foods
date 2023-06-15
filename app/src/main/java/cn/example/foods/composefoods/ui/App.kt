@@ -128,7 +128,7 @@ fun FoodsApp(
                             appState = appState,
                             drawerState = drawerState
                         ) {
-                            FoodsNavHost(appState = appState,drawerState = drawerState,snackbarHostState = snackbarHostState, onShowSnackbar = { message, action ->
+                            FoodsNavHost(appState = appState,drawerState = drawerState, onShowSnackbar = { message, action ->
                                 snackbarHostState.showSnackbar(
                                     message = message,
                                     actionLabel = action,
@@ -142,14 +142,6 @@ fun FoodsApp(
         }
     }
 }
-
-
-@Composable
-fun FoodsTopStartContent() {
-    
-}
-
-
 @Composable
 private fun FoodsNavRail(
     destinations: List<TopLevelDestination>,

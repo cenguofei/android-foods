@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.di.Dispatcher
 import com.example.common.di.FoodsDispatchers
-import com.example.network.remote.remoteModel.User
+import com.example.model.remoteModel.User
 import com.example.network.remote.repository.RemoteApi
 import com.example.network.remote.repository.RemoteRepository
-import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,7 +28,7 @@ class LoginViewModel @Inject constructor(
     ) {
         viewModelScope.launch(dispatcher) {
             val result = remoteRepository.login(username, password)
-//            try {
+            try {
                 Log.v("login_test","result = ${result.toString()}")
                 val isSuccess = result["isSuccess"] as Boolean
                 if (isSuccess) {
@@ -50,10 +49,10 @@ class LoginViewModel @Inject constructor(
                     val msg = result["msg"] as String
                     onError(msg)
                 }
-//            } catch (e : Exception) {
-//                Log.v("login_test","Exception = ${e.message}")
-//                onError(e.cause?.message ?: "unknown error")
-//            }
+            } catch (e : Exception) {
+                Log.v("login_test","Exception = ${e.message}")
+                onError(e.cause?.message ?: "unknown error")
+            }
         }
     }
 

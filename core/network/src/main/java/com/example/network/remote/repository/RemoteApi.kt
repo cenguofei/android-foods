@@ -1,8 +1,7 @@
 package com.example.network.remote.repository
 
-import com.example.network.remote.remoteModel.Food
-import com.example.network.remote.remoteModel.Order
-import com.example.network.remote.remoteModel.User
+import com.example.model.remoteModel.Food
+import com.example.model.remoteModel.Order
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

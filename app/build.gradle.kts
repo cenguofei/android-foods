@@ -84,6 +84,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:common"))
     implementation(project(":feature:start"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:home"))

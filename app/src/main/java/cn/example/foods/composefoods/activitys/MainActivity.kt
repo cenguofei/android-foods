@@ -1,5 +1,6 @@
 package cn.example.foods.composefoods.activitys
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,7 +16,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
-import cn.example.foods.composefoods.MainActivityViewModel
 import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.ui.FoodsApp
 import cn.example.foods.logv

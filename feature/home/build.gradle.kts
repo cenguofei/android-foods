@@ -32,4 +32,8 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(mapOf("path" to ":core:network")))
     implementation(project(mapOf("path" to ":core:common")))
+    implementation(project(mapOf("path" to ":core:model")))
+}
+kapt {
+    correctErrorTypes = true
 }

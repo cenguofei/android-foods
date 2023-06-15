@@ -4,6 +4,7 @@
     <application>
         <activity
             android:name=".SellerDetailActivity"
+            android:theme="@style/Theme.AppCompat.DayNight"
             android:exported="false" />
     </application>
 

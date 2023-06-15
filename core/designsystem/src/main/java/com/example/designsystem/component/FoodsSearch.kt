@@ -1,7 +1,9 @@
 package com.example.designsystem.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,6 +33,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.icon.FoodsIcons
 
+val searchBarHeight = 70.dp
+
 @Composable
 fun SearchToolbar(
     modifier: Modifier = Modifier,
@@ -39,17 +43,20 @@ fun SearchToolbar(
     searchQuery: String = "",
     onSearchTriggered: (String) -> Unit = {},
     enabled:Boolean = true,
-    leadingIcon:ImageVector = FoodsIcons.Search
+    leadingIcon:ImageVector? = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = { onLeadingClick() }) {
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null
-            )
+        leadingIcon?.let {
+            IconButton(onClick = { onLeadingClick() }) {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null
+                )
+            }
         }
         SearchTextField(
             onSearchQueryChanged = onSearchQueryChanged,
@@ -112,7 +119,6 @@ private fun SearchTextField(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .focusRequester(focusRequester)
             .onKeyEvent {
                 if (it.key == Key.Enter) {

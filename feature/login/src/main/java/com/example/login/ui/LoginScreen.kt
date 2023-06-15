@@ -1,6 +1,5 @@
 package com.example.login.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 
 import androidx.compose.foundation.background
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,21 +34,41 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.designsystem.component.FoodsBackground
+import com.example.designsystem.component.FoodsGradientBackground
+import com.example.designsystem.component.FoodsOutlinedTextField
+import com.example.designsystem.theme.GradientColors
+import com.example.designsystem.theme.LocalBackgroundTheme
+import com.example.designsystem.theme.LocalGradientColors
 import com.example.designsystem.theme.LocalTintTheme
-import com.example.network.remote.remoteModel.User
+import com.example.model.remoteModel.User
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 val sheetPeekHeight = 60.dp
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun LoginScreen(
+fun LoginScreenRoute(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     loginViewModel: LoginViewModel = hiltViewModel(),
     onSuccess: (user: User) -> Unit,
-    onError:(msg:String) -> Unit
+    onError: (msg: String) -> Unit
+) {
+    LoginScreen(
+        coroutineScope = coroutineScope,
+        loginViewModel = loginViewModel,
+        onSuccess = onSuccess,
+        onError = onError
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@Composable
+private fun LoginScreen(
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    onSuccess: (user: User) -> Unit,
+    onError: (msg: String) -> Unit
 ) {
     val sheetScaffoldState = rememberBottomSheetScaffoldState()
     val onOpenDrawer = {
@@ -67,8 +87,11 @@ fun LoginScreen(
         },
         modifier = Modifier,
         scaffoldState = sheetScaffoldState,
-        sheetShape = CutCornerShape(topStart = 30.dp, topEnd = 30.dp),
-        sheetPeekHeight = sheetPeekHeight
+        sheetShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+        sheetPeekHeight = sheetPeekHeight,
+        sheetElevation = 16.dp,
+        backgroundColor = LocalBackgroundTheme.current.color,
+        contentColor = LocalContentColor.current
     ) {
         //TextFields
         var email by remember { mutableStateOf(TextFieldValue("")) }
@@ -77,9 +100,6 @@ fun LoginScreen(
         var passwordVisualTransformation by remember {
             mutableStateOf<VisualTransformation>(PasswordVisualTransformation())
         }
-        val passwordInteractionState = remember { MutableInteractionSource() }
-        val emailInteractionState = remember { MutableInteractionSource() }
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,7 +121,7 @@ fun LoginScreen(
                         append("\uD83D\uDE0B")
                         append("w")
                     },
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.ExtraBold),
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(top = 30.dp)
                 )
             }
@@ -113,43 +133,22 @@ fun LoginScreen(
                 )
             }
             item {
-                OutlinedTextField(
+                FoodsOutlinedTextField(
                     value = email,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.AccountBox,
-                            tint = LocalTintTheme.current.iconTint,
-                            contentDescription = null
-                        )
-                    },
-                    maxLines = 1,
-                    isError = hasError,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    label = { Text(text = "Email/Username") },
-                    placeholder = { Text(text = "lyc@swu.edu") },
+                    leadingIcon = Icons.Default.AccountBox,
+                    hasError = hasError,
+                    labelText = "Email/Username",
+                    placeholderText = "lyc@swu.edu",
                     onValueChange = {
                         hasError = false
                         email = it
                     },
-                    interactionSource = emailInteractionState,
                 )
             }
             item {
-                OutlinedTextField(
+                FoodsOutlinedTextField(
                     value = password,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            tint = LocalTintTheme.current.iconTint,
-                            contentDescription = null
-                        )
-                    },
+                    leadingIcon = Icons.Default.Lock,
                     trailingIcon = {
                         Icon(
                             imageVector = if (passwordVisualTransformation != VisualTransformation.None) Icons.Default.VisibilityOff else Icons.Default.Visibility,
@@ -165,22 +164,17 @@ fun LoginScreen(
                             contentDescription = null
                         )
                     },
-                    maxLines = 1,
-                    isError = hasError,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
+                    hasError = hasError,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
-                    label = { Text(text = "Password") },
-                    placeholder = { Text(text = "123456") },
+                    labelText = "Password",
+                    placeholderText = "123456",
                     onValueChange = {
                         hasError = false
                         password = it
                     },
-                    interactionSource = passwordInteractionState,
                     visualTransformation = passwordVisualTransformation,
                 )
             }
@@ -229,7 +223,7 @@ fun LoginScreen(
 //                            HorizontalDottedProgressBar()
 //                        }
 //                    } else {
-                        Text(text = "Log In", style = MaterialTheme.typography.labelMedium)
+                    Text(text = "Log In", style = MaterialTheme.typography.labelMedium)
 //                    }
                 }
             }

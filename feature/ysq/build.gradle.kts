@@ -16,4 +16,6 @@ dependencies {
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+    implementation(project(":core:model"))
+    implementation(project(":core:common"))
 }

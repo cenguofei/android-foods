@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.di.Dispatcher
 import com.example.common.di.FoodsDispatchers
-import com.example.network.remote.remoteModel.Food
-import com.example.network.remote.remoteModel.NetworkResult
+import com.example.model.remoteModel.Food
+import com.example.model.remoteModel.NetworkResult
 import com.example.network.remote.repository.RemoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

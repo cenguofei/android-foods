@@ -28,4 +28,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.square.retrofit2.converter.gson)
+    implementation(project(":core:model"))
+    implementation(project(mapOf("path" to ":core:common")))
 }

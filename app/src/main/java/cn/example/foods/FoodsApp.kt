@@ -1,7 +1,7 @@
 package cn.example.foods
 
 import android.app.Application
-import com.example.network.remote.remoteModel.User
+import com.example.model.remoteModel.User
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -9,8 +9,15 @@ class FoodsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
     }
 
-    var currentUser:User = User.NONE
+    private var _currentUser: User = User.NONE
+
+    fun setCurrentUser(user: User) {
+        _currentUser = user
+    }
+
+    fun getCurrentUser():User {
+        return _currentUser
+    }
 }
