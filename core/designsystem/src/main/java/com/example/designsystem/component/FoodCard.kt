@@ -1,6 +1,6 @@
 package com.example.designsystem.component
 
-import com.example.designsystem.R as designR
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.designsystem.DataProvider
 import com.example.designsystem.theme.FoodsTheme
 import com.example.model.remoteModel.Food
@@ -51,8 +52,8 @@ fun FoodCard(
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit
 ) {
-    FoodsContainer(modifier = Modifier.padding(end = padding, top = 8.dp)) {
-        Box(modifier = Modifier.clickable(onClick = onClick)) {
+    FoodsContainer(modifier = Modifier.clickable(onClick = onClick).padding(end = padding, top = 8.dp)) {
+        Box(modifier = Modifier) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -61,7 +62,7 @@ fun FoodCard(
                 FoodSpacer()
                 SellerRow(seller)
                 FoodSpacer()
-                FoodImage(food.foodImg)
+                FoodImage(food.foodPic)
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = food.foodName,
@@ -141,16 +142,23 @@ fun ScoreIcon(modifier: Modifier) {
 }
 
 @Composable
-fun FoodImage(foodImg: Int) {
-    designR.drawable.food1
-    Image(
-        painter = painterResource(id = DataProvider.foodIds.random()),
+fun FoodImage(foodImg: String) {
+    AsyncImage(
+        model = foodImg,
         contentDescription = null,
-        contentScale = ContentScale.Crop,
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
-            .padding(vertical = 4.dp)
+            .height(120.dp),
+        contentScale = ContentScale.Crop,
+        onLoading = {
+            Log.v("FoodImage_test","onLoading image:$foodImg")
+        },
+        onError = {
+            Log.v("FoodImage_test","onError image:$foodImg")
+        },
+        onSuccess = {
+            Log.v("FoodImage_test","onSuccess image:$foodImg")
+        }
     )
 }
 

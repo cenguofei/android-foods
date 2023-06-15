@@ -54,8 +54,7 @@ fun FoodsContainer(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(4.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = content
         )

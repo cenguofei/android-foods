@@ -228,29 +228,44 @@ private fun LoginScreen(
                 }
             }
             item {
-                Box(modifier = Modifier.padding(vertical = 16.dp)) {
-                    Spacer(
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .height(1.dp)
-                            .fillMaxWidth()
-                            .background(Color.LightGray)
-                    )
-                    Text(
-                        text = buildAnnotatedString {
-                            pushStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurface))
-                            append("no account?")
-                            pop()
-                            pushStyle(style = SpanStyle(color = Color.Blue))
-                            append("register")
-                        },
-                        color = Color.LightGray,
-                        modifier = Modifier
-                            .clickable(onClick = { onOpenDrawer() })
-                            .align(Alignment.Center)
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(horizontal = 16.dp)
-                    )
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .background(Color.Transparent)
+                ) {
+                    Row(
+                        modifier = Modifier.align(Alignment.Center).padding(bottom = 3.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(
+                            modifier = Modifier
+                                .height(1.dp)
+                                .fillMaxWidth()
+                                .background(Color.LightGray)
+                                .weight(1f)
+                        )
+
+                        Text(
+                            text = buildAnnotatedString {
+                                pushStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurface))
+                                append("no account?")
+                                pop()
+                                pushStyle(style = SpanStyle(color = Color.Blue))
+                                append("register")
+                            },
+                            modifier = Modifier
+                                .clickable(onClick = { onOpenDrawer() })
+                                .padding(horizontal = 4.dp)
+                        )
+
+                        Spacer(
+                            modifier = Modifier
+                                .height(1.dp)
+                                .fillMaxWidth()
+                                .background(Color.LightGray)
+                                .weight(1f)
+                        )
+                    }
                 }
             }
         }

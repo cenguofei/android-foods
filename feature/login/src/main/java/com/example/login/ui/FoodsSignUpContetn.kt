@@ -68,27 +68,15 @@ fun SignUpContent(
     )
 
     FoodsOutlinedTextField(
-        value = password,
-        onValueChange = {
-            password = it
-            setHasError(false)
-        },
-        hasError = hasError,
-        leadingIcon = Icons.Default.Lock,
-        labelText = "Password",
-        placeholderText = "***"
-    )
-
-    FoodsOutlinedTextField(
         value = email,
         onValueChange = {
             email = it
             setHasError(false)
         },
-        leadingIcon = Icons.Default.Email,
         hasError = hasError,
-        labelText = "Email",
-        placeholderText = "lyc@swu.edu",
+        leadingIcon = Icons.Default.Email,
+        labelText = "email",
+        placeholderText = "ylc@swu.edu"
     )
 
     FoodsOutlinedTextField(

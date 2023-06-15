@@ -65,7 +65,7 @@ class LoginViewModel @Inject constructor(
         onError: (msg: String) -> Unit,
         onInputError: () -> Unit
     ) {
-        if (username.isNotBlank() or password.isNotBlank() or email.isNotBlank() or (password != confirmPassword)) {
+        if (username.isBlank() or password.isBlank() or email.isBlank() or (password != confirmPassword)) {
             onInputError()
             return
         }
@@ -79,11 +79,13 @@ class LoginViewModel @Inject constructor(
             )
             try {
                 val isSuccess = result["isSuccess"] as Boolean
-                val headImg = result["headImg"] as String
+//                val headImg = result["headImg"] as String
                 val msg = result["msg"] as String
 
                 if (isSuccess) {
-                    onSuccess(User(username = username, email = email, headImg = headImg))
+                    launch(Dispatchers.Main) {
+                        onSuccess(User(username = username, email = email))
+                    }
                 } else {
                     onError(msg)
                 }

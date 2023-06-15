@@ -1,5 +1,6 @@
 package com.example.login.ui
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.designsystem.component.FoodsBackground
@@ -40,13 +45,16 @@ fun FoodsBottomSheet(
     onSignUpSuccess: (user: User) -> Unit,
 ) {
     FoodsBackground {
-        FoodsGradientBackground(modifier = Modifier.alpha(0.6f),gradientColors = GradientColors(
-            top = MaterialTheme.colorScheme.background,
-            bottom = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f)
-        )
+        FoodsGradientBackground(
+            modifier = Modifier.alpha(0.6f), gradientColors = GradientColors(
+                top = MaterialTheme.colorScheme.background,
+                bottom = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f)
+            )
         ) {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -56,12 +64,23 @@ fun FoodsBottomSheet(
                         .height(sheetPeekHeight + 10.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Spacer(
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val color = MaterialTheme.colorScheme.primary
+                        Canvas(
                             modifier = Modifier
-                                .size(width = 15.dp, height = 4.dp)
-                                .background(MaterialTheme.colorScheme.primary)
-                        )
+                                .size(width = 35.dp, height = 4.dp)
+                                .background(MaterialTheme.colorScheme.primary),
+                            onDraw = {
+                                drawLine(
+                                    color = color,
+                                    start = Offset.Zero,
+                                    end = Offset.Infinite,
+                                    cap = StrokeCap.Round
+                                )
+                            })
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "Sign Up",

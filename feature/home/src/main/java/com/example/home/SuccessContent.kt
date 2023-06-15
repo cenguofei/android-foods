@@ -180,15 +180,12 @@ fun SuccessContent(
                     FoodCard(
                         padding = padding,
                         food = food,
-                        saveFavorite = { food: Food, seller: User ->
-
-                        },
+                        saveFavorite = saveFavorite,
                         onClick = {
                             onFoodClick(food,User.NONE)
-                        }
-                    ) { food: Food, seller: User ->
-
-                    }
+                        },
+                        deleteFavorite = deleteFavorite
+                    )
                 }
             }
         }
@@ -246,7 +243,7 @@ fun FoodTypes(types: List<Pair<Int, String>>, coroutineScope: CoroutineScope) {
                 Text(
                     text = "热门类别",
                     style = MaterialTheme.typography.titleMedium,
-                    color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
             val rotation = remember { Animatable(0f) }
@@ -280,7 +277,7 @@ fun FoodTypes(types: List<Pair<Int, String>>, coroutineScope: CoroutineScope) {
         }
         AnimatedVisibility(visible = visible.value) {
             LazyRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 types.reversed().take(3).forEach {
@@ -308,12 +305,12 @@ fun FoodsTypeImage(foodType: Pair<Int, String>) {
         Spacer(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.6f))
+                .background(Color.Black.copy(alpha = 0.4f))
         )
         Text(
             text = foodType.second,
             style = MaterialTheme.typography.bodyLarge,
-            color = if(isSystemInDarkTheme()) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
         )
     }
 }
