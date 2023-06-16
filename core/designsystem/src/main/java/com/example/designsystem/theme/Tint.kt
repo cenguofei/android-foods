@@ -16,6 +16,7 @@
 
 package com.example.designsystem.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -25,7 +26,7 @@ import androidx.compose.ui.graphics.Color
  */
 @Immutable
 data class TintTheme(
-    val iconTint: Color? = null,
+    val iconTint: Color = Color.Unspecified
 )
 
 /**

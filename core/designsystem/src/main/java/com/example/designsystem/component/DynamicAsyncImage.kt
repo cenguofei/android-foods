@@ -20,7 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
+import com.example.designsystem.R
 import com.example.designsystem.theme.LocalTintTheme
 
 /**
@@ -31,14 +34,15 @@ fun DynamicAsyncImage(
     imageUrl: String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    placeholder: Painter? = null,
+    placeholder: Painter = painterResource(id = R.drawable.food2),
 ) {
     val iconTint = LocalTintTheme.current.iconTint
     AsyncImage(
         placeholder = placeholder,
         model = imageUrl,
         contentDescription = contentDescription,
-        colorFilter = if (iconTint != null) ColorFilter.tint(iconTint) else null,
+        colorFilter = ColorFilter.tint(iconTint),
         modifier = modifier,
+        contentScale = ContentScale.Crop
     )
 }

@@ -1,5 +1,6 @@
 plugins {
     id("foods.android.library")
+    id("kotlin-parcelize")
 }
 
 android {

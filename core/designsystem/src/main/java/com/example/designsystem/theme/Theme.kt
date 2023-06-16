@@ -21,6 +21,7 @@ import android.util.Log
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -200,6 +201,7 @@ fun FoodsTheme(
     disableDynamicTheming: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    "darkTheme:$darkTheme, androidTheme:$androidTheme, disableDynamicTheming:$disableDynamicTheming".logv()
     // Color scheme
     val colorScheme = when {
         androidTheme -> if (darkTheme) DarkAndroidColorScheme else LightAndroidColorScheme
@@ -236,16 +238,29 @@ fun FoodsTheme(
         else -> defaultBackgroundTheme
     }
 
-    val tintTheme = when {
+    var tintTheme = when {
         androidTheme -> TintTheme()
         !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
         else -> TintTheme()
     }
+//    val tintTheme = TintTheme(MaterialTheme.colorScheme.primary)
+
+    val contentTheme = if (darkTheme) {
+        MaterialTheme.colorScheme.surface
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    "gradientColors:$gradientColors".logv()
+    "backgroundTheme:$backgroundTheme".logv()
+    "tintTheme:$tintTheme".logv()
+    "colorScheme:$colorScheme".logv()
     // Composition locals
     CompositionLocalProvider(
         LocalGradientColors provides gradientColors,
         LocalBackgroundTheme provides backgroundTheme,
         LocalTintTheme provides tintTheme,
+        LocalContentColor provides contentTheme
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -253,6 +268,10 @@ fun FoodsTheme(
             content = content,
         )
     }
+}
+
+private fun String.logv() {
+    Log.v("theme_test",this)
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)

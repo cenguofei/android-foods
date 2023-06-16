@@ -19,7 +19,8 @@ dependencies {
     implementation(libs.square.retrofit2)
     implementation(libs.square.retrofit2.converter.gson)
 
-    api(project(":core:common"))
+    implementation(project(":core:common"))
+    implementation(project(":core:model"))
 }
 
 kapt {

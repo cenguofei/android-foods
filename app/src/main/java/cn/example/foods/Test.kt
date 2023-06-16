@@ -1,9 +1,6 @@
 package cn.example.foods
 
-import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,12 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.network.remote.model.Order
-import com.example.network.remote.model.OrderDetail
-import com.example.network.remote.model.User
+import com.example.model.remoteModel.Order
+import com.example.model.remoteModel.OrderDetail
+import com.example.model.remoteModel.User
 import com.example.network.remote.repository.RemoteRepository
 import kotlinx.coroutines.launch
 

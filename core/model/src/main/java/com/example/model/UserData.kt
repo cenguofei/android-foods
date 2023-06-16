@@ -16,8 +16,8 @@
 
 package com.example.model
 
-import com.example.model.DarkThemeConfig
-import com.example.model.ThemeBrand
+import com.example.model.storagemodel.DarkThemeConfig
+import com.example.model.storagemodel.ThemeBrand
 
 /**
  * Class summarizing user interest data
