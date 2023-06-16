@@ -6,11 +6,112 @@
     android:layout_height="match_parent"
     tools:context=".SellerDetailActivity">
 
-    <TextView
-        android:text="LWH"
-        android:textSize="50dp"
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:src="@drawable/background"
+            android:scaleType="centerCrop">
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/brand_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="60dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/brand_bar" />
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="-100dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/brand_bar"
+                app:layout_constraintStart_toStartOf="@+id/brand_bar"
+                app:layout_constraintTop_toTopOf="@+id/brand_bar"
+                app:srcCompat="@drawable/logo" />
+
+            <TextView
+                android:id="@+id/brand_name"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="CHAGEE霸王茶姬（荣昌重百店）"
+                android:textColor="@color/theme_red"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:lines="1"
+                android:layout_marginTop="-70dp"
+                android:layout_marginLeft="112dp"
+                app:layout_constraintBottom_toBottomOf="@+id/logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/logo"
+                app:layout_constraintTop_toTopOf="@+id/logo" />
+
+            <TextView
+                android:id="@+id/brand_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="配送时间：10:00-22:00   配送约40分钟"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textColor="@color/grey"
+                android:layout_marginTop="-4dp"
+                android:layout_marginLeft="112dp"
+                app:layout_constraintBottom_toBottomOf="@+id/brand_bar"
+                app:layout_constraintStart_toStartOf="@+id/brand_name"
+                app:layout_constraintTop_toBottomOf="@+id/brand_name" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/light_grey">
+                </androidx.recyclerview.widget.RecyclerView>
+
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginleft="16dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+    </FrameLayout>
+</androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
