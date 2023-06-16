@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:text="原叶 · 鲜奶茶"
+        android:textColor="@color/dark_grey"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/change_color">
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:text="远山 · 鲜沏篇"
+        android:textColor="@color/dark_grey"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/change_color">
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:text="加料专区"
+        android:textColor="@color/dark_grey"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/change_color">
+    </Button>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:text="自报家门"
+        android:textColor="@color/dark_grey"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/change_color">
+    </Button>
+
+</LinearLayout>
