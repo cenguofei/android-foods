@@ -31,15 +31,15 @@ import androidx.compose.ui.unit.dp
 fun SettingsClickBar(
     shouldShow: MutableState<Boolean> = remember { mutableStateOf(false) },
     text:String,
-    color: Color = MaterialTheme.colorScheme.surface,
+    color: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = contentColorFor(color),
-    tonalElevation: Dp = 10.dp,
-    shadowElevation: Dp = 8.dp
+    tonalElevation: Dp = 4.dp,
+    shadowElevation: Dp = 2.dp
 ) {
     Surface(
         onClick = { shouldShow.value = !shouldShow.value },
         modifier = Modifier
-            .height(40.dp)
+            .height(50.dp)
             .fillMaxWidth(),
         color = color,
         contentColor = contentColor,
@@ -59,7 +59,7 @@ fun SettingsClickBar(
                     rotation.animateTo(0f)
                 }
             }
-            Text(text = text)
+            Text(text = text, style = MaterialTheme.typography.titleMedium)
             Icon(
                 imageVector = Icons.Default.ArrowDownward,
                 contentDescription = null,

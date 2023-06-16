@@ -74,16 +74,6 @@ fun FoodsDrawer(
     content: @Composable () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-
-//    BackHandler {
-//        if (drawerState.isOpen) {
-//            coroutineScope.launch {
-//                drawerState.close()
-//            }
-//        }
-//    }
-
     ModalNavigationDrawer(
         modifier = modifier,
         gesturesEnabled = appState.currentTopLevelDestination in TopLevelDestination.values(),
@@ -147,6 +137,10 @@ fun DrawerContent(
 
                     val shouldShowThemeSelections = remember { mutableStateOf(false) }
                     SettingsClickBar(shouldShow = shouldShowThemeSelections, text = "Choose Theme")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp))
                     Spacer(modifier = Modifier.height(8.dp))
                     VisibilityThemeSelections(
                         shouldShowThemeSelections = shouldShowThemeSelections,

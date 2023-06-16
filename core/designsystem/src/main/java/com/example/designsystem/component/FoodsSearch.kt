@@ -98,7 +98,7 @@ private fun SearchTextField(
             )
         },
         trailingIcon = {
-            if (searchQuery.isNotEmpty()) {
+            if (searchQuery.isNotEmpty() && enabled) {
                 IconButton(
                     onClick = {
                         onSearchQueryChanged("")

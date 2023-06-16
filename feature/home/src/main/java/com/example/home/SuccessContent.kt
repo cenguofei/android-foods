@@ -309,7 +309,8 @@ fun FoodsTypeImage(foodType: Pair<Int, String>) {
         )
         Text(
             text = foodType.second,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
         )
     }
