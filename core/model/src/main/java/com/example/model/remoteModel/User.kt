@@ -9,11 +9,11 @@ data class User(
     var id:Int = 0,
     var username:String = "",
     var password:String = "",
-    var email:String = "",
-    var tel:String = "", //电话
-    var createTime:String = "",
+    var email:String? = null,
+    var tel:String? = null, //电话
+    var createTime:String? = null,
     var sex:Boolean = false,
-    var headImg:String = "",
+    var headImg:String? = null,
     val img:Int = 0,
 ) : Parcelable {
     companion object {

@@ -17,7 +17,7 @@ fun HomeScreen(
     onShowError:(String) -> Unit,
     saveFavorite: (food: Food, seller: User) -> Unit = {_,_ ->},
     deleteFavorite: (food: Food, seller: User) -> Unit = {_,_ ->},
-    onFoodClick:(food:Food,seller:User) -> Unit = {_,_ ->}
+    onFoodClick:(food:List<Food>,seller:User) -> Unit = {_,_ ->}
 ) {
     val foods by homeViewModel.foods.collectAsState()
 
@@ -28,6 +28,7 @@ fun HomeScreen(
         is NetworkResult.Success<*> ->{
             SuccessContent(
                 foods.data,
+                viewModel = homeViewModel,
                 onSearch = {},
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,

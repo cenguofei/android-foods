@@ -26,6 +26,8 @@ data class Food(
      */
     var id: Int,
 
+    var createUserId:Int = 0,
+
     /**
      * 菜品名称
      */
@@ -56,5 +58,5 @@ data class Food(
     /**
      * 菜单类型
      */
-    val foodType: String
+    val foodType: Int
 ) : Parcelable

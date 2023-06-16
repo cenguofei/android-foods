@@ -21,6 +21,7 @@ import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
 import com.example.datastore.SettingsViewModel
+import com.example.model.remoteModel.Food
 import com.example.network.netstate.NetworkMonitor
 import com.example.model.remoteModel.User
 import kotlinx.coroutines.CoroutineScope
@@ -149,6 +150,11 @@ class FoodsAppState(
 
     fun navigateToSearch() {
 //        navController.navigateToSearch()
+    }
+
+    fun navigateToSellerDetail(foods: ArrayList<Food>, seller: User) {
+
+        navController.navigate(Screens.SellerDetail.route+"/"+foods+"/"+seller)
     }
 
     private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)

@@ -64,11 +64,12 @@
             android:id="@+id/number1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="318dp"
+            android:layout_marginStart="318dp"
             android:layout_marginTop="-18dp"
             android:text="0"
             android:background="#00FFFFFF"
-            android:textSize="14dp"></EditText>
+            android:textSize="14sp"
+            android:autofillHints="" />
 
         <ImageView
             android:id="@+id/add1"
@@ -132,11 +133,12 @@
             android:id="@+id/number2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="318dp"
+            android:layout_marginStart="318dp"
             android:layout_marginTop="-18dp"
             android:text="0"
             android:background="#00FFFFFF"
-            android:textSize="14dp">
+            android:textSize="14sp"
+            android:autofillHints="">
         </EditText>
 
         <ImageView
@@ -193,7 +195,7 @@
             android:id="@+id/minus3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="300dp"
+            android:layout_marginStart="300dp"
             android:layout_marginTop="-18dp"
             app:srcCompat="@drawable/minus" />
 
@@ -201,18 +203,19 @@
             android:id="@+id/number3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="318dp"
+            android:layout_marginStart="318dp"
             android:layout_marginTop="-18dp"
             android:text="0"
             android:background="#00FFFFFF"
-            android:textSize="14dp">
+            android:textSize="14sp"
+            android:autofillHints="">
         </EditText>
 
         <ImageView
             android:id="@+id/add3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="330dp"
+            android:layout_marginStart="330dp"
             android:layout_marginTop="-16dp"
             android:src="@drawable/add">
         </ImageView>
@@ -228,7 +231,7 @@
             android:id="@+id/goods4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
             android:layout_marginTop="-95dp"
             app:srcCompat="@drawable/goods4" />
 
@@ -236,33 +239,33 @@
             android:id="@+id/goods_name4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="136dp"
+            android:layout_marginStart="136dp"
             android:layout_marginTop="-68dp"
             android:ellipsize="end"
             android:lines="1"
             android:text="春宴 · 樱花乌龙"
             android:textColor="@color/black"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/goods_price4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="136dp"
+            android:layout_marginStart="136dp"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:lines="1"
             android:text="¥17.00"
             android:textColor="@color/grey"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/minus4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="300dp"
+            android:layout_marginStart="300dp"
             android:layout_marginTop="-18dp"
             app:srcCompat="@drawable/minus" />
 
@@ -270,18 +273,18 @@
             android:id="@+id/number4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="318dp"
+            android:layout_marginStart="318dp"
             android:layout_marginTop="-18dp"
             android:text="0"
             android:background="#00FFFFFF"
-            android:textSize="14dp">
+            android:textSize="14sp">
         </EditText>
 
         <ImageView
             android:id="@+id/add4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="330dp"
+            android:layout_marginStart="330dp"
             android:layout_marginTop="-16dp"
             android:src="@drawable/add">
         </ImageView>

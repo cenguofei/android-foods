@@ -91,6 +91,7 @@ dependencies {
     implementation(project(":feature:ysq"))
     implementation(project(":feature:lwh"))
     implementation(project(":feature:login"))
+    implementation(project(":feature:sellerdetail"))
 
 
     testImplementation(libs.test.junit)

@@ -17,9 +17,9 @@
 package cn.example.foods.composefoods.navigation
 
 import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,15 +27,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.os.bundleOf
 import cn.example.foods.composefoods.activitys.MyBackHandler
 import cn.example.foods.composefoods.activitys.graphs.homeNavigation
 import cn.example.foods.composefoods.activitys.graphs.loginNavigation
 import cn.example.foods.composefoods.ui.FoodsAppState
-import com.example.lwh.SellerDetailActivity
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsNavHost(
@@ -56,27 +55,23 @@ fun FoodsNavHost(
         modifier = modifier,
     ) {
         homeNavigation(
-            onFoodClick = { food, seller ->
-                val bundleOf = Bundle(
-//                    "currentUser" to appState.currentUser,
-//                    "food" to food,
-//                    "seller" to seller,
-//                    "str" to "hello lwh"
-                ).apply {
-                    putParcelable("currentUser",appState.currentUser.value)
-                    putParcelable("food",food)
-                    putParcelable("seller",seller)
-                    putString("str","hello lwh")
-                }
-                val intent = Intent(activity, SellerDetailActivity::class.java)
-                intent.putExtras(bundleOf)
-                activity.startActivity(intent)
-            },
+//            onFoodClick = { food, seller ->
+//                val bundleOf = Bundle().apply {
+//                    putParcelable("currentUser",appState.currentUser.value)
+//                    putParcelable("food",food)
+//                    putParcelable("seller",seller)
+//                    putString("str","hello lwh")
+//                }
+//                val intent = Intent(activity, SellerDetailActivity::class.java)
+//                intent.putExtras(bundleOf)
+//                activity.startActivity(intent)
+//            },
             onShowError = {
                 coroutineScope.launch {
                     onShowSnackbar(it, null)
                 }
-            }
+            },
+            appState = appState
         )
         loginNavigation(
             appState = appState,

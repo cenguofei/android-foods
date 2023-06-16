@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,12 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -47,14 +41,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,7 +54,6 @@ import com.example.designsystem.component.FoodsBackground
 import com.example.designsystem.component.FoodsTopAppBar
 import com.example.designsystem.component.MyStaggeredVerticalGrid
 import com.example.designsystem.component.SearchToolbar
-import com.example.designsystem.component.searchBarHeight
 import com.example.designsystem.theme.FoodsTheme
 import com.example.designsystem.R as designR
 import com.example.model.remoteModel.Food
@@ -96,26 +85,9 @@ object FoodType {
     )
 }
 
-@Composable
-fun SuccessContent(
-    data: Map<String, List<Food>>?,
-    onSearch: (String) -> Unit,
-    searchQuery: String = "今天想吃点什么?",
-    position: Position = Position.NONE,
-    types: List<Pair<Int, String>> = FoodType.types,
-    saveFavorite: (food: Food, seller: User) -> Unit,
-    deleteFavorite: (food: Food, seller: User) -> Unit,
-    onFoodClick:(food:Food,seller:User) -> Unit
-) {
-    val outerScrollState = rememberLazyListState()
+/*
     val innerScrollState = rememberLazyStaggeredGridState()
 
-    val coroutineScope = rememberCoroutineScope()
-
-    val totalTopHeight = remember {
-        searchBarHeight + toolbarHeight + foodTypesHeight
-    }
-    val totalTopHeightPx = with(LocalDensity.current) { totalTopHeight.toPx() }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             var consumedY = 0f
@@ -145,6 +117,24 @@ fun SuccessContent(
             }
         }
     }
+
+ */
+@Composable
+fun SuccessContent(
+    data: Map<Int, List<Food>>?,
+    onSearch: (String) -> Unit,
+    searchQuery: String = "今天想吃点什么?",
+    position: Position = Position.NONE,
+    types: List<Pair<Int, String>> = FoodType.types,
+    saveFavorite: (food: Food, seller: User) -> Unit,
+    deleteFavorite: (food: Food, seller: User) -> Unit,
+    onFoodClick: (food: List<Food>,seller: User) -> Unit,
+    viewModel: HomeViewModel
+) {
+    val outerScrollState = rememberLazyListState()
+
+    val coroutineScope = rememberCoroutineScope()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -175,17 +165,24 @@ fun SuccessContent(
                     .padding(horizontal = 8.dp)
             ) {
                 val lists = data?.values?.shuffled()?.flatten()
+                Log.v("cgf", "MyStaggeredVerticalGrid:foods=$lists")
                 lists?.forEachIndexed { idx, food ->
                     val padding = if (idx % 2 == 0) 8.dp else 0.dp
-                    FoodCard(
-                        padding = padding,
-                        food = food,
-                        saveFavorite = saveFavorite,
-                        onClick = {
-                            onFoodClick(food,User.NONE)
-                        },
-                        deleteFavorite = deleteFavorite
-                    )
+                    val seller = viewModel.getSeller(food.createUserId)
+                    if (seller != null) {
+                        FoodCard(
+                            padding = padding,
+                            food = food,
+                            seller = seller,
+                            saveFavorite = saveFavorite,
+                            onClick = {
+                                onFoodClick(
+                                    lists.filter { it.createUserId == food.createUserId },seller
+                                )
+                            },
+                            deleteFavorite = deleteFavorite
+                        )
+                    }
                 }
             }
         }
@@ -410,18 +407,19 @@ fun FoodsMessage(
 fun PreviewSuccess() {
     FoodsBackground {
         FoodsTheme {
-            SuccessContent(
-                data = mapOf(),
-                onSearch = {},
-                saveFavorite = { food, seller ->
-
-                },
-                deleteFavorite = { food, seller ->
-                },
-                onFoodClick = {food, seller ->
-
-                }
-            )
+//            SuccessContent(
+//                data = mapOf(),
+//                onSearch = {},
+//                saveFavorite = { food, seller ->
+//
+//                },
+//                deleteFavorite = { food, seller ->
+//                },
+//                onFoodClick = {food, seller ->
+//
+//                },
+////                viewModel = homeViewModel
+//            )
         }
     }
 }

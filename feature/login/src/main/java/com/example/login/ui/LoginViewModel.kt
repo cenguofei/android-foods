@@ -36,17 +36,17 @@ class LoginViewModel @Inject constructor(
                     val user = User(
                         username = username,
                         password = password,
-                        email = userMap["email"] as String,
-                        tel = userMap["tel"] as String,
-                        createTime = userMap["createTime"] as String,
-                        headImg = userMap["headImg"] as String
+                        email = userMap["email"] as? String ?: "",
+                        tel = userMap["tel"] as? String ?: "",
+                        createTime = userMap["createTime"] as? String ?: "",
+                        headImg = userMap["headImg"] as? String ?: ""
                     )
                     user.headImg = RemoteApi.IMAGE_BASE_URL + user.headImg
                     launch(Dispatchers.Main) {
                         onSuccess(user)
                     }
                 } else {
-                    val msg = result["msg"] as String
+                    val msg = result["msg"] as? String ?: ""
                     onError(msg)
                 }
             } catch (e : Exception) {

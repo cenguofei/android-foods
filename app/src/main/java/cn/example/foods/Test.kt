@@ -41,8 +41,8 @@ fun TestRemoteService(remoteRepository: RemoteRepository) {
         ) {
             TestButton("login") {
                 coroutineScope.launch {
-                    val hashMap = remoteRepository.login(username = "cgf", password = "abc")
-                    hashMap.string()
+//                    val hashMap = remoteRepository.login(username = "cgf", password = "abc")
+//                    hashMap.string()
                 }
             }
 

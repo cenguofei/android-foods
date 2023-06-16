@@ -1,5 +1,7 @@
 package cn.example.foods.composefoods.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -54,6 +56,7 @@ import com.example.network.netstate.NetworkMonitor
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class,

@@ -14,7 +14,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food1.toString(),
-            foodType = "1",
+            foodType = 1,
             foodImg = R.drawable.food1
         ),
         Food(
@@ -24,7 +24,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food2.toString(),
-            foodType = "2",
+            foodType = 1,
             foodImg = R.drawable.food2
         ),
         Food(
@@ -34,7 +34,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food3.toString(),
-            foodType = "2",
+            foodType = 2,
             foodImg = R.drawable.food3
         ),
         Food(
@@ -44,7 +44,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food4.toString(),
-            foodType = "2",
+            foodType = 1,
             foodImg = R.drawable.food4
         ),
         Food(
@@ -54,7 +54,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food5.toString(),
-            foodType = "3",
+            foodType = 3,
             foodImg = R.drawable.food5
         ),
         Food(
@@ -64,7 +64,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food6.toString(),
-            foodType = "3",
+            foodType = 3,
             foodImg = R.drawable.food6
         ),
         Food(
@@ -74,7 +74,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food7.toString(),
-            foodType = "3",
+            foodType = 3,
             foodImg = R.drawable.food7
         ),
         Food(
@@ -84,7 +84,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food8.toString(),
-            foodType = "4",
+            foodType = 4,
             foodImg = R.drawable.food8
         ),
         Food(
@@ -94,7 +94,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food9.toString(),
-            foodType = "4",
+            foodType = 4,
             foodImg = R.drawable.food9
         ),
         Food(
@@ -104,7 +104,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food10.toString(),
-            foodType = "4",
+            foodType = 4,
             foodImg = R.drawable.food10
         ),
         Food(
@@ -114,7 +114,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food11.toString(),
-            foodType = "4",
+            foodType = 4,
             foodImg = R.drawable.food11
         ),
         Food(
@@ -124,7 +124,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food12.toString(),
-            foodType = "2",
+            foodType = 5,
             foodImg = R.drawable.food12
         ),
         Food(
@@ -134,7 +134,7 @@ object DataProvider {
             price = 18.0,
             count = 1,
             foodPic = R.drawable.food13.toString(),
-            foodType = "1",
+            foodType = 1,
             foodImg = R.drawable.food13
         ),
     )
@@ -148,7 +148,7 @@ object DataProvider {
         price = 3.0,
         count = 1,
         foodPic = R.drawable.food13.toString(),
-        foodType = "1",
+        foodType = 1,
         foodImg = R.drawable.food1
     )
 

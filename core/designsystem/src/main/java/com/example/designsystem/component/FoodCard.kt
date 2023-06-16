@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.designsystem.DataProvider
+import com.example.designsystem.R
 import com.example.designsystem.theme.FoodsTheme
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
@@ -52,7 +53,9 @@ fun FoodCard(
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit
 ) {
-    FoodsContainer(modifier = Modifier.clickable(onClick = onClick).padding(end = padding, top = 8.dp)) {
+    FoodsContainer(modifier = Modifier
+        .clickable(onClick = onClick)
+        .padding(end = padding, top = 8.dp)) {
         Box(modifier = Modifier) {
             Column(
                 modifier = Modifier
@@ -172,8 +175,9 @@ private fun SellerRow(
     seller: User,
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        //TODO 把User的头像换成后端的[showimg]
         Image(
-            painter = painterResource(id = seller.img),
+            painter = painterResource(id = R.drawable.default_head_img),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
