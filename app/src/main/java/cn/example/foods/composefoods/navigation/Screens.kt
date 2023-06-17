@@ -3,7 +3,8 @@ package cn.example.foods.composefoods.navigation
 enum class Screens(val route: String) {
     HOME("home"),
     LOGIN("login"),
-    SellerDetail("seller")
+    SellerDetail("seller"),
+    Start("start")
 }
 
 object NavigationRoutes {

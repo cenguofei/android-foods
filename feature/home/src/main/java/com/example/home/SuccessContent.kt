@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -35,6 +37,8 @@ import androidx.compose.material.icons.outlined.CropSquare
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -121,24 +125,37 @@ object FoodType {
  */
 @Composable
 fun SuccessContent(
-    data: Map<Int, List<Food>>?,
+    data: Map<User, List<Food>>,
     onSearch: (String) -> Unit,
     searchQuery: String = "今天想吃点什么?",
     position: Position = Position.NONE,
     types: List<Pair<Int, String>> = FoodType.types,
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit,
-    onFoodClick: (food: List<Food>,seller: User) -> Unit,
-    viewModel: HomeViewModel
+    onFoodClick: (foods: List<Food>, seller: User) -> Unit,
 ) {
-    val outerScrollState = rememberLazyListState()
-
     val coroutineScope = rememberCoroutineScope()
+    val map = remember { mutableMapOf<Food, User>() }
+    val pairs = remember { mutableListOf<Pair<Food, Food?>>() }
+
+    data.forEach { (user, foods) ->
+        foods.forEach { food ->
+            map[food] = user
+        }
+    }
+    val flatten = data.values.flatten()
+    for (i in flatten.indices - 1) {
+        if (i+1 < flatten.size) {
+            pairs.add(flatten[i] to flatten[i + 1])
+        }
+        if (i == flatten.size - 2) {
+            pairs.add(flatten[i] to null)
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
-        state = outerScrollState, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             FoodsHomeToolBar(position)
@@ -158,35 +175,47 @@ fun SuccessContent(
                 FoodTypes(types, coroutineScope)
             }
         }
-        item {
-            MyStaggeredVerticalGrid(
-                maxColumnWidth = 250.dp,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-            ) {
-                val lists = data?.values?.shuffled()?.flatten()
-                Log.v("cgf", "MyStaggeredVerticalGrid:foods=$lists")
-                lists?.forEachIndexed { idx, food ->
-                    val padding = if (idx % 2 == 0) 8.dp else 0.dp
-                    val seller = viewModel.getSeller(food.createUserId)
-                    if (seller != null) {
+        pairs.forEach { pair ->
+            item {
+                val firstSeller = map[pair.first]!!
+                val firstFoods = data[firstSeller]!!
+
+                val secondSeller = pair.second?.let { map[it] }
+                val secondFoods = secondSeller?.let { data[it] }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    secondFoods?.let {
                         FoodCard(
-                            padding = padding,
-                            food = food,
-                            seller = seller,
+                            modifier = Modifier.weight(1f),
+                            food = pair.second!!,
+                            seller = secondSeller,
                             saveFavorite = saveFavorite,
                             onClick = {
-                                onFoodClick(
-                                    lists.filter { it.createUserId == food.createUserId },seller
-                                )
+                                onFoodClick(secondFoods, secondSeller)
                             },
                             deleteFavorite = deleteFavorite
                         )
                     }
+                    FoodCard(
+                        modifier = Modifier.weight(1f),
+                        food = pair.first,
+                        seller = firstSeller,
+                        saveFavorite = saveFavorite,
+                        onClick = {
+                            onFoodClick(firstFoods, firstSeller)
+                        },
+                        deleteFavorite = deleteFavorite
+                    )
+
                 }
             }
         }
     }
+
 }
 
 @Composable
@@ -202,12 +231,15 @@ private fun HomeFoodsCardGrid(
 val foodTypesHeight = 125.dp
 
 @Composable
-fun FoodTypes(types: List<Pair<Int, String>>, coroutineScope: CoroutineScope) {
+fun FoodTypes(
+    types: List<Pair<Int, String>>,
+    coroutineScope: CoroutineScope,
+    visible: MutableState<Boolean> = remember { mutableStateOf(false) }
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        val visible = remember { mutableStateOf(false) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -274,7 +306,9 @@ fun FoodTypes(types: List<Pair<Int, String>>, coroutineScope: CoroutineScope) {
         }
         AnimatedVisibility(visible = visible.value) {
             LazyRow(
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 types.reversed().take(3).forEach {

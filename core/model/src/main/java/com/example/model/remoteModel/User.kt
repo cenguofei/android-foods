@@ -15,7 +15,11 @@ data class User(
     var sex:Boolean = false,
     var headImg:String? = null,
     val img:Int = 0,
+    val canteenName: String = "",
+    val foodType:String = ""
 ) : Parcelable {
+
+
     companion object {
         val NONE = User(username = "Foods For You")
     }

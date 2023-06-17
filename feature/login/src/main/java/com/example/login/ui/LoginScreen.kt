@@ -4,16 +4,13 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Lock
@@ -34,12 +31,8 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.designsystem.component.FoodsBackground
-import com.example.designsystem.component.FoodsGradientBackground
 import com.example.designsystem.component.FoodsOutlinedTextField
-import com.example.designsystem.theme.GradientColors
 import com.example.designsystem.theme.LocalBackgroundTheme
-import com.example.designsystem.theme.LocalGradientColors
 import com.example.designsystem.theme.LocalTintTheme
 import com.example.model.remoteModel.User
 import kotlinx.coroutines.CoroutineScope
@@ -52,13 +45,15 @@ fun LoginScreenRoute(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     loginViewModel: LoginViewModel = hiltViewModel(),
     onSuccess: (user: User) -> Unit,
-    onError: (msg: String) -> Unit
+    onError: (msg: String) -> Unit,
+    isRegister: Boolean
 ) {
     LoginScreen(
         coroutineScope = coroutineScope,
         loginViewModel = loginViewModel,
         onSuccess = onSuccess,
-        onError = onError
+        onError = onError,
+        isRegister = isRegister
     )
 }
 
@@ -68,13 +63,19 @@ private fun LoginScreen(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     loginViewModel: LoginViewModel = hiltViewModel(),
     onSuccess: (user: User) -> Unit,
-    onError: (msg: String) -> Unit
+    onError: (msg: String) -> Unit,
+    isRegister: Boolean
 ) {
     val sheetScaffoldState = rememberBottomSheetScaffoldState()
+
     val onOpenDrawer = {
         coroutineScope.launch {
             sheetScaffoldState.bottomSheetState.expand()
         }
+    }
+
+    if(isRegister) {
+        onOpenDrawer()
     }
     BottomSheetScaffold(
         sheetContent = {

@@ -1,5 +1,6 @@
 package cn.example.foods.composefoods.ui
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -24,6 +25,7 @@ import com.example.datastore.SettingsViewModel
 import com.example.model.remoteModel.Food
 import com.example.network.netstate.NetworkMonitor
 import com.example.model.remoteModel.User
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -144,17 +146,16 @@ class FoodsAppState(
             }
     }
 
-    fun navigateToLoginDestination() {
-        navController.navigate(Screens.LOGIN.route)
-    }
-
     fun navigateToSearch() {
 //        navController.navigateToSearch()
     }
 
-    fun navigateToSellerDetail(foods: ArrayList<Food>, seller: User) {
+    fun navigateToSellerDetail() {
+        navController.navigate(Screens.SellerDetail.route)
+    }
 
-        navController.navigate(Screens.SellerDetail.route+"/"+foods+"/"+seller)
+    fun navigateToLoginOrSignUp(isRegister:Boolean = false) {
+        navController.navigate(Screens.LOGIN.route+"/$isRegister")
     }
 
     private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)
@@ -176,7 +177,7 @@ private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
 private fun NavigationTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
         val listener = NavController.OnDestinationChangedListener { _,destination,arguments ->
-            Log.v("navigation_events","Destination:${destination.route.toString()},arguments:$arguments")
+            Log.v("navigation_events","Foods Destination:${destination.route.toString()},arguments:$arguments")
         }
 
         navController.addOnDestinationChangedListener(listener)

@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
                         createTime = userMap["createTime"] as? String ?: "",
                         headImg = userMap["headImg"] as? String ?: ""
                     )
-                    user.headImg = RemoteApi.IMAGE_BASE_URL + user.headImg
+//                    user.headImg = RemoteApi.IMAGE_BASE_URL + user.headImg
                     launch(Dispatchers.Main) {
                         onSuccess(user)
                     }

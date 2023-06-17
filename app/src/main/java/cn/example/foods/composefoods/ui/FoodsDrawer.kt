@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.ListAlt
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Mail
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -53,9 +62,14 @@ import cn.example.foods.R
 import cn.example.foods.composefoods.navigation.TopLevelDestination
 import com.example.datastore.SettingsUiState
 import com.example.datastore.SettingsViewModel
-import com.example.designsystem.component.SettingsClickBar
+import com.example.designsystem.component.FoodsBackground
+import com.example.designsystem.component.FoodsGradientBackground
+import com.example.designsystem.component.SettingsClickBarExpandable
+import com.example.designsystem.component.TopDrawerDivider
 import com.example.designsystem.component.UserHeader
+import com.example.designsystem.theme.GradientColors
 import com.example.designsystem.theme.LocalBackgroundTheme
+import com.example.designsystem.theme.LocalGradientColors
 import com.example.model.storagemodel.DarkThemeConfig
 import com.example.model.storagemodel.ThemeBrand
 import com.example.model.remoteModel.User
@@ -96,68 +110,102 @@ fun DrawerContent(
     user: User,
     onLogin: () -> Unit
 ) {
-    Surface(
+    FoodsBackground(
         modifier = Modifier
             .fillMaxHeight()
             .width(LocalConfiguration.current.screenWidthDp.dp - 100.dp),
-        shape = RoundedCornerShape(topEnd = 50f, bottomEnd = 50f),
-        color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
-        else LocalBackgroundTheme.current.color,
-        //TODO error when set tonalElevation
-//        tonalElevation = LocalBackgroundTheme.current.tonalElevation
+        shape = RoundedCornerShape(topEnd = 50f, bottomEnd = 50f)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
+        FoodsGradientBackground(
+            gradientColors =
+            LocalGradientColors.current
         ) {
-            Row(
+//            Surface(
+//                modifier = Modifier
+//                    .fillMaxHeight()
+//                    .width(LocalConfiguration.current.screenWidthDp.dp - 100.dp),
+//                shape = RoundedCornerShape(topEnd = 50f, bottomEnd = 50f),
+//                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+//                else LocalBackgroundTheme.current.color,
+            //TODO error when set tonalElevation:because it is Unspecified default
+//        tonalElevation = LocalBackgroundTheme.current.tonalElevation
+//            ) {
+            Column(
                 modifier = Modifier
-                    .systemBarsPadding()
-                    .padding(8.dp)
-                    .clickable(onClick = onLogin),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
-                UserHeader(model = user.headImg)
-                Text(text = user.username, modifier = Modifier.padding(start = 8.dp))
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(
-                        if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = 0.5f
+                Row(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .padding(8.dp)
+                        .clickable(onClick = onLogin),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    UserHeader(model = user.headImg)
+                    Text(text = user.username, modifier = Modifier.padding(start = 8.dp))
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(
+                            if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = 0.5f
+                            )
+                            else LocalBackgroundTheme.current.color
                         )
-                        else LocalBackgroundTheme.current.color
-                    )
-            ) {
-                Column {
-                    val settingsUiStateState = settingsViewModel.settingsUiState.collectAsState()
+                ) {
+                    Column {
+                        val settingsUiStateState =
+                            settingsViewModel.settingsUiState.collectAsState()
 
-                    val shouldShowThemeSelections = remember { mutableStateOf(false) }
-                    SettingsClickBar(shouldShow = shouldShowThemeSelections, text = "Choose Theme")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Spacer(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp))
-                    Spacer(modifier = Modifier.height(8.dp))
-                    VisibilityThemeSelections(
-                        shouldShowThemeSelections = shouldShowThemeSelections,
-                        onThemeSelected = {
-                            settingsViewModel.updateThemeBrand(it)
-                        },
-                        onIsDynamicSelected = {
-                            settingsViewModel.updateDynamicColorPreference(it)
-                        },
-                        onModeSelected = {
-                            settingsViewModel.updateDarkThemeConfig(it)
-                        },
-                        settingsUiStateState = settingsUiStateState
-                    )
+                        val shouldShowThemeSelections = remember { mutableStateOf(false) }
+                        SettingsClickBarExpandable(
+                            shouldShow = shouldShowThemeSelections,
+                            text = "Choose Theme",
+                            startIcon = Icons.Default.DarkMode,
+                            endIcon = Icons.Default.ArrowDownward
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        VisibilityThemeSelections(
+                            shouldShowThemeSelections = shouldShowThemeSelections,
+                            onThemeSelected = {
+                                settingsViewModel.updateThemeBrand(it)
+                            },
+                            onIsDynamicSelected = {
+                                settingsViewModel.updateDynamicColorPreference(it)
+                            },
+                            onModeSelected = {
+                                settingsViewModel.updateDarkThemeConfig(it)
+                            },
+                            settingsUiStateState = settingsUiStateState
+                        )
+
+                        SettingsClickBarExpandable(
+                            text = "我的邮箱",
+                            startIcon = Icons.Default.Mail
+                        )
+                        SettingsClickBarExpandable(
+                            text = "我的电话",
+                            startIcon = Icons.Default.Call
+                        )
+                        SettingsClickBarExpandable(
+                            text = "我的订单",
+                            startIcon = Icons.Default.ListAlt
+                        )
+                        SettingsClickBarExpandable(
+                            text = "我的邮箱",
+                            startIcon = Icons.Default.StarBorder
+                        )
+                        SettingsClickBarExpandable(
+                            text = "我的邮箱",
+                            startIcon = Icons.Default.Logout
+                        )
+                    }
                 }
             }
         }
+//        }
     }
 }
 
@@ -191,14 +239,38 @@ private fun VisibilityThemeSelections(
      *
      * 共 3x3=9 种情况，实际主题组合只有 9-3=6 种
      */
+    /**
+     * Theme:
+     *      Default
+     *      Android
+     *
+     * Use Dynamic Color: [enabled = Theme == Default]
+     *      Yes
+     *      No
+     *
+     * Dark mode preference:
+     *      System default
+     *      Light
+     *      Dark
+     *
+     * Choices:
+     * 1. Theme.Android + {System default, Light, Dark}
+     *
+     * 2.1 Theme.Default + No + {System default, Light, Dark}
+     * 2.2 Theme.Default + Yes + {System default, Light, Dark}
+     *
+     * 共 3x3=9 种情况，实际主题组合只有 9-3=6 种
+     */
     AnimatedVisibility(
         visible = shouldShowThemeSelections.value,
         enter = expandVertically() + fadeIn(),
         exit = shrinkVertically() + fadeOut()
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .background(LocalBackgroundTheme.current.color)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(LocalBackgroundTheme.current.color)
+        ) {
             val selected =
                 remember {
                     mutableStateOf(
@@ -424,11 +496,11 @@ fun ThemeSelectionChipText(
 @Preview
 @Composable
 private fun PreviewSelectionBar1() {
-    SettingsClickBar(text = "Choose Theme")
+    SettingsClickBarExpandable(text = "Choose Theme")
 }
 
 @Preview
 @Composable
 private fun PreviewSelectionBar2() {
-    SettingsClickBar(text = "Choose Theme")
+    SettingsClickBarExpandable(text = "Choose Theme")
 }

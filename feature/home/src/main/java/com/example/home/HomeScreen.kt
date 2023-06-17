@@ -1,6 +1,8 @@
 package com.example.home
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -13,13 +15,17 @@ import com.example.model.remoteModel.User
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel,
     onShowError:(String) -> Unit,
     saveFavorite: (food: Food, seller: User) -> Unit = {_,_ ->},
     deleteFavorite: (food: Food, seller: User) -> Unit = {_,_ ->},
     onFoodClick:(food:List<Food>,seller:User) -> Unit = {_,_ ->}
 ) {
-    val foods by homeViewModel.foods.collectAsState()
+    val foods by homeViewModel.sellerToFoods.collectAsState()
+    LaunchedEffect(key1 = Unit, block = {
+        Log.v("重复加载测试","HomeScreen开始加载 Foods。。。")
+//        homeViewModel.getAllFoods()
+    })
 
     when(foods) {
         is NetworkResult.Loading -> {
@@ -27,8 +33,7 @@ fun HomeScreen(
         }
         is NetworkResult.Success<*> ->{
             SuccessContent(
-                foods.data,
-                viewModel = homeViewModel,
+                data = foods.data!!,
                 onSearch = {},
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,

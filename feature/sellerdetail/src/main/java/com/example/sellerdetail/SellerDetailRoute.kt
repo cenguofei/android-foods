@@ -1,47 +1,54 @@
 package com.example.sellerdetail
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.designsystem.theme.FoodsTheme
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SellerDetailRoute(seller: User?, foods: Array<Food>?) {
+fun SellerDetailRoute(seller: User, foods: List<Food>) {
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+    val selectedFood = remember { mutableStateMapOf<Food,Int>() }
+
+
     Box {
         FoodsDetailScreen(
-            Album(
-                1,
-                "Pop",
-                "artist",
-                "song",
-                "desc",
-                com.example.designsystem.R.drawable.food1,
-                false
-            )
+            seller = seller,
+            foods = foods,
+            scaffoldState = scaffoldState,
+            selectedFood = selectedFood
         )
-        Text(text = seller.toString() + foods.toString())
-    }
-
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSpotifyDetailActivity() {
-    val album = Album(
-        1,
-        "Pop",
-        "artist",
-        "song",
-        "desc",
-        com.example.designsystem.R.drawable.food1,
-        false
-    )
-    FoodsTheme {
-        FoodsDetailScreen(album)
+        FoodsFAB(
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 4.dp),
+            scaffoldState = scaffoldState,
+            coroutineScope = coroutineScope,
+            onCommitClick = {},
+            size = selectedFood.size
+        )
+        Image(
+            painter = painterResource(id = R.drawable.bottom_kid),
+            modifier = Modifier
+                .align(
+                    Alignment.BottomStart
+                )
+                .size(height = 120.dp, width = 100.dp),
+            contentDescription = null
+        )
     }
 }
+

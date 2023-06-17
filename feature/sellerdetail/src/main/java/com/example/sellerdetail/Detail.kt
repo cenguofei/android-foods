@@ -1,9 +1,17 @@
 package com.example.sellerdetail
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,81 +19,115 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import java.io.Serializable
+import com.example.model.remoteModel.Food
+import com.example.model.remoteModel.User
 
-data class Album(
-    val id: Int,
-    val genre: String = "Pop",
-    val artist: String,
-    val song: String,
-    val descriptions: String,
-    val imageId: Int,
-    val swiped: Boolean = false
-) : Serializable
-
-object SpotifyDataProvider {
+object FoodsDataProvider {
+    @Composable
     fun foodsSurfaceGradient(isDark: Boolean) =
-        if (isDark) listOf(Color.Gray, Color.Black) else listOf(Color.White, Color.LightGray)
+        if (isDark) listOf(
+            MaterialTheme.colorScheme.onSecondaryContainer,
+            MaterialTheme.colorScheme.onBackground
+        )
+        else listOf(
+            MaterialTheme.colorScheme.secondaryContainer,
+            MaterialTheme.colorScheme.background
+        )
 }
 
+sealed class DominantState {
+    object Loading : DominantState()
+    data class Success(val bitmap: Bitmap) : DominantState()
+}
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FoodsDetailScreen(album: Album) {
+fun FoodsDetailScreen(
+    seller: User,
+    foods: List<Food>,
+    scaffoldState: BottomSheetScaffoldState,
+    selectedFood: SnapshotStateMap<Food, Int>
+) {
     val scrollState = rememberScrollState(0)
-    val context = LocalContext.current
-    val image = ImageBitmap.imageResource(context.resources, id = album.imageId).asAndroidBitmap()
-    val swatch = remember(album.id) { image.generateDominantColorState() }
 
-
-    //使Box1的背景从 Album 图片的主颜色 变化到 surface -> White
-    val dominantColors = listOf(Color(swatch.rgb), MaterialTheme.colorScheme.surface)
-    val dominantGradient = remember { dominantColors }
-    val surfaceGradient = SpotifyDataProvider
-        .foodsSurfaceGradient(isSystemInDarkTheme()).asReversed()
-
-    //有background
-    Box( //Box1
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalGradientBackground(dominantGradient)
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        floatingActionButtonPosition = FabPosition.Center,
+        sheetContent = {
+            FoodsSheetBillContent(selectedFood = selectedFood)
+        },
+        sheetElevation = 8.dp,
+        sheetShape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10),
+        drawerGesturesEnabled = false
     ) {
-        //没有background
-        BoxTopSection(album = album, scrollState = scrollState) //对图片大小做变化，250dp->10dp
+        SellerDetailContent(
+            seller = seller,
+            foods = foods,
+            scrollState = scrollState,
+            selectedFood = selectedFood
+        )
+    }
+}
 
-        //有background
-        TopSectionOverlay(scrollState = scrollState) // White 的alpha 不断升高，使Box1的竖直渐变背景色不断变淡
 
-        //有background
-        //可滚动的内容，占全屏，有480高的Spacer占位符
-        BottomScrollableContent(scrollState = scrollState, surfaceGradient = surfaceGradient)
+private fun String.log(s: String) {
+    Log.v(s, this)
+}
 
-        //有background
-        //当滚动距离小于1000px时为TRANSPARENT，否则为surfaceGradient
-        AnimatedToolBar(album, scrollState, surfaceGradient)
+@SuppressLint("AutoboxingStateCreation")
+@Composable
+fun SideBar(foods: List<Food>, modifier: Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+//            .verticalGradientBackground(
+//                FoodsDataProvider.foodsSurfaceGradient(isDark = isSystemInDarkTheme())
+//            ),
+        , contentAlignment = Alignment.CenterEnd
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            foods.forEach {
+                Text(
+                    it.foodName,
+                    Modifier.padding(vertical = 16.dp),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun AnimatedToolBar(album: Album, scrollState: ScrollState, surfaceGradient: List<Color>) {
+fun AnimatedToolBar(
+    scrollState: ScrollState,
+    surfaceGradient: List<Color>,
+    seller: User
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .horizontalGradientBackground(
-                if (Dp(scrollState.value.toFloat()) < 1080.dp)
-                    listOf(Color.Transparent, Color.Transparent) else surfaceGradient
-            )
+//            .horizontalGradientBackground(
+////                if (Dp(scrollState.value.toFloat()) < 1080.dp)
+////                    listOf(Color.Transparent, Color.Transparent) else surfaceGradient
+//                surfaceGradient
+//            )
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Icon(
@@ -93,7 +135,7 @@ fun AnimatedToolBar(album: Album, scrollState: ScrollState, surfaceGradient: Lis
             contentDescription = null
         )
         Text(
-            text = album.song,
+            text = seller.canteenName,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .padding(16.dp)

@@ -1,11 +1,14 @@
 package com.example.designsystem.component
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,34 +26,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsClickBar(
+fun SettingsClickBarExpandable(
     shouldShow: MutableState<Boolean> = remember { mutableStateOf(false) },
-    text:String,
-    color: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = contentColorFor(color),
-    tonalElevation: Dp = 4.dp,
-    shadowElevation: Dp = 2.dp
+    text: String,
+    startIcon: ImageVector? = null,
+    endIcon: ImageVector? = null
 ) {
-    Surface(
-        onClick = { shouldShow.value = !shouldShow.value },
+    Row(
         modifier = Modifier
+            .fillMaxWidth()
             .height(50.dp)
-            .fillMaxWidth(),
-        color = color,
-        contentColor = contentColor,
-        tonalElevation = tonalElevation,
-        shadowElevation = shadowElevation
+            .clickable(onClick = { shouldShow.value = !shouldShow.value }),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(start = 8.dp)) {
+            startIcon?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+            Text(text = text, style = MaterialTheme.typography.labelLarge)
+        }
+        endIcon?.let {
             val rotation = remember { Animatable(0f) }
             LaunchedEffect(key1 = shouldShow.value) {
                 if (shouldShow.value) {
@@ -59,15 +66,15 @@ fun SettingsClickBar(
                     rotation.animateTo(0f)
                 }
             }
-            Text(text = text, style = MaterialTheme.typography.titleMedium)
             Icon(
-                imageVector = Icons.Default.ArrowDownward,
+                imageVector = it, //Icons.Default.ArrowDownward
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .graphicsLayer {
-                    rotationZ = rotation.value
-                }
+                        rotationZ = rotation.value
+                    },
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }

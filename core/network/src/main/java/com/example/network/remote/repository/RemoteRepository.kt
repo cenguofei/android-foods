@@ -41,11 +41,8 @@ class RemoteRepository @Inject constructor() {
         emit(result)
     }
 
-    suspend fun getAllUser(): Flow<List<User>> = flow {
-        val result = withContext(dispatcher) {
-            remoteService.getAllUser()
-        }
-        emit(result)
+    suspend fun getAllUser(): List<User> = withContext(dispatcher) {
+        return@withContext remoteService.getAllUser()
     }
 
     suspend fun postOrder(order: Order): HashMap<String, Any> {

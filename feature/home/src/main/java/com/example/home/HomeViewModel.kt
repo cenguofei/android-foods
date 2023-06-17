@@ -33,76 +33,59 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        const val FOODS_WITH_SELLER = "foods_with_seller"
+        const val SELLER_TO_FOODS = "seller_to_foods"
 
         const val SELLERS_MAP_BY_ID = "sellers_map_by_id"
+
+        //点击首页后传递给商家详情页的参数
+        var foods: List<Food> = listOf()
+        var seller: User = User.NONE
     }
 
-
-
-    private var _foods: MutableStateFlow<NetworkResult<Map<Int, List<Food>>>> =
+    val sellerToFoods: MutableStateFlow<NetworkResult<Map<User, List<Food>>>> =
         MutableStateFlow(NetworkResult.Loading())
-    val foods = _foods
-
-    var sellerWithFoodsMap = mapOf<Int,List<Food>>()
-        private set
-    private var sellers = listOf<User?>()
 
     init {
+        sellerToFoods.value =
+            savedStateHandle.get<NetworkResult<Map<User, List<Food>>>>(SELLER_TO_FOODS)
+                ?: NetworkResult.Loading()
         getAllFoods()
-        sellerWithFoodsMap = savedStateHandle.get<Map<Int, List<Food>>>(FOODS_WITH_SELLER) ?: mapOf()
-        sellers = savedStateHandle.get<List<User?>>(SELLERS_MAP_BY_ID) ?: listOf()
     }
 
     @OptIn(SavedStateHandleSaveableApi::class)
-    private fun getAllFoods() {
+    fun getAllFoods() {
         viewModelScope.launch(dispatcher) {
             try {
-                val users = async { remoteRepository.getAllUser() }
+                val allUser = async { remoteRepository.getAllUser() }
                 remoteRepository.getAllFood()
                     .distinctUntilChangedBy {
                         it.map { food -> food.id }
                     }
                     .catch {
-                        Log.v("cgf","错误："+it.message+", "+it.cause)
-                        _foods.emit(NetworkResult.Error(it.cause))
+                        Log.v("cgf", "错误：" + it.message + ", " + it.cause)
+                        sellerToFoods.emit(NetworkResult.Error(it.cause))
                     }
                     .collect {
-                        val foodList =
-                            it/*.map { food -> food.copy(foodPic = RemoteApi.IMAGE_BASE_URL + food.foodPic) }*/
-                        Log.v("FoodImage_test","foods:$foodList")
-                        val netResult = it.groupBy { food ->
-                            food.foodType
-                        }
-                        users.await().collect { m ->
-                            sellers = m
-                            savedStateHandle.saveable {
-                                mutableStateOf(m)
+                        val foodList = it
+                        /*.map { food -> food.copy(foodPic = RemoteApi.IMAGE_BASE_URL + food.foodPic) }*/
+                        val users = allUser.await()
+                        Log.v("cgf", "getAllFoods foods:$foodList")
+                        Log.v("cgf", "getAllUser users:$users")
+                        val map = users.map { user ->
+                            val filter = foodList.filter { food: Food ->
+                                food.createUserId == user.id
                             }
-                            _foods.emit(NetworkResult.Success(netResult))
-                        }
-                        sellerWithFoodsMap = foodList.groupBy { food -> food.createUserId }
-
+                            user to filter
+                        }.toMap()
+                        val result = NetworkResult.Success(map)
+                        sellerToFoods.emit(result)
                         savedStateHandle.saveable {
-                            mutableStateOf(sellerWithFoodsMap)
+                            mutableStateOf(result)
                         }
                     }
-            } catch (e:Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-        }
-    }
-
-    fun getSeller(createUserId: Int): User? {
-        try {
-            val user = sellers[createUserId]
-            if (user != null) {
-                return user
-            }
-            return null
-        } catch (e:Exception) {
-            return null
         }
     }
 }
