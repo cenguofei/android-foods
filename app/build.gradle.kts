@@ -92,6 +92,7 @@ dependencies {
     implementation(project(":feature:lwh"))
     implementation(project(":feature:login"))
     implementation(project(":feature:sellerdetail"))
+    implementation(project(":feature:myorder"))
 
 
     testImplementation(libs.test.junit)

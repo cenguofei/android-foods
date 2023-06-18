@@ -5,7 +5,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.ui.FoodsAppState
-import com.example.login.ui.LoginScreenRoute
 import com.example.model.remoteModel.User
 
 @OptIn(ExperimentalAnimationApi::class)

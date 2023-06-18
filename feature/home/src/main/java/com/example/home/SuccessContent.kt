@@ -138,11 +138,16 @@ fun SuccessContent(
     val map = remember { mutableMapOf<Food, User>() }
     val pairs = remember { mutableListOf<Pair<Food, Food?>>() }
 
-    data.forEach { (user, foods) ->
-        foods.forEach { food ->
-            map[food] = user
+    //初始化map
+    data.entries.forEach { entry ->
+        val key = entry.key
+        val value = entry.value
+
+        value.forEach { food ->
+            map[food] = key
         }
     }
+
     val flatten = data.values.flatten()
     for (i in flatten.indices - 1) {
         if (i+1 < flatten.size) {
@@ -184,7 +189,7 @@ fun SuccessContent(
                 val secondFoods = secondSeller?.let { data[it] }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -292,7 +297,11 @@ fun FoodTypes(
                 modifier = Modifier.graphicsLayer {
                     rotationZ = rotation.value
                 }) {
-                Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Default.ArrowDownward,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
 

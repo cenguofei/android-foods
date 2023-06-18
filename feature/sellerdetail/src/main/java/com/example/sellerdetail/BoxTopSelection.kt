@@ -1,7 +1,7 @@
 package com.example.sellerdetail
 
-import android.util.Log
-import android.widget.ImageView
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
@@ -17,21 +17,21 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.example.model.remoteModel.User
 
+@SuppressLint("AutoboxingStateCreation")
 @Composable
 fun BoxTopSection(
     seller: User,
-    scrollState: ScrollState,
-    dominantState: MutableState<DominantState>,
-    imageView: ImageView
+    scrollState: MutableState<ScrollState>,
+    bitmap: MutableState<Bitmap>,
 ) {
+    val dynamicAlpha = 1 - ((scrollState.value.value + 0.00f) / 1400).coerceIn(0f, 1f)
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(
             modifier = Modifier
@@ -40,44 +40,24 @@ fun BoxTopSection(
         )
         //animate as scroll value increase but not fast so divide by random number 50
         val dynamicValue =
-            if (250.dp - Dp(scrollState.value / 50f) < 10.dp) 10.dp //prevent going 0 cause crash
-            else 250.dp - Dp(scrollState.value / 20f)
+            if (250.dp - Dp(scrollState.value.value / 50f) < 10.dp) 10.dp //prevent going 0 cause crash
+            else 250.dp - Dp(scrollState.value.value / 20f)
         val animateImageSize = animateDpAsState(dynamicValue).value
-
-        when(dominantState.value) {
-            is DominantState.Loading -> {
-                Image(
-                    painter = painterResource(id = com.example.designsystem.R.drawable.food2),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(animateImageSize)
-                        .padding(8.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            is DominantState.Success -> {
-                Log.v("cgf","DominantState.Success  商家详情图片")
-                AndroidView(factory = {
-                    imageView
-                })
-                Image(
-                    bitmap = (dominantState.value as DominantState.Success)
-                        .bitmap
-                        .asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(animateImageSize)
-                        .padding(8.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
-        }
+        Image(
+            bitmap = bitmap.value.asImageBitmap(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(animateImageSize)
+                .padding(8.dp)
+                .alpha(dynamicAlpha),
+            contentScale = ContentScale.Crop
+        )
 
         Text(
             text = seller.canteenName.ifEmpty { "Foods商家" },
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
-            modifier = Modifier.padding(8.dp),
-            color = MaterialTheme.colorScheme.onSurface
+            modifier = Modifier.padding(8.dp).alpha(dynamicAlpha),
+            color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
             text = "FOLLOWING",
@@ -90,20 +70,21 @@ fun BoxTopSection(
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(vertical = 4.dp, horizontal = 24.dp)
+                .alpha(dynamicAlpha)
         )
         Text(
             text = seller.foodType,
             style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(4.dp).alpha(dynamicAlpha),
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
         )
     }
 }
 
 @Composable
-fun TopSectionOverlay(scrollState: ScrollState) {
+fun TopSectionOverlay(scrollState: MutableState<ScrollState>) {
     //slowly increase alpha till it reaches 1
-    val dynamicAlpha = ((scrollState.value + 0.00f) / 1400).coerceIn(0f, 1f)
+    val dynamicAlpha = ((scrollState.value.value + 0.00f) / 1400).coerceIn(0f, 1f)
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -115,3 +96,53 @@ fun TopSectionOverlay(scrollState: ScrollState) {
             )
     )
 }
+
+
+//@SuppressLint("CheckResult")
+//@Composable
+//fun GlideImage(
+//    imageUrl: String,
+//    onImageBitmapLoaded: (Bitmap) -> Unit,
+//    coroutineScope: CoroutineScope = rememberCoroutineScope()
+//) {
+//    Glide
+//        .with(LocalContext.current)
+//        .load(imageUrl)
+//        .placeholder(R.drawable.food13)
+//        .error(R.drawable.food11)
+//        .listener(@SuppressLint("CheckResult")
+//        object : RequestListener<Drawable?> {
+//            override fun onLoadFailed(
+//                e: GlideException?,
+//                model: Any?,
+//                target: com.bumptech.glide.request.target.Target<Drawable?>?,
+//                isFirstResource: Boolean
+//            ): Boolean {
+//
+//                Log.v("glide", "开始下载--onLoadFailed--")
+//                return false
+//            }
+//
+//            override fun onResourceReady(
+//                resource: Drawable?,
+//                model: Any?,
+//                target: Target<Drawable?>?,
+//                dataSource: DataSource?,
+//                isFirstResource: Boolean
+//            ): Boolean {
+//                Log.v("glide", "GlideReady--onResourceReady--")
+//                if (resource is BitmapDrawable) {
+//                    val bitmap = resource.bitmap
+////                val imageBitmap = bitmap.asImageBitmap()
+//                    coroutineScope.launch(Dispatchers.Main) {
+//                        onImageBitmapLoaded(bitmap)
+//                    }
+//                    Log.d("glide", bitmap.toString() + "是resource is BitmapDrawable")
+//                } else {
+//                    Log.d("glide", "不是 resource not a BitmapDrawable")
+//                }
+//                return false
+//            }
+//        })
+//}
+

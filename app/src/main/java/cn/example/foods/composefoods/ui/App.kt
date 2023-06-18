@@ -1,5 +1,7 @@
 package cn.example.foods.composefoods.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -49,6 +51,7 @@ import com.example.designsystem.theme.GradientColors
 import com.example.designsystem.theme.LocalGradientColors
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class,
@@ -56,19 +59,8 @@ import com.example.designsystem.theme.LocalGradientColors
 )
 @Composable
 fun FoodsApp(
-//    windowSizeClass: WindowSizeClass,
-//    networkMonitor: NetworkMonitor,
-//    sourceContainer: SourceContainer,
-//    settingsViewModel: SettingsViewModel,
-//    appState: FoodsAppState = rememberFoodsAppState(
-//        networkMonitor = networkMonitor,
-//        windowSizeClass = windowSizeClass,
-//        sourceContainer = sourceContainer,
-//        settingsViewModel = settingsViewModel,
-//        navController = rememberNavController()
-//    )
-appState: FoodsAppState,
-startScreen: Screens
+    appState: FoodsAppState,
+    startScreen: Screens
 ) {
     val shouldShowGradientBackground =
         appState.currentTopLevelDestination == TopLevelDestination.HOME
@@ -119,19 +111,20 @@ startScreen: Screens
                     Column(Modifier.fillMaxSize()) {
                         FoodsDrawer(
                             settingsViewModel = appState.settingsViewModel,
-                            onLogin = {
-                                appState.navigateToLoginOrSignUp()
-                            },
                             appState = appState,
                             drawerState = drawerState
                         ) {
-                            FoodsNavHost(appState = appState,drawerState = drawerState,startScreen = startScreen/*, onShowSnackbar = { message, action ->
+                            FoodsNavHost(
+                                appState = appState,
+                                drawerState = drawerState,
+                                startScreen = startScreen/*, onShowSnackbar = { message, action ->
                                 snackbarHostState.showSnackbar(
                                     message = message,
                                     actionLabel = action,
                                     duration = SnackbarDuration.Short,
                                 ) == SnackbarResult.ActionPerformed
-                            }*/)
+                            }*/
+                            )
                         }
                     }
                 }
@@ -139,6 +132,7 @@ startScreen: Screens
         }
     }
 }
+
 @Composable
 private fun FoodsNavRail(
     destinations: List<TopLevelDestination>,

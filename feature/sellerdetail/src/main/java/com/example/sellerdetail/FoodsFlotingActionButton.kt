@@ -20,10 +20,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.model.remoteModel.Food
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -34,7 +36,8 @@ fun FoodsFAB(
     scaffoldState: BottomSheetScaffoldState,
     onCommitClick: () -> Unit,
     coroutineScope: CoroutineScope,
-    size: Int,
+    sellerDetailViewModel: SellerDetailViewModel,
+    selectedFood: SnapshotStateMap<Food, Int>,
 ) {
     Surface(
         modifier = modifier
@@ -52,7 +55,7 @@ fun FoodsFAB(
                     .clickable(onClick = {
                         coroutineScope.launch {
                             if (scaffoldState.bottomSheetState.isCollapsed) {
-                                if (size > 0) {
+                                if (selectedFood.size > 0) {
                                     scaffoldState.bottomSheetState.expand()
                                 }
                             } else {
@@ -64,13 +67,13 @@ fun FoodsFAB(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "￥ 99.00",
+                    text = "￥ "+sellerDetailViewModel.calculatePrice(selectedFood),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.surface,
                     fontSize = 20.sp
                 )
                 Text(
-                    text = "预估另需配送费 ￥1.5",
+                    text = "预估另需配送费 ￥"+(selectedFood.size * 1 + 0.5),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.surface
                 )

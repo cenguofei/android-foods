@@ -161,7 +161,12 @@ class FoodsAppState(
     private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)
     val currentUser = _currentUser
     fun setCurrentUser(user: User) {
+        Log.v("cgf","setCurrentUser:$user")
         _currentUser.value = user
+    }
+
+    fun navigateToMyOrder() {
+        navController.navigate(Screens.MyORDER.route)
     }
 }
 

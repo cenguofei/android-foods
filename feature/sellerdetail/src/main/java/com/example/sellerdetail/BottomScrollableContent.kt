@@ -1,6 +1,9 @@
 package com.example.sellerdetail
 
+import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CheckboxColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +28,6 @@ import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,41 +40,51 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.designsystem.R
 import com.example.designsystem.component.FoodsContainer
 import com.example.model.remoteModel.Food
 
 
+@SuppressLint("AutoboxingStateCreation")
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomScrollableContent(
-    scrollState: ScrollState,
-    foods: List<Food>,
-    selectedFood: SnapshotStateMap<Food, Int>
+    selectedFood: SnapshotStateMap<Food, Int>,
+    categoryFoods: Map<String, List<Food>>,
+    targetState: MutableState<Int>,
+    scrollState: MutableState<ScrollState>
 ) {
-    Column(modifier = Modifier.verticalScroll(state = scrollState)) {
-        Spacer(modifier = Modifier.height(450.dp))
-//        ShuffleButton()
-//        DownloadedRow()
-
-        Column(modifier = Modifier/*.horizontalGradientBackground(surfaceGradient)*/) {
-            FoodsScrollingSection(foods = foods, selectedFood = selectedFood)
-        }
-        Spacer(modifier = Modifier.height(50.dp))
+    Crossfade(targetState = targetState.value) { pageIndex ->
+        val values: List<List<Food>> = categoryFoods.values.toList()
+        val foods = values[pageIndex]
+        FoodsScrollingSection(foods = foods, selectedFood = selectedFood,scrollState = scrollState)
     }
 }
 
 @Composable
 fun FoodsScrollingSection(
     foods: List<Food>,
-    selectedFood: SnapshotStateMap<Food, Int>
+    selectedFood: SnapshotStateMap<Food, Int>,
+    scrollState: MutableState<ScrollState>
 ) {
-    foods.forEach {
-        FoodsListItem(food = it, Modifier, selectedFood = selectedFood)
+    scrollState.value = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState.value)
+    ) {
+        Spacer(modifier = Modifier.height(400.dp))
+        foods.forEach {
+            FoodsListItem(food = it, Modifier, selectedFood = selectedFood)
+        }
+        Spacer(modifier = Modifier.height(150.dp))
     }
 }
 
@@ -87,7 +98,7 @@ fun FoodsListItem(
     FoodsContainer(
         modifier = modifier
             .fillMaxSize()
-            .padding(4.dp), size = DpSize(0.dp, 80.dp)
+            .padding(4.dp), size = DpSize(0.dp, 100.dp)
     ) {
         Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
             Row(
@@ -96,17 +107,18 @@ fun FoodsListItem(
                     .weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 if (isSelectedFood) {
-                    Checkbox(
-                        checked = isFoodCancelled.value,
-                        onCheckedChange = { isFoodCancelled.value = !isFoodCancelled.value },
-                    )
+//                    Checkbox(
+//                        checked = !isFoodCancelled.value,
+//                        onCheckedChange = { isFoodCancelled.value = !isFoodCancelled.value },
+//                    )
                 }
-                Spacer(modifier = Modifier.width(4.dp))
                 AsyncImage(
                     model = food.foodPic,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.width(75.dp).fillMaxHeight(),
+                    modifier = Modifier
+                        .width(100.dp)
+                        .fillMaxHeight(),
                     onLoading = {
                         Log.v("cgf", "商家详情正在加载item图片：$food")
                     },
@@ -115,11 +127,20 @@ fun FoodsListItem(
                     },
                     onSuccess = {
                         Log.v("cgf", "加载图片成功：$food")
-                    }
+                    },
+                    placeholder = painterResource(id = R.drawable.food3),
+                    error = painterResource(id = R.drawable.food11),
                 )
                 Column(modifier = Modifier.padding(start = 8.dp)) {
                     Text(text = food.foodName, style = MaterialTheme.typography.labelLarge)
                     Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = food.taste,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        maxLines = 5,
+                        overflow = TextOverflow.Ellipsis
+                    )
                     Text(text = "￥ ${food.price}", style = MaterialTheme.typography.labelMedium)
                 }
             }
@@ -135,11 +156,14 @@ fun FoodsListItem(
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(36.dp)
+                        .padding(8.dp)
                         .clickable {
                             val numFood = selectedFood[food] ?: 0
                             if (numFood != 0) {
                                 selectedFood[food] = numFood - 1
+                            } else {
+                                selectedFood.remove(food)
                             }
                         }
                 )
@@ -149,7 +173,8 @@ fun FoodsListItem(
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(36.dp)
+                        .padding(8.dp)
                         .clickable {
                             val numFood = selectedFood[food] ?: 0
                             selectedFood[food] = numFood + 1

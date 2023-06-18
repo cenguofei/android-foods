@@ -46,16 +46,18 @@ import androidx.compose.ui.res.stringResource
 fun FoodsTopAppBar(
     modifier: Modifier = Modifier,
     startContent: @Composable RowScope.() -> Unit,
-    endContent: @Composable RowScope.() -> Unit,
+    endContent: (@Composable RowScope.() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = if (endContent == null) Arrangement.Start else Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
             startContent()
-            endContent()
+            endContent?.let {
+                endContent()
+            }
         }
     }
 }

@@ -25,6 +25,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.coil.kt.compose)
     implementation(project(mapOf("path" to ":core:model")))
+    implementation(libs.lottie.compose)
 
-    implementation(libs.github.glide.compose)
+    implementation(libs.androidx.palette)
+    implementation(libs.androidx.core.ktx)
 }

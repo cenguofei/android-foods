@@ -36,13 +36,19 @@ fun SettingsClickBarExpandable(
     shouldShow: MutableState<Boolean> = remember { mutableStateOf(false) },
     text: String,
     startIcon: ImageVector? = null,
-    endIcon: ImageVector? = null
+    endIcon: ImageVector? = null,
+    onClick:() -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .clickable(onClick = { shouldShow.value = !shouldShow.value }),
+            .clickable(onClick = {
+                if (endIcon != null) {
+                    shouldShow.value = !shouldShow.value
+                }
+                onClick()
+            }),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

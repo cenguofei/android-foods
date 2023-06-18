@@ -69,14 +69,19 @@ class HomeViewModel @Inject constructor(
                         val foodList = it
                         /*.map { food -> food.copy(foodPic = RemoteApi.IMAGE_BASE_URL + food.foodPic) }*/
                         val users = allUser.await()
+                        Log.v("cgf","wait users:$users")
+//                        val usersNotNull = users.filter {
+//                            it != null && it.id != null && it.sex != null && it.foodType != null && it.username != null && it.password != null && it.tel != null && it.headImg != null && it.img != null && it.canteenName != null && it.foodType != null
+//                        }
                         Log.v("cgf", "getAllFoods foods:$foodList")
-                        Log.v("cgf", "getAllUser users:$users")
                         val map = users.map { user ->
+                            user.headImg = RemoteApi.IMAGE_USER_URL + user.headImg
                             val filter = foodList.filter { food: Food ->
                                 food.createUserId == user.id
                             }
                             user to filter
                         }.toMap()
+                        Log.v("cgf", "getAllUser users:$users")
                         val result = NetworkResult.Success(map)
                         sellerToFoods.emit(result)
                         savedStateHandle.saveable {

@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
@@ -65,9 +66,7 @@ import com.example.datastore.SettingsViewModel
 import com.example.designsystem.component.FoodsBackground
 import com.example.designsystem.component.FoodsGradientBackground
 import com.example.designsystem.component.SettingsClickBarExpandable
-import com.example.designsystem.component.TopDrawerDivider
 import com.example.designsystem.component.UserHeader
-import com.example.designsystem.theme.GradientColors
 import com.example.designsystem.theme.LocalBackgroundTheme
 import com.example.designsystem.theme.LocalGradientColors
 import com.example.model.storagemodel.DarkThemeConfig
@@ -84,20 +83,31 @@ fun FoodsDrawer(
     settingsViewModel: SettingsViewModel,
     appState: FoodsAppState,
     user: User = appState.currentUser.value,
-    onLogin: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val closeDrawer = {
+        coroutineScope.launch {
+            drawerState.snapTo(DrawerValue.Closed)
+        }
+    }
     ModalNavigationDrawer(
         modifier = modifier,
         gesturesEnabled = appState.currentTopLevelDestination in TopLevelDestination.values(),
         drawerContent = {
-            DrawerContent(settingsViewModel, user = user, onLogin = {
-                coroutineScope.launch {
-                    drawerState.close()
+            DrawerContent(
+                settingsViewModel,
+                user = user,
+                onLogin = {
+                    closeDrawer()
+                    appState.navigateToLoginOrSignUp()
+                },
+                appState = appState,
+                onSeeMyOrder = {
+                    closeDrawer()
+                    appState.navigateToMyOrder()
                 }
-                onLogin()
-            })
+            )
         },
         drawerState = drawerState,
         content = content
@@ -108,7 +118,9 @@ fun FoodsDrawer(
 fun DrawerContent(
     settingsViewModel: SettingsViewModel,
     user: User,
-    onLogin: () -> Unit
+    onLogin: () -> Unit,
+    onSeeMyOrder: () -> Unit,
+    appState: FoodsAppState
 ) {
     FoodsBackground(
         modifier = Modifier
@@ -191,7 +203,8 @@ fun DrawerContent(
                         )
                         SettingsClickBarExpandable(
                             text = "我的订单",
-                            startIcon = Icons.Default.ListAlt
+                            startIcon = Icons.Default.ListAlt,
+                            onClick = onSeeMyOrder
                         )
                         SettingsClickBarExpandable(
                             text = "我的邮箱",

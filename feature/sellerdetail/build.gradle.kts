@@ -25,7 +25,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.palette)
-
     implementation(project(":core:designsystem"))
     implementation(project(mapOf("path" to ":core:network")))
     implementation(project(mapOf("path" to ":core:common")))

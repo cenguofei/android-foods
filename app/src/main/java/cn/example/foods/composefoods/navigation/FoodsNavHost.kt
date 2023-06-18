@@ -16,8 +16,9 @@
 
 package cn.example.foods.composefoods.navigation
 
-import android.app.Activity
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,9 +39,11 @@ import com.example.home.HomeViewModel
 import com.example.login.ui.LoginScreenRoute
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
+import com.example.myorder.MyOrderScreen
 import com.example.sellerdetail.SellerDetailRoute
 import com.example.start.StartScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsNavHost(
@@ -54,7 +56,6 @@ fun FoodsNavHost(
     val coroutineScope = rememberCoroutineScope()
     val navController = appState.navController
     val homeViewModel:HomeViewModel = viewModel()
-
 
     MyBackHandler(appState = appState, drawerState = drawerState,coroutineScope)
     NavHost(
@@ -81,7 +82,6 @@ fun FoodsNavHost(
                     appState.settingsViewModel.updateUseState(false)
                 }
             }
-            Log.v("重复加载测试","composable(Screens.HOME.route)")
             HomeScreen(
                 homeViewModel = homeViewModel,
                 onShowError = {
@@ -97,19 +97,25 @@ fun FoodsNavHost(
                 }
             )
         }
-        composable(Screens.SellerDetail.route) { backStackEntry ->
-
-            Log.v("seller_test", "seller:${HomeViewModel.seller}")
-            Log.v("seller_test", "foods:${HomeViewModel.foods}")
-
-            SellerDetailRoute(seller = HomeViewModel.seller, foods = HomeViewModel.foods)
+        composable(Screens.SellerDetail.route) {
+            SellerDetailRoute(
+                seller = HomeViewModel.seller,
+                foods = HomeViewModel.foods,
+                onBackClick = {
+                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+                },
+                currentLoginUser = appState.currentUser
+            )
         }
-        composable(Screens.LOGIN.route+"/{isRegister}",arguments = listOf(
-            navArgument("isRegister") {
-                type = NavType.BoolType
-                defaultValue = false
-            }
-        )) { navBackEntry ->
+        composable(
+            Screens.LOGIN.route + "/{isRegister}",
+            arguments = listOf(
+                navArgument("isRegister") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                }
+            )
+        ) { navBackEntry ->
             val isRegister = navBackEntry.arguments?.getBoolean("isRegister") ?: false
             Log.v("重复加载测试","Login屏幕,isRegister=$isRegister")
             LoginScreenRoute(
@@ -128,6 +134,14 @@ fun FoodsNavHost(
 //                    }
                 },
                 isRegister = isRegister
+            )
+        }
+        composable(Screens.MyORDER.route) {
+            MyOrderScreen(
+                onBack = {
+                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+                },
+                currentLoginUser = appState.currentUser.value
             )
         }
     }

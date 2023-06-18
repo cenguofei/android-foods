@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
@@ -36,24 +38,33 @@ fun FoodsSheetBillContent(selectedFood: SnapshotStateMap<Food, Int>) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = buildAnnotatedString {
-                pushStyle(
-                    SpanStyle(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 18.sp
+            Text(
+                text = buildAnnotatedString {
+                    pushStyle(
+                        SpanStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 18.sp
+                        )
                     )
-                )
-                append("已选商品")
-                pop()
-                (SpanStyle(color = MaterialTheme.colorScheme.primary, fontSize = 18.sp))
-                append("打包费 ￥" + (selectedFood.size * 2))
-            })
+                    append("已选商品")
+                    pop()
+                    (SpanStyle(color = MaterialTheme.colorScheme.primary, fontSize = 18.sp))
+                    append("打包费 ￥")
+                }.toString() + "${(selectedFood.size * 2)}"
+            )
             TextButton(onClick = { selectedFood.clear() }) {
                 Text(text = "清空购物车", style = MaterialTheme.typography.labelMedium)
             }
         }
+        val isFoodCancelled: MutableState<Boolean> = remember { mutableStateOf(false) }
         selectedFood.keys.forEach {
-            FoodsListItem(food = it, modifier = Modifier, isSelectedFood = true,selectedFood = selectedFood)
+            FoodsListItem(
+                food = it,
+                modifier = Modifier,
+                isSelectedFood = true,
+                selectedFood = selectedFood,
+                isFoodCancelled = isFoodCancelled
+            )
         }
         Spacer(modifier = Modifier.height(120.dp))
     }

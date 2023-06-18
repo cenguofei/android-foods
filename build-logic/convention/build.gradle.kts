@@ -72,10 +72,10 @@ gradlePlugin {
 
 
 
-        register("androidRoom") {
-            id = "nowinandroid.android.room"
-            implementationClass = "AndroidRoomConventionPlugin"
-        }
+//        register("androidRoom") {
+//            id = "foods.android.room"
+//            implementationClass = "AndroidRoomConventionPlugin"
+//        }
 //        register("jvmLibrary") {
 //            id = "nowinandroid.jvm.library"
 //            implementationClass = "JvmLibraryConventionPlugin"

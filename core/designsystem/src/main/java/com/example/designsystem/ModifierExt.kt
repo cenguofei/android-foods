@@ -1,4 +1,4 @@
-package com.example.sellerdetail
+package com.example.designsystem
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,4 +42,19 @@ fun Modifier.verticalGradientBackground(
         startY = 0f,
         endY = size.width
     )
+}
+
+fun Modifier.foodsVerticalGradient(
+    colors: List<Color>,
+)  = composed {
+    var size by remember { mutableStateOf(Size.Zero) }
+    drawWithContent {
+        size = this.size
+        val verticalGradient = Brush.verticalGradient(
+            colors = colors,
+            startY = 0f,
+            endY = size.width
+        )
+        drawRect(brush = verticalGradient)
+    }
 }

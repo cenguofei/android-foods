@@ -1,4 +1,4 @@
-package com.example.sellerdetail
+package com.example.designsystem
 
 import android.graphics.Bitmap
 import androidx.palette.graphics.Palette

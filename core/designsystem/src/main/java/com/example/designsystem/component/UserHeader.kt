@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -20,7 +21,7 @@ import com.example.designsystem.R
 @Composable
 fun UserHeader(model:Any?) {
     AsyncImage(
-        modifier = Modifier.size(60.dp),
+        modifier = Modifier.size(60.dp).clip(RoundedCornerShape(50)),
         alignment = Alignment.Center,
         model = model,
         contentScale = ContentScale.Crop,

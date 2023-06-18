@@ -8,7 +8,7 @@ object DataProvider {
 
     val foods = listOf(
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "鸡蛋番茄面",
             taste = "清爽",
             price = 18.0,
@@ -18,7 +18,7 @@ object DataProvider {
             foodImg = R.drawable.food1
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -28,7 +28,7 @@ object DataProvider {
             foodImg = R.drawable.food2
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "清爽",
             price = 18.0,
@@ -38,7 +38,7 @@ object DataProvider {
             foodImg = R.drawable.food3
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -48,7 +48,7 @@ object DataProvider {
             foodImg = R.drawable.food4
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -58,7 +58,7 @@ object DataProvider {
             foodImg = R.drawable.food5
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -68,7 +68,7 @@ object DataProvider {
             foodImg = R.drawable.food6
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -78,7 +78,7 @@ object DataProvider {
             foodImg = R.drawable.food7
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -88,7 +88,7 @@ object DataProvider {
             foodImg = R.drawable.food8
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -98,7 +98,7 @@ object DataProvider {
             foodImg = R.drawable.food9
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -108,7 +108,7 @@ object DataProvider {
             foodImg = R.drawable.food10
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -118,7 +118,7 @@ object DataProvider {
             foodImg = R.drawable.food11
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -128,7 +128,7 @@ object DataProvider {
             foodImg = R.drawable.food12
         ),
         Food(
-            id = Random.nextInt(),
+            id = Random.nextLong(),
             foodName = "桑葚",
             taste = "甜",
             price = 18.0,
@@ -142,7 +142,7 @@ object DataProvider {
     val foodIds = foods.map { it.foodImg }
 
     val Food = Food(
-        id = Random.nextInt(),
+        id = Random.nextLong(),
         foodName = "冰淇淋",
         taste = "甜",
         price = 3.0,
@@ -155,7 +155,7 @@ object DataProvider {
     val user = User(
         username = "茶颜悦色",
         tel = "11100089756",
-        createTime = "2020-05-15 13:49:07",
+//        createTime = "2020-05-15 13:49:07",
         email = "email@swu.com",
         headImg = R.drawable.p9.toString(),
         img = R.drawable.p9
