@@ -61,6 +61,7 @@ fun FoodsBackground(
         color = if (color == Color.Unspecified) Color.Transparent else color,
         tonalElevation = if (tonalElevation == Dp.Unspecified) 0.dp else tonalElevation,
         modifier = modifier.fillMaxSize(),
+        shape = shape
     ) {
         CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
             content()

@@ -26,6 +26,7 @@ import coil.compose.AsyncImage
 import com.example.designsystem.R
 import com.example.designsystem.theme.LocalTintTheme
 
+
 /**
  * A wrapper around [AsyncImage] which determines the colorFilter based on the theme
  */
@@ -36,6 +37,7 @@ fun DynamicAsyncImage(
     modifier: Modifier = Modifier,
     placeholder: Painter = painterResource(id = R.drawable.food2),
 ) {
+
     val iconTint = LocalTintTheme.current.iconTint
     AsyncImage(
         placeholder = placeholder,

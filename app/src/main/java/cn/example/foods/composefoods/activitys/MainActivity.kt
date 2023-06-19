@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -16,8 +17,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
 import cn.example.foods.composefoods.datasource.SourceContainer
+import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.ui.FoodsApp
+import cn.example.foods.composefoods.ui.FoodsAppState
+import cn.example.foods.composefoods.ui.rememberFoodsAppState
 import cn.example.foods.logv
 import com.example.datastore.SettingsUiState
 import com.example.datastore.SettingsViewModel
@@ -27,6 +32,7 @@ import com.example.designsystem.theme.FoodsTheme
 import com.example.network.netstate.NetworkMonitor
 import com.example.start.StartScreen
 import com.example.start.splash.FoodsSplashScreen
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -43,7 +49,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settingsViewModel:SettingsViewModel
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,6 +72,13 @@ class MainActivity : ComponentActivity() {
                     androidTheme = shouldUseAndroidTheme(uiState.value),
                     disableDynamicTheming = shouldDisableDynamicTheming(uiState.value),
                 ) {
+                    val appState: FoodsAppState = rememberFoodsAppState(
+                        networkMonitor = networkMonitor,
+                        windowSizeClass = calculateWindowSizeClass(this),
+                        sourceContainer = sourceContainer,
+                        settingsViewModel = settingsViewModel,
+                        navController = rememberNavController()
+                    )
                     Crossfade(uiState) { settingsState ->
                         when(settingsState.value) {
                             is SettingsUiState.Loading -> {
@@ -73,25 +86,9 @@ class MainActivity : ComponentActivity() {
                             }
                             is SettingsUiState.Success -> {
                                 if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
-                                    val updateUserUseState = {
-                                        settingsViewModel.updateUseState(false)
-                                        settingsViewModel.updateUserInitialThemeBehavior()
-                                    }
-                                    StartScreen(
-                                        onSignUpClick = {
-                                            updateUserUseState()
-                                        },
-                                        onBeginClick = {
-                                            updateUserUseState()
-                                        }
-                                    )
+                                    FoodsApp(appState = appState, startScreen = Screens.Start)
                                 } else {
-                                    FoodsApp(
-                                        networkMonitor = networkMonitor,
-                                        windowSizeClass = calculateWindowSizeClass(this),
-                                        sourceContainer = sourceContainer,
-                                        settingsViewModel = settingsViewModel
-                                    )
+                                    FoodsApp(appState = appState, startScreen = Screens.HOME)
                                 }
                             }
                         }

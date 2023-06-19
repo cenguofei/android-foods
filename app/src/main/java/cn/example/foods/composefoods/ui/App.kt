@@ -1,5 +1,7 @@
 package cn.example.foods.composefoods.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -20,10 +22,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,10 +38,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import cn.example.foods.R
-import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.FoodsNavHost
+import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
-import com.example.datastore.SettingsViewModel
 import com.example.designsystem.component.FoodsBackground
 import com.example.designsystem.component.FoodsGradientBackground
 import com.example.designsystem.component.FoodsNavigationBar
@@ -50,10 +49,9 @@ import com.example.designsystem.component.FoodsNavigationRail
 import com.example.designsystem.component.FoodsNavigationRailItem
 import com.example.designsystem.theme.GradientColors
 import com.example.designsystem.theme.LocalGradientColors
-import com.example.network.netstate.NetworkMonitor
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class,
@@ -61,17 +59,8 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 )
 @Composable
 fun FoodsApp(
-    windowSizeClass: WindowSizeClass,
-    networkMonitor: NetworkMonitor,
-    sourceContainer: SourceContainer,
-    settingsViewModel: SettingsViewModel,
-    appState: FoodsAppState = rememberFoodsAppState(
-        networkMonitor = networkMonitor,
-        windowSizeClass = windowSizeClass,
-        sourceContainer = sourceContainer,
-        settingsViewModel = settingsViewModel,
-        navController = rememberAnimatedNavController()
-    )
+    appState: FoodsAppState,
+    startScreen: Screens
 ) {
     val shouldShowGradientBackground =
         appState.currentTopLevelDestination == TopLevelDestination.HOME
@@ -121,20 +110,21 @@ fun FoodsApp(
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     Column(Modifier.fillMaxSize()) {
                         FoodsDrawer(
-                            settingsViewModel = settingsViewModel,
-                            onLogin = {
-                                appState.navigateToLoginDestination()
-                            },
+                            settingsViewModel = appState.settingsViewModel,
                             appState = appState,
                             drawerState = drawerState
                         ) {
-                            FoodsNavHost(appState = appState,drawerState = drawerState, onShowSnackbar = { message, action ->
+                            FoodsNavHost(
+                                appState = appState,
+                                drawerState = drawerState,
+                                startScreen = startScreen/*, onShowSnackbar = { message, action ->
                                 snackbarHostState.showSnackbar(
                                     message = message,
                                     actionLabel = action,
                                     duration = SnackbarDuration.Short,
                                 ) == SnackbarResult.ActionPerformed
-                            })
+                            }*/
+                            )
                         }
                     }
                 }
@@ -142,6 +132,7 @@ fun FoodsApp(
         }
     }
 }
+
 @Composable
 private fun FoodsNavRail(
     destinations: List<TopLevelDestination>,

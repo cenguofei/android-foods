@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,11 +44,14 @@ fun FoodsOutlinedTextField(
         keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Next
     ),
+    backgroundEnabled: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    shape: Shape = TextFieldDefaults.outlinedShape,
 ) {
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
     OutlinedTextField(
+        shape = shape,
         value = value,
         onValueChange = onValueChange,
         leadingIcon = {
@@ -83,7 +87,12 @@ fun FoodsOutlinedTextField(
         interactionSource = interactionSource,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             errorBorderColor = MaterialTheme.colorScheme.error,
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = if (!backgroundEnabled) {
+                MaterialTheme.colorScheme.background
+            } else {
+                MaterialTheme.colorScheme.secondaryContainer
+            },
+            focusedBorderColor = MaterialTheme.colorScheme.tertiary,
         ),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions

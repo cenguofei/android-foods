@@ -2,6 +2,7 @@ package com.example.model.remoteModel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 /**
     支持的类型
@@ -24,37 +25,44 @@ data class Food(
     /**
      * 菜品Id
      */
-    var id: Int,
+    var id: Long,
+
+    var createUserId:Long = 0,
 
     /**
      * 菜品名称
      */
-    val foodName: String,
+    val foodName: String = "",
 
     /**
-     * 菜品口味
+     * 描述
      */
-    val taste: String,
+    val taste: String = "",
 
     /**
      * 价格
      */
-    val price: Double,
+    val price: Double = 0.00,
 
     /**
      * 添加到购物车中的数量
      */
-    val count: Int,
+    val count: Long = 0,
 
     /**
      * 菜的图片
      */
-    val foodPic: String,
+    val foodPic: String = "",
 
+    //测试用的
     val foodImg:Int = 0,
 
     /**
      * 菜单类型
      */
-    val foodType: String
+    val foodType: Long = 1,
+
+    val foodCategory:String = "",
+
+//    val createTime: Date? = null
 ) : Parcelable

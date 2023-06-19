@@ -24,6 +24,8 @@ import com.example.model.storagemodel.UserEditableSettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -46,6 +48,7 @@ class SettingsViewModel @Inject constructor(
                     ),
                 )
             }
+            .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
                 // Starting eagerly means the user data is ready when the SettingsDialog is laid out

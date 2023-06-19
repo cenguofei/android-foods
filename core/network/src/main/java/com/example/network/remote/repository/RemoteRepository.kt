@@ -1,12 +1,15 @@
 package com.example.network.remote.repository
 
+import android.util.Log
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.User
+import com.google.gson.internal.LinkedTreeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -38,6 +41,10 @@ class RemoteRepository @Inject constructor() {
         emit(result)
     }
 
+    suspend fun getAllUser(): List<User> = withContext(dispatcher) {
+        return@withContext remoteService.getAllUser()
+    }
+
     suspend fun postOrder(order: Order): HashMap<String, Any> {
         return withContext(dispatcher) {
             remoteService.postOrder(order)
@@ -62,8 +69,8 @@ class RemoteRepository @Inject constructor() {
             remoteService.register(
                 user.username,
                 user.password,
-                user.email,
-                user.tel,
+                user.email!!,
+                user.tel ?: "",
                 user.sex.toString()
             )
         }

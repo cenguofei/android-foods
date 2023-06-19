@@ -16,84 +16,134 @@
 
 package cn.example.foods.composefoods.navigation
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.os.bundleOf
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import cn.example.foods.composefoods.activitys.MyBackHandler
-import cn.example.foods.composefoods.activitys.graphs.homeNavigation
-import cn.example.foods.composefoods.activitys.graphs.loginNavigation
 import cn.example.foods.composefoods.ui.FoodsAppState
-import com.example.lwh.SellerDetailActivity
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import kotlinx.coroutines.launch
+import com.example.datastore.SettingsUiState
+import com.example.home.HomeScreen
+import com.example.home.HomeViewModel
+import com.example.login.ui.LoginScreenRoute
+import com.example.model.remoteModel.Food
+import com.example.model.remoteModel.User
+import com.example.myorder.MyOrderScreen
+import com.example.sellerdetail.SellerDetailRoute
+import com.example.start.StartScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsNavHost(
     appState: FoodsAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = Screens.HOME.route,
-    onShowSnackbar: suspend (String, String?) -> Boolean,
+//   TODO BUG when use: onShowSnackbar: suspend (String, String?) -> Boolean,
     drawerState: DrawerState,
+    startScreen: Screens,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val navController = appState.navController
-    val activity = LocalContext.current as Activity
+    val homeViewModel:HomeViewModel = viewModel()
 
     MyBackHandler(appState = appState, drawerState = drawerState,coroutineScope)
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = startScreen.route,
         modifier = modifier,
     ) {
-        homeNavigation(
-            onFoodClick = { food, seller ->
-                val bundleOf = Bundle(
-//                    "currentUser" to appState.currentUser,
-//                    "food" to food,
-//                    "seller" to seller,
-//                    "str" to "hello lwh"
-                ).apply {
-                    putParcelable("currentUser",appState.currentUser.value)
-                    putParcelable("food",food)
-                    putParcelable("seller",seller)
-                    putString("str","hello lwh")
+        composable(route = Screens.Start.route) {
+            StartScreen(
+                onSignUpClick = {
+                    appState.settingsViewModel.updateUserInitialThemeBehavior()
+                    appState.navigateToLoginOrSignUp(true)
+                },
+                onBeginClick = {
+                    appState.settingsViewModel.updateUserInitialThemeBehavior()
+                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
                 }
-                val intent = Intent(activity, SellerDetailActivity::class.java)
-                intent.putExtras(bundleOf)
-                activity.startActivity(intent)
-            },
-            onShowError = {
-                coroutineScope.launch {
-                    onShowSnackbar(it, null)
+            )
+        }
+        composable(Screens.HOME.route) {
+            val settingsUiStateState = appState.settingsViewModel.settingsUiState.collectAsState()
+            if (settingsUiStateState.value is SettingsUiState.Success) {
+                if ((settingsUiStateState.value as SettingsUiState.Success).settings.isFirstUse) {
+                    appState.settingsViewModel.updateUseState(false)
                 }
             }
-        )
-        loginNavigation(
-            appState = appState,
-            onSuccess = {
-                Log.v(
-                    "navigation_test",
-                    "loginNavigation navigateToTopLevelDestination(TopLevelDestination.HOME)"
-                )
-                appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
-                appState.setCurrentUser(it)
-            },
-            onShowError = {
-                coroutineScope.launch {
-                    onShowSnackbar(it, null)
+            HomeScreen(
+                homeViewModel = homeViewModel,
+                onShowError = {
+                              //TODO BUG when use onShowSnackbar
+//                    coroutineScope.launch {
+//                        onShowSnackbar(it, null)
+//                    }
+                },
+                onFoodClick = { foods: List<Food>, seller: User ->
+                    HomeViewModel.foods = foods
+                    HomeViewModel.seller = seller
+                    appState.navigateToSellerDetail()
                 }
-            }
-        )
+            )
+        }
+        composable(Screens.SellerDetail.route) {
+            SellerDetailRoute(
+                seller = HomeViewModel.seller,
+                foods = HomeViewModel.foods,
+                onBackClick = {
+                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+                },
+                currentLoginUser = appState.currentUser
+            )
+        }
+        composable(
+            Screens.LOGIN.route + "/{isRegister}",
+            arguments = listOf(
+                navArgument("isRegister") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                }
+            )
+        ) { navBackEntry ->
+            val isRegister = navBackEntry.arguments?.getBoolean("isRegister") ?: false
+            Log.v("重复加载测试","Login屏幕,isRegister=$isRegister")
+            LoginScreenRoute(
+                onSuccess = {
+                    Log.v(
+                        "navigation_test",
+                        "loginNavigation navigateToTopLevelDestination(TopLevelDestination.HOME)"
+                    )
+                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+                    appState.setCurrentUser(it)
+                },
+                onError = {
+                    //TODO BUG
+//                    coroutineScope.launch {
+//                        onShowSnackbar(it, null)
+//                    }
+                },
+                isRegister = isRegister
+            )
+        }
+        composable(Screens.MyORDER.route) {
+            MyOrderScreen(
+                onBack = {
+                    appState.navigateToTopLevelDestination(TopLevelDestination.HOME)
+                },
+                currentLoginUser = appState.currentUser.value
+            )
+        }
     }
 }
 

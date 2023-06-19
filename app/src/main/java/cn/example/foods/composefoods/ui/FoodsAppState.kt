@@ -1,5 +1,6 @@
 package cn.example.foods.composefoods.ui
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -21,8 +22,10 @@ import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
 import com.example.datastore.SettingsViewModel
+import com.example.model.remoteModel.Food
 import com.example.network.netstate.NetworkMonitor
 import com.example.model.remoteModel.User
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -143,18 +146,27 @@ class FoodsAppState(
             }
     }
 
-    fun navigateToLoginDestination() {
-        navController.navigate(Screens.LOGIN.route)
-    }
-
     fun navigateToSearch() {
 //        navController.navigateToSearch()
+    }
+
+    fun navigateToSellerDetail() {
+        navController.navigate(Screens.SellerDetail.route)
+    }
+
+    fun navigateToLoginOrSignUp(isRegister:Boolean = false) {
+        navController.navigate(Screens.LOGIN.route+"/$isRegister")
     }
 
     private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)
     val currentUser = _currentUser
     fun setCurrentUser(user: User) {
+        Log.v("cgf","setCurrentUser:$user")
         _currentUser.value = user
+    }
+
+    fun navigateToMyOrder() {
+        navController.navigate(Screens.MyORDER.route)
     }
 }
 
@@ -170,7 +182,7 @@ private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
 private fun NavigationTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
         val listener = NavController.OnDestinationChangedListener { _,destination,arguments ->
-            Log.v("navigation_events","Destination:${destination.route.toString()},arguments:$arguments")
+            Log.v("navigation_events","Foods Destination:${destination.route.toString()},arguments:$arguments")
         }
 
         navController.addOnDestinationChangedListener(listener)
