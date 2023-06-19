@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface RemoteApi {
 
     companion object {
-        const val BASE_URL = "http://10.129.67.213:80/"
+        const val BASE_URL = "http://10.129.33.197:80/"
 
         const val IMAGE_BASE_URL = BASE_URL + "food/showimg/"
     }

@@ -3,9 +3,12 @@
 
     <application>
         <activity
-            android:name=".SellerDetailActivity"
-            android:theme="@style/Theme.AppCompat.DayNight"
+            android:name=".My_Order_Activity"
             android:exported="false" />
+        <activity
+            android:name=".SellerDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight" />
     </application>
 
 </manifest>

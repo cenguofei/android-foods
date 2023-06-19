@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.google.android.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(project(mapOf("path" to ":core:model")))
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
