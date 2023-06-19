@@ -23,6 +23,6 @@ dependencies {
     implementation(project(":core:model"))
 }
 
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//    correctErrorTypes = true
+//}

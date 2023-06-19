@@ -66,9 +66,6 @@ fun MyOrderItem(order: Order) {
                     .weight(3f), color = MaterialTheme.colorScheme.surface
             ) {
                 Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
-//                val localDate = LocalDateTime.parse(order.createTime)
-//                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
                     if (order.orderDetailList.size == 1) {
                         FoodSmallImage(model = order.orderDetailList[0].foodPic)
                         Column(

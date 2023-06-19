@@ -106,6 +106,10 @@ fun FoodsDrawer(
                 onSeeMyOrder = {
                     closeDrawer()
                     appState.navigateToMyOrder()
+                },
+                onSeeMyFavorites = {
+                    closeDrawer()
+                    appState.navigateToMyFavorite()
                 }
             )
         },
@@ -120,6 +124,7 @@ fun DrawerContent(
     user: User,
     onLogin: () -> Unit,
     onSeeMyOrder: () -> Unit,
+    onSeeMyFavorites: () -> Unit,
     appState: FoodsAppState
 ) {
     FoodsBackground(
@@ -207,8 +212,9 @@ fun DrawerContent(
                             onClick = onSeeMyOrder
                         )
                         SettingsClickBarExpandable(
-                            text = "我的邮箱",
-                            startIcon = Icons.Default.StarBorder
+                            text = "我的喜欢",
+                            startIcon = Icons.Default.StarBorder,
+                            onClick = onSeeMyFavorites
                         )
                         SettingsClickBarExpandable(
                             text = "我的邮箱",

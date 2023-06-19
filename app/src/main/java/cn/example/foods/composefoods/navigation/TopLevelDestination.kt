@@ -32,12 +32,6 @@ enum class TopLevelDestination(
     @StringRes val iconTextId: Int? = null,
     @StringRes val titleTextId: Int? = null,
 ) {
-//    SEARCH(
-//        unselectedIcon = FoodsIcons.Search,
-//        selectedIcon = FoodsIcons.SearchFilled,
-//        iconTextId = R.string.search,
-//        titleTextId = R.string.search_meal
-//    ),
     HOME(
         unselectedIcon = FoodsIcons.Home,
         selectedIcon = FoodsIcons.HomeFilled
@@ -46,9 +40,5 @@ enum class TopLevelDestination(
         unselectedIcon = FoodsIcons.Grid3x3,
         selectedIcon = FoodsIcons.Grid3x3
     )
-//    SETTINGS(
-//        unselectedIcon = FoodsIcons.Settings,
-//        selectedIcon = FoodsIcons.SettingsFilled,
-//    )
 }
 

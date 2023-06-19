@@ -1,13 +1,16 @@
 package com.example.home
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.designsystem.component.ErrorScreen
 import com.example.designsystem.component.ShimmerList
+import com.example.model.remoteModel.Favorite
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.User
@@ -16,16 +19,12 @@ import com.example.model.remoteModel.User
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    onShowError:(String) -> Unit,
-    saveFavorite: (food: Food, seller: User) -> Unit = {_,_ ->},
-    deleteFavorite: (food: Food, seller: User) -> Unit = {_,_ ->},
-    onFoodClick:(food:List<Food>,seller:User) -> Unit = {_,_ ->}
+    onFoodClick: (food: List<Food>, seller: User) -> Unit = { _, _ -> },
+    saveFavorite: (food: Food, seller: User) -> Unit,
+    deleteFavorite: (food: Food, seller: User) -> Unit,
+    favoriteFoodIds: SnapshotStateList<Long>,
 ) {
     val foods by homeViewModel.sellerToFoods.collectAsState()
-    LaunchedEffect(key1 = Unit, block = {
-        Log.v("重复加载测试","HomeScreen开始加载 Foods。。。")
-//        homeViewModel.getAllFoods()
-    })
 
     when(foods) {
         is NetworkResult.Loading -> {
@@ -37,11 +36,13 @@ fun HomeScreen(
                 onSearch = {},
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,
-                onFoodClick = onFoodClick
+                onFoodClick = onFoodClick,
+                favoriteFoodIds = favoriteFoodIds
             )
+
         }
         is NetworkResult.Error -> {
-            onShowError(foods.error?.cause?.message ?: stringResource(id = R.string.unkown_erro))
+            ErrorScreen(foods.error?.cause?.message ?: stringResource(id = R.string.unkown_erro))
         }
     }
 }

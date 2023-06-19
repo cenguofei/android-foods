@@ -35,6 +35,6 @@ dependencies {
     implementation(project(mapOf("path" to ":core:model")))
     implementation(project(mapOf("path" to ":feature:login")))
 }
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//    correctErrorTypes = true
+//}

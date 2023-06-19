@@ -130,6 +130,7 @@ fun FoodsListItem(
                     },
                     placeholder = painterResource(id = R.drawable.food3),
                     error = painterResource(id = R.drawable.food11),
+                    alignment = Alignment.Center
                 )
                 Column(modifier = Modifier.padding(start = 8.dp)) {
                     Text(text = food.foodName, style = MaterialTheme.typography.labelLarge)

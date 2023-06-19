@@ -22,15 +22,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
-import androidx.compose.material.icons.outlined.AddComment
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -49,10 +42,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
@@ -77,7 +67,8 @@ fun FoodCard(
     food: Food = DataProvider.Food,
     onClick: () -> Unit,
     saveFavorite: (food: Food, seller: User) -> Unit,
-    deleteFavorite: (food: Food, seller: User) -> Unit
+    deleteFavorite: (food: Food, seller: User) -> Unit,
+    isFavoriteFood: Boolean
 ) {
     val rgb = remember { mutableStateOf(0) }
     val resource = LocalContext.current.resources
@@ -98,7 +89,7 @@ fun FoodCard(
         .verticalGradientBackground(listOf(Color(rgb.value), MaterialTheme.colorScheme.surface))
 
     Surface(
-        modifier = gradientModifier,color = Color.Transparent
+        modifier = gradientModifier, color = Color.Transparent
     ) {
         Column(
             modifier = Modifier
@@ -148,24 +139,29 @@ fun FoodCard(
                         .align(Alignment.BottomEnd),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    var favorite by remember { mutableStateOf(false) }
-                    var previousState by remember { mutableStateOf(false) }
+//                    var favorite by remember { mutableStateOf(false) }
+//                    var previousState by remember { mutableStateOf(false) }
 
                     IconButton(
                         onClick = {
-                            favorite = !favorite
+//                            favorite = !favorite
+                            if (isFavoriteFood) {
+                                deleteFavorite(food, seller)
+                            } else {
+                                saveFavorite(food, seller)
+                            }
                         },
                         modifier = Modifier/*.padding(bottom = 4.dp, end = 4.dp)*/
                     ) {
-                        if (favorite) {
+                        if (isFavoriteFood) {
                             Log.v("cgf", "首页card Rounded.Favorite")
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            previousState = true
-                            saveFavorite(food, seller)
+//                            previousState = true
+//                            saveFavorite(food, seller)
                         } else {
                             Log.v("cgf", "首页card Outlined.Favorite")
                             Icon(
@@ -173,10 +169,10 @@ fun FoodCard(
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            if (previousState) {
-                                deleteFavorite(food, seller)
-                                previousState = false
-                            }
+//                            if (previousState) {
+//                                deleteFavorite(food, seller)
+//                                previousState = false
+//                            }
                         }
                     }
                 }
@@ -259,17 +255,18 @@ private fun SellerRow(
     seller: User,
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        //TODO 把User的头像换成后端的[showimg]
         AsyncImage(
             model = seller.headImg,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(
-                    width = 40.dp,
-                    height = 30.dp
+                    width = 48.dp,
+                    height = 38.dp
                 )
                 .clip(RoundedCornerShape(16))
+                .padding(start = 8.dp,top = 4.dp),
+            alignment = Alignment.Center
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(text = seller.username, maxLines = 1, style = MaterialTheme.typography.titleSmall)
@@ -283,12 +280,13 @@ private fun FoodCardPreview() {
     FoodsTheme {
         Box(modifier = Modifier.width(width = 200.dp)) {
             FoodCard(
+                onClick = {},
                 saveFavorite = { food, seller ->
                 },
                 deleteFavorite = { food, seller ->
 
                 },
-                onClick = {}
+                isFavoriteFood = true
             )
         }
     }

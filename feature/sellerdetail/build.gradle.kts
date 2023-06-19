@@ -30,6 +30,6 @@ dependencies {
     implementation(project(mapOf("path" to ":core:common")))
     implementation(project(mapOf("path" to ":core:model")))
 }
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//    correctErrorTypes = true
+//}

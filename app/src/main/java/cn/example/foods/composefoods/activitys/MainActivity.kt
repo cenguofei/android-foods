@@ -1,10 +1,10 @@
 package cn.example.foods.composefoods.activitys
 
-import android.app.Application
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,16 +23,13 @@ import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.ui.FoodsApp
 import cn.example.foods.composefoods.ui.FoodsAppState
 import cn.example.foods.composefoods.ui.rememberFoodsAppState
-import cn.example.foods.logv
 import com.example.datastore.SettingsUiState
 import com.example.datastore.SettingsViewModel
 import com.example.model.storagemodel.DarkThemeConfig
 import com.example.model.storagemodel.ThemeBrand
 import com.example.designsystem.theme.FoodsTheme
 import com.example.network.netstate.NetworkMonitor
-import com.example.start.StartScreen
 import com.example.start.splash.FoodsSplashScreen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -49,6 +46,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settingsViewModel:SettingsViewModel
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +86,7 @@ class MainActivity : ComponentActivity() {
                                 if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
                                     FoodsApp(appState = appState, startScreen = Screens.Start)
                                 } else {
-                                    FoodsApp(appState = appState, startScreen = Screens.HOME)
+                                    FoodsApp(appState = appState, startScreen = Screens.Home)
                                 }
                             }
                         }

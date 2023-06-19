@@ -4,6 +4,8 @@ plugins {
     id("foods.android.application.compose")
     id("org.jetbrains.kotlin.android")
     id("foods.android.hilt")
+
+//    id("kotlin-kapt")
 }
 
 android {
@@ -82,9 +84,9 @@ dependencies {
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
-    implementation(project(":core:common"))
     implementation(project(":feature:start"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:home"))
@@ -93,14 +95,26 @@ dependencies {
     implementation(project(":feature:login"))
     implementation(project(":feature:sellerdetail"))
     implementation(project(":feature:myorder"))
+    implementation(project(":feature:favorite"))
 
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.ext)
+
+    val room_version = "2.5.1"
+
+//    implementation("androidx.room:room-runtime:$room_version")
+//    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+//    kapt("androidx.room:room-compiler:$room_version")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+//    implementation("androidx.room:room-ktx:$room_version")
 }
 
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//    correctErrorTypes = true
+//}

@@ -20,6 +20,7 @@ package com.example.designsystem.component
 
 //noinspection SuspiciousImport
 import androidx.annotation.StringRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -53,7 +54,9 @@ fun FoodsTopAppBar(
         horizontalArrangement = if (endContent == null) Arrangement.Start else Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+        val contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface
+            else MaterialTheme.colorScheme.onSurface
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
             startContent()
             endContent?.let {
                 endContent()

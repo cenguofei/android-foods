@@ -1,6 +1,5 @@
 package com.example.home
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
@@ -20,9 +19,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -38,27 +34,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.component.FoodCard
-import com.example.designsystem.component.FoodsBackground
 import com.example.designsystem.component.FoodsTopAppBar
-import com.example.designsystem.component.MyStaggeredVerticalGrid
 import com.example.designsystem.component.SearchToolbar
-import com.example.designsystem.theme.FoodsTheme
 import com.example.designsystem.R as designR
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
@@ -133,30 +125,23 @@ fun SuccessContent(
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit,
     onFoodClick: (foods: List<Food>, seller: User) -> Unit,
+    favoriteFoodIds: SnapshotStateList<Long>,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val map = remember { mutableMapOf<Food, User>() }
-    val pairs = remember { mutableListOf<Pair<Food, Food?>>() }
 
-    //初始化map
+
+    val map = remember { mutableMapOf<Food, User>() }
     data.entries.forEach { entry ->
         val key = entry.key
         val value = entry.value
-
         value.forEach { food ->
             map[food] = key
         }
     }
 
-    val flatten = data.values.flatten()
-    for (i in flatten.indices - 1) {
-        if (i+1 < flatten.size) {
-            pairs.add(flatten[i] to flatten[i + 1])
-        }
-        if (i == flatten.size - 2) {
-            pairs.add(flatten[i] to null)
-        }
-    }
+
+
+    val pairs = remember { data.values.flatten().toPairs() }
 
     LazyColumn(
         modifier = Modifier
@@ -196,44 +181,44 @@ fun SuccessContent(
                     secondFoods?.let {
                         FoodCard(
                             modifier = Modifier.weight(1f),
-                            food = pair.second!!,
                             seller = secondSeller,
-                            saveFavorite = saveFavorite,
+                            food = pair.second!!,
                             onClick = {
                                 onFoodClick(secondFoods, secondSeller)
                             },
-                            deleteFavorite = deleteFavorite
+                            saveFavorite = { food, seller ->
+                                saveFavorite(food, seller)
+                                favoriteFoodIds.add(food.id)
+                            },
+                            deleteFavorite = { food, seller ->
+                                deleteFavorite(food, seller)
+                                favoriteFoodIds.remove(food.id)
+                            },
+                            isFavoriteFood = pair.second!!.id in favoriteFoodIds
                         )
                     }
                     FoodCard(
                         modifier = Modifier.weight(1f),
                         food = pair.first,
                         seller = firstSeller,
-                        saveFavorite = saveFavorite,
+                        saveFavorite = { food, seller ->
+                            saveFavorite(food, seller)
+                            favoriteFoodIds.add(food.id)
+                        },
                         onClick = {
                             onFoodClick(firstFoods, firstSeller)
                         },
-                        deleteFavorite = deleteFavorite
+                        deleteFavorite = { food, seller ->
+                            deleteFavorite(food, seller)
+                            favoriteFoodIds.remove(food.id)
+                        },
+                        isFavoriteFood = pair.first.id in favoriteFoodIds
                     )
-
                 }
             }
         }
     }
-
 }
-
-@Composable
-private fun HomeFoodsCardGrid(
-    data: Map<String, List<Food>>?,
-    saveFavorite: (food: Food, seller: User) -> Unit,
-    deleteFavorite: (food: Food, seller: User) -> Unit,
-    nestedScrollConnection: NestedScrollConnection
-) {
-
-}
-
-val foodTypesHeight = 125.dp
 
 @Composable
 fun FoodTypes(
@@ -356,9 +341,6 @@ fun FoodsTypeImage(foodType: Pair<Int, String>) {
     }
 }
 
-
-val toolbarHeight = 100.dp
-
 @Composable
 fun FoodsHomeToolBar(position: Position) {
     FoodsTopAppBar(
@@ -385,8 +367,6 @@ fun FoodsHomeToolBar(position: Position) {
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
-
-                    FoodsMessage()
                 }
 
                 Box(
@@ -437,32 +417,26 @@ fun StartContent(position: Position) {
         }
     }
 }
+private fun <T> List<T>.toPairs(): MutableList<Pair<T, T?>> {
+    if (this.isEmpty()) {
+        return mutableListOf()
+    }
+    if (this.size == 1) {
+        return mutableListOf(this[0] to null)
+    }
 
-@Composable
-fun FoodsMessage(
-    num: Int = 0
-) {
-
-}
-
-@Preview
-@Composable
-fun PreviewSuccess() {
-    FoodsBackground {
-        FoodsTheme {
-//            SuccessContent(
-//                data = mapOf(),
-//                onSearch = {},
-//                saveFavorite = { food, seller ->
-//
-//                },
-//                deleteFavorite = { food, seller ->
-//                },
-//                onFoodClick = {food, seller ->
-//
-//                },
-////                viewModel = homeViewModel
-//            )
+    val pairs = mutableListOf<Pair<T, T?>>()
+    var pairList = mutableListOf<T>()
+    for (i in indices) {
+        if (pairList.size == 2) {
+            pairs.add(pairList[0] to pairList[1])
+            pairList = mutableListOf()
+        } else {
+            pairList.add(this[i])
         }
     }
+    if (pairList.isNotEmpty()) {
+        pairs.add(pairList[0] to null)
+    }
+    return pairs
 }

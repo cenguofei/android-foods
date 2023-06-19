@@ -13,7 +13,7 @@ fun NavGraphBuilder.loginNavigation(
     onShowError: (String) -> Unit,
     onSuccess: (user: User) -> Unit
 ) {
-    composable(Screens.LOGIN.route) {
+    composable(Screens.Login.route) {
 //        LoginScreenRoute(
 //            onSuccess = onSuccess,
 //            onError = onShowError,

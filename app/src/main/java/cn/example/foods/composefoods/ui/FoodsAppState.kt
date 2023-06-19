@@ -1,6 +1,5 @@
 package cn.example.foods.composefoods.ui
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -22,10 +21,8 @@ import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
 import com.example.datastore.SettingsViewModel
-import com.example.model.remoteModel.Food
 import com.example.network.netstate.NetworkMonitor
 import com.example.model.remoteModel.User
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -74,7 +71,7 @@ class FoodsAppState(
 
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
-            Screens.HOME.route -> TopLevelDestination.HOME
+            Screens.Home.route -> TopLevelDestination.HOME
             else -> null
         }
 
@@ -121,7 +118,7 @@ class FoodsAppState(
      *
      * @param topLevelDestination: The destination the app needs to navigate to.
      */
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination = TopLevelDestination.HOME) {
             val topLevelNavOptions = navOptions {
                 // Pop up to the start destination of the graph to
                 // avoid building up a large stack of destinations
@@ -155,7 +152,7 @@ class FoodsAppState(
     }
 
     fun navigateToLoginOrSignUp(isRegister:Boolean = false) {
-        navController.navigate(Screens.LOGIN.route+"/$isRegister")
+        navController.navigate(Screens.Login.route+"/$isRegister")
     }
 
     private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)
@@ -166,13 +163,17 @@ class FoodsAppState(
     }
 
     fun navigateToMyOrder() {
-        navController.navigate(Screens.MyORDER.route)
+        navController.navigate(Screens.MyOrder.route)
+    }
+
+    fun navigateToMyFavorite() {
+        navController.navigate(Screens.Favorite.route)
     }
 }
 
 private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
     Log.v("navigation_test","NavHostController.navigateToHome(topLevelNavOptions: NavOptions)")
-    navigate(route = Screens.HOME.route,navOptions = topLevelNavOptions)
+    navigate(route = Screens.Home.route,navOptions = topLevelNavOptions)
 }
 
 /**

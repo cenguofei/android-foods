@@ -1,6 +1,8 @@
 package com.example.network.remote.repository
 
 import android.util.Log
+import com.example.common.di.Dispatcher
+import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.User
@@ -19,10 +21,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RemoteRepository @Inject constructor() {
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+class RemoteRepository @Inject constructor(
+    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
+) {
+//    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
     private val remoteService: RemoteApi = Retrofit.Builder()
-        .baseUrl(RemoteApi.BASE_URL)
+        .baseUrl(ApiParam.BASE_URL)
         .client(
             OkHttpClient.Builder()
                 .readTimeout(1,TimeUnit.MINUTES)
@@ -69,8 +73,8 @@ class RemoteRepository @Inject constructor() {
             remoteService.register(
                 user.username,
                 user.password,
-                user.email!!,
-                user.tel ?: "",
+                user.email,
+                user.tel,
                 user.sex.toString()
             )
         }
