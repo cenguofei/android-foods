@@ -23,6 +23,7 @@ fun HomeScreen(
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
+    onSearchClick: () -> Unit,
 ) {
     val foods by homeViewModel.sellerToFoods.collectAsState()
 
@@ -33,7 +34,7 @@ fun HomeScreen(
         is NetworkResult.Success<*> ->{
             SuccessContent(
                 data = foods.data!!,
-                onSearch = {},
+                onSearchClick = onSearchClick,
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,
                 onFoodClick = onFoodClick,

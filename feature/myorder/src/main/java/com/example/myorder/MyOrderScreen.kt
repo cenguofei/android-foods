@@ -66,18 +66,11 @@ private fun MyOrderScreenRoute(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 8.dp)
     ) {
         item {
             FoodsTopAppBar(
-                startContent = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = null,
-                        modifier = Modifier.clickable(onClick = onBack),
-                        tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                onBack = onBack
             )
         }
 

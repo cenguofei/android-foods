@@ -26,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.ChangeHistory
 import androidx.compose.material.icons.outlined.Circle
@@ -34,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -118,7 +118,7 @@ object FoodType {
 @Composable
 fun SuccessContent(
     data: Map<User, List<Food>>,
-    onSearch: (String) -> Unit,
+    onSearchClick: () -> Unit,
     searchQuery: String = "今天想吃点什么?",
     position: Position = Position.NONE,
     types: List<Pair<Int, String>> = FoodType.types,
@@ -148,20 +148,20 @@ fun SuccessContent(
             .fillMaxSize(),
     ) {
         item {
-            FoodsHomeToolBar(position)
+            FoodsHomeToolBar(position, onSearchClick = onSearchClick)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp)
             ) {
-                SearchToolbar(
-                    modifier = Modifier,
-                    searchQuery = searchQuery,
-                    onLeadingClick = {
-                        onSearch(searchQuery)
-                    },
-                    enabled = false
-                )
+//                SearchToolbar(
+//                    modifier = Modifier,
+//                    searchQuery = searchQuery,
+//                    onClick = {
+//                        onSearch(searchQuery)
+//                    },
+//                    enabled = false
+//                )
                 FoodTypes(types, coroutineScope)
             }
         }
@@ -342,12 +342,13 @@ fun FoodsTypeImage(foodType: Pair<Int, String>) {
 }
 
 @Composable
-fun FoodsHomeToolBar(position: Position) {
+fun FoodsHomeToolBar(position: Position,onSearchClick: () -> Unit) {
     FoodsTopAppBar(
         modifier = Modifier
             .systemBarsPadding()
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
+        needNavigation = false,
         startContent = {
             StartContent(position)
         },
@@ -380,6 +381,21 @@ fun FoodsHomeToolBar(position: Position) {
                         }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier.size(45.dp)
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.Center), onClick = onSearchClick) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurface
                         )

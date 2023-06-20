@@ -13,7 +13,7 @@ import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
 import com.example.model.remoteModel.User
-import com.example.network.remote.repository.RemoteRepository
+import com.example.network.remote.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SellerDetailViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
+    private val remoteRepository: FoodRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)

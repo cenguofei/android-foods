@@ -56,7 +56,10 @@ fun StartScreen(
 fun StartScreenPreview(){
     FoodsBackground {
         FoodsTheme {
-//            StartScreen()
+            StartScreen(
+                onBeginClick = {},
+                onSignUpClick = {}
+            )
         }
     }
 }

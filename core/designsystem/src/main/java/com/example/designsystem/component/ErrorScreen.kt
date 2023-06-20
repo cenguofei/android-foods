@@ -12,15 +12,17 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun ErrorScreen(
-    description:String = ""
+    description:String = "",
+    shouldShowAnim:Boolean = true
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        FoodsLottieAnimation(assetName = "error1.json")
-        
+        if (shouldShowAnim) {
+            FoodsLottieAnimation(assetName = "error1.json")
+        }
         Text(text = "出错啦！！！\uD83D\uDE23\uD83D\uDE23", style = MaterialTheme.typography.titleSmall)
         Text(text = description, style = MaterialTheme.typography.bodyMedium)
     }

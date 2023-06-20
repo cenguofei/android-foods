@@ -14,6 +14,7 @@ androidxEspressoCore = "3.5.1"
 androidxTestExt = "1.1.4"
 androidxDatastore = "1.0.0"
 androidxComposeFoundation = "1.5.0-beta02"
+androidxComposeConstraintLayout = "1.0.1"
 
 
 androidxPalette = "1.0.0"
@@ -93,6 +94,8 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
+androidx-compose-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose",version.ref = "androidxComposeConstraintLayout"}
+androidx-constraintlayout-core = { group = "androidx.constraintlayout", name = "constraintlayout-core",version.ref = "androidxComposeConstraintLayout"}
 
 androidx-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }

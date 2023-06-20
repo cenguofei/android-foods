@@ -1,37 +1,29 @@
 package com.example.home
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import com.example.common.di.Dispatcher
 import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.User
 import com.example.network.remote.repository.ApiParam
-import com.example.network.remote.repository.RemoteRepository
+import com.example.network.remote.repository.FoodRepository
+import com.example.network.remote.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
+    private val foodRepository: FoodRepository,
+    private val userRepository: UserRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -49,7 +41,7 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(NetworkResult.Loading())
 
     init {
-        Log.v("cgf","HomeViewModel RemoteRepository->$remoteRepository")
+        Log.v("cgf","HomeViewModel RemoteRepository->$foodRepository")
         Log.v("test_home","1 savedStateHandle get  sellerToFoods.value=${sellerToFoods.value}")
 
 //        val default = NetworkResult.Loading<Map<User, List<Food>>>()
@@ -65,8 +57,8 @@ class HomeViewModel @Inject constructor(
     fun getAllFoods() {
         viewModelScope.launch(dispatcher) {
             try {
-                val allUser = async { remoteRepository.getAllUser() }
-                remoteRepository.getAllFood()
+                val allUser = async { userRepository.getAllUser() }
+                foodRepository.getAllFood()
                     .catch {
                         Log.v("cgf", "错误：" + it.message + ", " + it.cause)
                         sellerToFoods.emit(NetworkResult.Error(it.cause))

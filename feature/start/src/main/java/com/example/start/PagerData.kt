@@ -2,6 +2,6 @@ package com.example.start
 
 val defaultLottieAnimations = listOf<String>(
     "delivery.json",
-    "menu.json",
+    "food_text.json",
     "packaging.json"
 )

@@ -9,18 +9,17 @@ import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
-import com.example.network.remote.repository.RemoteRepository
+import com.example.network.remote.repository.FoodRepository
 import com.google.gson.internal.LinkedTreeMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MyOrderViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
+    private val remoteRepository: FoodRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {

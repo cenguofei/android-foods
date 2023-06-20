@@ -25,6 +25,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,22 +46,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsTopAppBar(
     modifier: Modifier = Modifier,
-    startContent: @Composable RowScope.() -> Unit,
+    needNavigation: Boolean = true,
+    onBack: () -> Unit = {},
+    startContent: @Composable RowScope.() -> Unit = {},
     endContent: (@Composable RowScope.() -> Unit)? = null,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .statusBarsPadding(),
         horizontalArrangement = if (endContent == null) Arrangement.Start else Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface
-            else MaterialTheme.colorScheme.onSurface
+        else MaterialTheme.colorScheme.onSurface
         CompositionLocalProvider(LocalContentColor provides contentColor) {
+            if (needNavigation) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null,
+                        tint = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
             startContent()
             endContent?.let {
                 endContent()

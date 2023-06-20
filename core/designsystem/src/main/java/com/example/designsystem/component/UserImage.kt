@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,9 +22,11 @@ import coil.compose.AsyncImage
 import com.example.designsystem.R
 
 @Composable
-fun UserHeader(model:Any?) {
+fun UserHeader(model: Any?) {
     AsyncImage(
-        modifier = Modifier.size(60.dp).clip(RoundedCornerShape(50)),
+        modifier = Modifier
+            .size(60.dp)
+            .clip(RoundedCornerShape(50)),
         alignment = Alignment.Center,
         model = model,
         contentScale = ContentScale.Crop,
@@ -36,8 +39,8 @@ fun UserHeader(model:Any?) {
 @Composable
 fun LoadRoundedImageWithBorder(
     modifier: Modifier = Modifier,
-    model:Any?,
-    colors:List<Color> = listOf(
+    model: Any?,
+    colors: List<Color> = listOf(
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.secondary,
         MaterialTheme.colorScheme.tertiary,
@@ -47,16 +50,20 @@ fun LoadRoundedImageWithBorder(
     size: Dp = 80.dp
 ) {
     val brush = Brush.linearGradient(colors)
-    AsyncImage(
-        modifier = modifier
+    Surface(
+        color = Color.Transparent, modifier = modifier
             .size(size)
             .clip(RoundedCornerShape(16))
-            .border(width = 3.dp, brush = brush, shape = RoundedCornerShape(50)),
-        alignment = Alignment.Center,
-        model = model,
-        contentScale = ContentScale.Crop,
-        contentDescription = stringResource(R.string.your_header),
-        placeholder = painterResource(id = R.drawable.default_head_img),
-        error = painterResource(id = R.drawable.default_head_img),
-    )
+            .border(width = 3.dp, brush = brush, shape = RoundedCornerShape(50))
+    ) {
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            alignment = Alignment.Center,
+            model = model,
+            contentScale = ContentScale.Crop,
+            contentDescription = stringResource(R.string.your_header),
+            placeholder = painterResource(id = R.drawable.default_head_img),
+            error = painterResource(id = R.drawable.default_head_img),
+        )
+    }
 }

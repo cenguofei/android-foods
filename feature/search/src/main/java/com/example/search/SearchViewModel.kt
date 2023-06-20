@@ -16,15 +16,25 @@ package com.example.search
  * limitations under the License.
  */
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.model.page.PageList
+import com.example.model.page.SearchResultUiState
+import com.example.network.remote.repository.ApiParam
+import com.example.network.remote.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +42,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val foodRepository: FoodRepository
 ) : ViewModel() {
 
     val searchQuery = savedStateHandle.getStateFlow(SEARCH_QUERY, "")
@@ -40,12 +51,37 @@ class SearchViewModel @Inject constructor(
         savedStateHandle[SEARCH_QUERY] = query
     }
 
-
+    val searchResultUiState: StateFlow<SearchResultUiState> = channelFlow {
+        searchQuery.collectLatest { query ->
+            if (query.isNotEmpty()) {
+                foodRepository.queryLike(query)
+                    .catch {
+                        Log.v("cgf", "查询失败了:${it.message}")
+                        it.printStackTrace()
+                        trySend(SearchResultUiState.LoadFailed(it))
+                    }
+                    .collect {
+                        Log.v("cgf", "查询成功：$it")
+                        val map = it.rows.map { food ->
+                            food.copy(foodPic = ApiParam.IMAGE_FOOD_URL + food.foodPic)
+                        }
+                        val pageList = PageList(total = it.total, rows = map)
+                        if (it.isEmpty()) {
+                            trySend(SearchResultUiState.EmptyQuery)
+                        } else {
+                            trySend(SearchResultUiState.Success(pageList))
+                        }
+                    }
+            } else {
+                trySend(SearchResultUiState.PendingSearch)
+            }
+        }
+        awaitClose { close() }
+    }.stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = SearchResultUiState.EmptyQuery
+        )
 }
 
-/** Minimum length where search query is considered as [SearchResultUiState.EmptyQuery] */
-private const val SEARCH_QUERY_MIN_LENGTH = 2
-
-/** Minimum number of the fts table's entity count where it's considered as search is not ready */
-private const val SEARCH_MIN_FTS_ENTITY_COUNT = 1
 private const val SEARCH_QUERY = "searchQuery"

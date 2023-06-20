@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
     lateinit var sourceContainer: SourceContainer
 
     @Inject
-    lateinit var settingsViewModel:SettingsViewModel
+    lateinit var settingsViewModel: SettingsViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalAnimationApi::class)
@@ -61,33 +61,32 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(systemUiController, darkTheme) {
                 systemUiController.systemBarsDarkContentEnabled = !darkTheme
-                systemUiController.setSystemBarsColor(Color.Transparent,darkIcons = !darkTheme)
+                systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = !darkTheme)
             }
 
-            CompositionLocalProvider {
-                FoodsTheme(
-                    darkTheme = darkTheme,
-                    androidTheme = shouldUseAndroidTheme(uiState.value),
-                    disableDynamicTheming = shouldDisableDynamicTheming(uiState.value),
-                ) {
-                    val appState: FoodsAppState = rememberFoodsAppState(
-                        networkMonitor = networkMonitor,
-                        windowSizeClass = calculateWindowSizeClass(this),
-                        sourceContainer = sourceContainer,
-                        settingsViewModel = settingsViewModel,
-                        navController = rememberNavController()
-                    )
-                    Crossfade(uiState) { settingsState ->
-                        when(settingsState.value) {
-                            is SettingsUiState.Loading -> {
-                                FoodsSplashScreen()
-                            }
-                            is SettingsUiState.Success -> {
-                                if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
-                                    FoodsApp(appState = appState, startScreen = Screens.Start)
-                                } else {
-                                    FoodsApp(appState = appState, startScreen = Screens.Home)
-                                }
+            FoodsTheme(
+                darkTheme = darkTheme,
+                androidTheme = shouldUseAndroidTheme(uiState.value),
+                disableDynamicTheming = shouldDisableDynamicTheming(uiState.value),
+            ) {
+                val appState: FoodsAppState = rememberFoodsAppState(
+                    networkMonitor = networkMonitor,
+                    windowSizeClass = calculateWindowSizeClass(this),
+                    sourceContainer = sourceContainer,
+                    settingsViewModel = settingsViewModel,
+                    navController = rememberNavController()
+                )
+                Crossfade(uiState) { settingsState ->
+                    when (settingsState.value) {
+                        is SettingsUiState.Loading -> {
+                            FoodsSplashScreen()
+                        }
+
+                        is SettingsUiState.Success -> {
+                            if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
+                                FoodsApp(appState = appState, startScreen = Screens.Start)
+                            } else {
+                                FoodsApp(appState = appState, startScreen = Screens.Home)
                             }
                         }
                     }

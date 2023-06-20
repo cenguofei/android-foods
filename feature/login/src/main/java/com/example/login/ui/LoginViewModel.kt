@@ -7,7 +7,7 @@ import com.example.common.di.Dispatcher
 import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.User
 import com.example.network.remote.repository.ApiParam
-import com.example.network.remote.repository.RemoteRepository
+import com.example.network.remote.repository.UserRepository
 import com.google.gson.internal.LinkedTreeMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository,
+    private val remoteRepository: UserRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 

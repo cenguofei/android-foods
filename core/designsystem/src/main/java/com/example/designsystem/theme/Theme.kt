@@ -39,12 +39,9 @@ import androidx.compose.ui.unit.dp
  */
 @VisibleForTesting
 val LightDefaultColorScheme = lightColorScheme(
-//    primary = Purple40,
     primary = ClassicRed,
     onPrimary = Color.White,
-//    primaryContainer = Purple90,
     primaryContainer = Red90,
-//    onPrimaryContainer = Purple10,
     onPrimaryContainer = Red10,
     secondary = Orange40,
     onSecondary = Color.White,
@@ -201,17 +198,15 @@ fun FoodsTheme(
     disableDynamicTheming: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    "darkTheme:$darkTheme, androidTheme:$androidTheme, disableDynamicTheming:$disableDynamicTheming".logv()
     // Color scheme
     val colorScheme = when {
         androidTheme -> if (darkTheme) DarkAndroidColorScheme else LightAndroidColorScheme
         //TODO disable dynamic for test
-//        !disableDynamicTheming && supportsDynamicTheming() -> {
-//            Log.v("cgf","use dynamic theme")
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-
+        !disableDynamicTheming && supportsDynamicTheming() -> {
+            Log.v("cgf","use dynamic theme")
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
         else -> if (darkTheme) DarkDefaultColorScheme else LightDefaultColorScheme
     }
 
@@ -238,24 +233,16 @@ fun FoodsTheme(
         else -> defaultBackgroundTheme
     }
 
-    var tintTheme = when {
+    val tintTheme = when {
         androidTheme -> TintTheme()
         !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
         else -> TintTheme()
     }
-//    val tintTheme = TintTheme(MaterialTheme.colorScheme.primary)
-
     val contentTheme = if (darkTheme) {
         MaterialTheme.colorScheme.surface
     } else {
         MaterialTheme.colorScheme.onSurface
     }
-
-    "gradientColors:$gradientColors".logv()
-    "backgroundTheme:$backgroundTheme".logv()
-    "tintTheme:$tintTheme".logv()
-    "colorScheme:$colorScheme".logv()
-    // Composition locals
     CompositionLocalProvider(
         LocalGradientColors provides gradientColors,
         LocalBackgroundTheme provides backgroundTheme,
@@ -268,10 +255,6 @@ fun FoodsTheme(
             content = content,
         )
     }
-}
-
-private fun String.logv() {
-    Log.v("theme_test",this)
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)

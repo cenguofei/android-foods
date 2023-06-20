@@ -129,7 +129,7 @@ fun FoodsLoadingWheel(
 }
 
 @Composable
-fun NiaOverlayLoadingWheel(
+fun OverlayLoadingWheel(
     contentDesc: String,
     modifier: Modifier = Modifier,
 ) {
@@ -148,7 +148,7 @@ fun NiaOverlayLoadingWheel(
 
 @ThemePreviews
 @Composable
-fun NiaLoadingWheelPreview() {
+fun LoadingWheelPreview() {
     FoodsTheme {
         Surface {
             FoodsLoadingWheel(contentDesc = "LoadingWheel")
@@ -158,10 +158,10 @@ fun NiaLoadingWheelPreview() {
 
 @ThemePreviews
 @Composable
-fun NiaOverlayLoadingWheelPreview() {
+fun OverlayLoadingWheelPreview() {
     FoodsTheme {
         Surface {
-            NiaOverlayLoadingWheel(contentDesc = "LoadingWheel")
+            OverlayLoadingWheel(contentDesc = "LoadingWheel")
         }
     }
 }

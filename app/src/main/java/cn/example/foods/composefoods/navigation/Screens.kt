@@ -6,7 +6,8 @@ enum class Screens(val route: String) {
     SellerDetail("seller"),
     Start("start"),
     MyOrder("start"),
-    Favorite("favorite")
+    Favorite("favorite"),
+    Search("search")
 }
 
 object NavigationRoutes {

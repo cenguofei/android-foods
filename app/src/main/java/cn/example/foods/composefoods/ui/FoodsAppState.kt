@@ -96,22 +96,6 @@ class FoodsAppState(
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
     /**
-     * The top level destinations that have unread news resources.
-     */
-//    val topLevelDestinationsWithUnreadResources: StateFlow<Set<TopLevelDestination>> =
-//        userNewsResourceRepository.observeAllForFollowedTopics()
-//            .combine(userNewsResourceRepository.observeAllBookmarked()) { forYouNewsResources, bookmarkedNewsResources ->
-//                setOfNotNull(
-//                    FOR_YOU.takeIf { forYouNewsResources.any { !it.hasBeenViewed } },
-//                    BOOKMARKS.takeIf { bookmarkedNewsResources.any { !it.hasBeenViewed } },
-//                )
-//            }.stateIn(
-//                coroutineScope,
-//                SharingStarted.WhileSubscribed(5_000),
-//                initialValue = emptySet(),
-//            )
-
-    /**
      * UI logic for navigating to a top level destination in the app. Top level destinations have
      * only one copy of the destination of the back stack, and save and restore state whenever you
      * navigate to and from it.
@@ -144,7 +128,7 @@ class FoodsAppState(
     }
 
     fun navigateToSearch() {
-//        navController.navigateToSearch()
+        navController.navigate(Screens.Search.route)
     }
 
     fun navigateToSellerDetail() {

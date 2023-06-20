@@ -19,18 +19,15 @@ package cn.example.foods.composefoods.navigation
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,11 +40,10 @@ import com.example.favorite.FavoriteViewModel
 import com.example.home.HomeScreen
 import com.example.home.HomeViewModel
 import com.example.login.ui.LoginScreenRoute
-import com.example.model.remoteModel.Favorite
 import com.example.model.remoteModel.Food
-import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.User
 import com.example.myorder.MyOrderScreen
+import com.example.search.SearchScreen
 import com.example.sellerdetail.SellerDetailRoute
 import com.example.start.StartScreen
 
@@ -64,9 +60,7 @@ fun FoodsNavHost(
     val coroutineScope = rememberCoroutineScope()
     val navController = appState.navController
     val homeViewModel: HomeViewModel = viewModel()
-    val favoriteViewModel: FavoriteViewModel = hiltViewModel()
-    //收藏的Foods
-    val favoritesFood = favoriteViewModel.myFavorites.collectAsState()
+    val favoriteViewModel: FavoriteViewModel = viewModel()
     LaunchedEffect(key1 = appState.currentUser.value, block = {
         favoriteViewModel.getFavorites(appState.currentUser.value.username)
     })
@@ -77,116 +71,165 @@ fun FoodsNavHost(
         startDestination = startScreen.route,
         modifier = modifier,
     ) {
-        composable(route = Screens.Start.route) {
-            StartScreen(
-                onSignUpClick = {
-                    appState.settingsViewModel.updateUserInitialThemeBehavior()
-                    appState.navigateToLoginOrSignUp(true)
-                },
-                onBeginClick = {
-                    appState.settingsViewModel.updateUserInitialThemeBehavior()
-                    appState.navigateToTopLevelDestination()
-                }
-            )
-        }
-        composable(Screens.Home.route) {
-            val settingsUiStateState = appState.settingsViewModel.settingsUiState.collectAsState()
-            if (settingsUiStateState.value is SettingsUiState.Success) {
-                if ((settingsUiStateState.value as SettingsUiState.Success).settings.isFirstUse) {
-                    appState.settingsViewModel.updateUseState(false)
-                }
+        startScreen(appState = appState)
+        homeScreen(
+            appState = appState,
+            homeViewModel = homeViewModel,
+            favoriteViewModel = favoriteViewModel,
+            onSearchClick = {
+                appState.navigateToSearch()
             }
-
-            HomeScreen(
-                homeViewModel = homeViewModel,
-                onFoodClick = { foods: List<Food>, seller: User ->
-                    HomeViewModel.foods = foods
-                    HomeViewModel.seller = seller
-                    appState.navigateToSellerDetail()
-                },
-                saveFavorite = { food, seller ->
-                    favoriteViewModel.addFavorite(
-                        currentUser = appState.currentUser.value,
-                        seller = seller,
-                        food = food,
-                        onError = {
-                            //TODO while save favorite failed.
-                        },
-                        onSuccess = { }
-                    )
-                },
-                deleteFavorite = { food, seller ->
-                    favoriteViewModel.deleteFavorite(
-                        id = food.id,
-                        onSuccess = {},
-                        onError = {
-                            //TODO while delete favorite failed.
-                        }
-                    )
-                },
-                favoriteFoodIds = favoriteViewModel.favoriteFoodIds
-            )
-        }
-        composable(Screens.SellerDetail.route) {
-            SellerDetailRoute(
-                seller = HomeViewModel.seller,
-                foods = HomeViewModel.foods,
-                onBackClick = {
-                    appState.navigateToTopLevelDestination()
-                },
-                currentLoginUser = appState.currentUser
-            )
-        }
-        composable(
-            Screens.Login.route + "/{isRegister}",
-            arguments = listOf(
-                navArgument("isRegister") {
-                    type = NavType.BoolType
-                    defaultValue = false
-                }
-            )
-        ) { navBackEntry ->
-            val isRegister = navBackEntry.arguments?.getBoolean("isRegister") ?: false
-            Log.v("重复加载测试", "Login屏幕,isRegister=$isRegister")
-            LoginScreenRoute(
-                onSuccess = {
-                    Log.v(
-                        "navigation_test",
-                        "loginNavigation navigateToTopLevelDestination(TopLevelDestination.HOME)"
-                    )
-                    appState.navigateToTopLevelDestination()
-                    appState.setCurrentUser(it)
-                },
-                onError = {
-                    //TODO BUG
-//                    coroutineScope.launch {
-//                        onShowSnackbar(it, null)
-//                    }
-                },
-                isRegister = isRegister
-            )
-        }
-        composable(Screens.MyOrder.route) {
-            MyOrderScreen(
-                onBack = {
-                    appState.navigateToTopLevelDestination()
-                },
-                currentLoginUser = appState.currentUser.value
-            )
-        }
-
-        composable(Screens.Favorite.route) {
-            FavoriteScreen(
-                onBack = {
-                    appState.navigateToTopLevelDestination()
-                },
-                currentUser = appState.currentUser.value,
-                favoriteViewModel = favoriteViewModel
-            )
-        }
+        )
+        searchScreen(
+            onBack = { appState.navigateToTopLevelDestination()}
+        )
+        sellerDetailScreen(appState = appState)
+        loginScreen(appState = appState)
+        myOrderScreen(appState = appState)
+        favoriteScreen(
+            appState = appState,
+            favoriteViewModel = favoriteViewModel
+        )
     }
 }
 
+private fun NavGraphBuilder.homeScreen(
+    appState: FoodsAppState,
+    homeViewModel: HomeViewModel,
+    favoriteViewModel: FavoriteViewModel,
+    onSearchClick: () -> Unit,
+) {
+    composable(Screens.Home.route) {
+        val settingsUiStateState = appState.settingsViewModel.settingsUiState.collectAsState()
+        if (settingsUiStateState.value is SettingsUiState.Success) {
+            if ((settingsUiStateState.value as SettingsUiState.Success).settings.isFirstUse) {
+                appState.settingsViewModel.updateUseState(false)
+            }
+        }
 
+        HomeScreen(
+            homeViewModel = homeViewModel,
+            onFoodClick = { foods: List<Food>, seller: User ->
+                HomeViewModel.foods = foods
+                HomeViewModel.seller = seller
+                appState.navigateToSellerDetail()
+            },
+            saveFavorite = { food, seller ->
+                favoriteViewModel.addFavorite(
+                    currentUser = appState.currentUser.value,
+                    seller = seller,
+                    food = food,
+                    onError = {
+                        //TODO while save favorite failed.
+                    },
+                    onSuccess = { }
+                )
+            },
+            deleteFavorite = { food, seller ->
+                favoriteViewModel.deleteFavorite(
+                    id = food.id,
+                    onSuccess = {},
+                    onError = {
+                        //TODO while delete favorite failed.
+                    }
+                )
+            },
+            favoriteFoodIds = favoriteViewModel.favoriteFoodIds,
+            onSearchClick = onSearchClick
+        )
+    }
+}
+private fun NavGraphBuilder.startScreen(appState: FoodsAppState) {
+    composable(route = Screens.Start.route) {
+        StartScreen(
+            onSignUpClick = {
+                appState.settingsViewModel.updateUserInitialThemeBehavior()
+                appState.navigateToLoginOrSignUp(true)
+            },
+            onBeginClick = {
+                appState.settingsViewModel.updateUserInitialThemeBehavior()
+                appState.navigateToTopLevelDestination()
+            }
+        )
+    }
+}
 
+private fun NavGraphBuilder.sellerDetailScreen(appState: FoodsAppState) {
+    composable(Screens.SellerDetail.route) {
+        SellerDetailRoute(
+            seller = HomeViewModel.seller,
+            foods = HomeViewModel.foods,
+            onBackClick = {
+                appState.navigateToTopLevelDestination()
+            },
+            currentLoginUser = appState.currentUser
+        )
+    }
+}
 
+private fun NavGraphBuilder.loginScreen(appState: FoodsAppState) {
+    composable(
+        Screens.Login.route + "/{isRegister}",
+        arguments = listOf(
+            navArgument("isRegister") {
+                type = NavType.BoolType
+                defaultValue = false
+            }
+        )
+    ) { navBackEntry ->
+        val isRegister = navBackEntry.arguments?.getBoolean("isRegister") ?: false
+        Log.v("重复加载测试", "Login屏幕,isRegister=$isRegister")
+        LoginScreenRoute(
+            onSuccess = {
+                Log.v(
+                    "navigation_test",
+                    "loginNavigation navigateToTopLevelDestination(TopLevelDestination.HOME)"
+                )
+                appState.navigateToTopLevelDestination()
+                appState.setCurrentUser(it)
+            },
+            onError = {
+                //TODO BUG
+//                    coroutineScope.launch {
+//                        onShowSnackbar(it, null)
+//                    }
+            },
+            isRegister = isRegister
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+private fun NavGraphBuilder.myOrderScreen(appState: FoodsAppState) {
+    composable(Screens.MyOrder.route) {
+        MyOrderScreen(
+            onBack = {
+                appState.navigateToTopLevelDestination()
+            },
+            currentLoginUser = appState.currentUser.value
+        )
+    }
+}
+
+private fun NavGraphBuilder.favoriteScreen(
+    appState: FoodsAppState,
+    favoriteViewModel: FavoriteViewModel
+) {
+    composable(Screens.Favorite.route) {
+        FavoriteScreen(
+            onBack = {
+                appState.navigateToTopLevelDestination()
+            },
+            currentUser = appState.currentUser.value,
+            favoriteViewModel = favoriteViewModel
+        )
+    }
+}
+
+private fun NavGraphBuilder.searchScreen(
+    onBack:() -> Unit
+) {
+    composable(Screens.Search.route) {
+        SearchScreen(onBack = onBack)
+    }
+}

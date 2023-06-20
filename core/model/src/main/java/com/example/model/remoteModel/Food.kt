@@ -52,7 +52,7 @@ data class Food(
     /**
      * 菜的图片
      */
-    val foodPic: String = "",
+    var foodPic: String = "",
 
     //测试用的
     val foodImg:Int = 0,

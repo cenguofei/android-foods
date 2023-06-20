@@ -96,6 +96,7 @@ dependencies {
     implementation(project(":feature:sellerdetail"))
     implementation(project(":feature:myorder"))
     implementation(project(":feature:favorite"))
+    implementation(project(":feature:search"))
 
 
     testImplementation(libs.test.junit)
