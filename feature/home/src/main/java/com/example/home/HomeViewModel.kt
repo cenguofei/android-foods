@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
         var seller: User = User.NONE
     }
 
-    val sellerToFoods: MutableStateFlow<NetworkResult<Map<User, List<Food>>>> =
+    val sellerToFoods: MutableStateFlow<NetworkResult<Any>> =
         MutableStateFlow(NetworkResult.Loading())
 
     init {
@@ -52,6 +52,11 @@ class HomeViewModel @Inject constructor(
         Log.v("test_home","2 savedStateHandle get sellerToFoods.value=${sellerToFoods.value}")
         getAllFoods()
     }
+
+    var userToFoodsMap:Map<User,List<Food>> = mapOf()
+        private set
+    var showFoods:MutableList<Pair<User,Food>> = mutableListOf()
+        private set
 
     @OptIn(SavedStateHandleSaveableApi::class)
     fun getAllFoods() {
@@ -74,25 +79,19 @@ class HomeViewModel @Inject constructor(
                                 food.createUserId == user.id
                             }
                             user to filter
+                        }.filter { pair ->
+                            pair.second.isNotEmpty()
                         }.toMap()
+
+                        userToFoodsMap = map
+                        userToFoodsMap.forEach { entry ->
+                            showFoods.add(entry.key to entry.value.random())
+                        }
                         Log.v("cgf", "getAllUser users:$users")
-                        val result = NetworkResult.Success(map)
-                        sellerToFoods.emit(result)
-//                        savedStateHandle[SELLER_TO_FOODS_KEY] = result
-//
-//                        viewModelScope.launch {
-//                            while (true) {
-//                                delay(1000)
-//
-//                                val default = NetworkResult.Loading<Map<User, List<Food>>>()
-//                                val stateFlow = (savedStateHandle.getStateFlow(SELLER_TO_FOODS_KEY,default) as StateFlow<NetworkResult<Map<User,List<Food>>>>)
-//
-//                                Log.v("test_home",
-//                                    "3 savedStateHandle get after save sellerToFoods.value=${stateFlow.value}")
-//                            }
-//                        }
+                        sellerToFoods.emit(NetworkResult.Success(Any()))
                     }
             } catch (e: Exception) {
+                sellerToFoods.emit(NetworkResult.Error(e))
                 e.printStackTrace()
             }
         }

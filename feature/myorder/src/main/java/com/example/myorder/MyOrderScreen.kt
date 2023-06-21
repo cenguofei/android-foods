@@ -65,7 +65,6 @@ private fun MyOrderScreenRoute(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding()
             .padding(horizontal = 8.dp)
     ) {
         item {

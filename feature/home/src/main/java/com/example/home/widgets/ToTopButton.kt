@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
@@ -33,13 +34,13 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ToTopButton(
-    lazyListState: LazyListState,
     modifier: Modifier = Modifier,
-    onClick:() -> Unit
+    onClick: () -> Unit,
+    lazyStaggeredState: LazyStaggeredGridState
 ) {
     val scrollOffset = remember {
         derivedStateOf {
-            lazyListState.firstVisibleItemScrollOffset * (1 + lazyListState.firstVisibleItemIndex)
+            lazyStaggeredState.firstVisibleItemScrollOffset * (1 + lazyStaggeredState.firstVisibleItemIndex)
         }
     }
 //    Log.v("scrollOffset","scrollOffset=${scrollOffset.value},index=${lazyListState.firstVisibleItemIndex}")

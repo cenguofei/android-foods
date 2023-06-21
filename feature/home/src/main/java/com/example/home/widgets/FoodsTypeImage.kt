@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 fun FoodsTypeImage(foodType: Pair<Int, String>) {
     Box(
         modifier = Modifier
-            .height(75.dp)
+            .height(foodsTypesLineHeight)
             .width(125.dp)
             .padding(end = 8.dp)
             .clip(RoundedCornerShape(16)), contentAlignment = Alignment.Center

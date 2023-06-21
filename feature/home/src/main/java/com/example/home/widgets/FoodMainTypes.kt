@@ -2,11 +2,14 @@ package com.example.home.widgets
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,22 +34,28 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+val foodsTypesLineHeight = 75.dp
+val foodsTypesDescHeight = 80.dp
+
 @Composable
 fun FoodMainTypes(
+    modifier: Modifier = Modifier,
     types: List<Pair<Int, String>>,
     coroutineScope: CoroutineScope,
-    visible: MutableState<Boolean> = remember { mutableStateOf(false) }
+    visible: MutableState<Boolean> = remember { mutableStateOf(false) },
+    onDoubleLine: (Boolean) -> Unit = {},
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = 8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Outlined.Circle,
@@ -79,10 +88,12 @@ fun FoodMainTypes(
             val rotation = remember { Animatable(0f) }
             LaunchedEffect(key1 = visible.value, block = {
                 if (visible.value) {
+                    onDoubleLine(true)
                     coroutineScope.launch {
                         rotation.animateTo(-180f)
                     }
                 } else {
+                    onDoubleLine(false)
                     coroutineScope.launch {
                         rotation.animateTo(0f)
                     }
@@ -109,7 +120,7 @@ fun FoodMainTypes(
                 item { FoodsTypeImage(it) }
             }
         }
-        AnimatedVisibility(visible = visible.value) {
+//        AnimatedVisibility(visible = visible.value, enter = fadeIn(), exit = fadeOut()) {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -120,6 +131,6 @@ fun FoodMainTypes(
                     item { FoodsTypeImage(it) }
                 }
             }
-        }
+//        }
     }
 }

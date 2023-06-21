@@ -82,13 +82,14 @@ fun MyOrderItem(order: Order) {
                             )
                         }
                     } else {
-                        Column(modifier = Modifier.weight(1f).padding(horizontal = 8.dp)) {
+                        Column(modifier = Modifier.weight(1f)) {
                             LazyRow {
                                 Log.v("cgf","LazyRow order.orderDetailList="+order.orderDetailList)
                                 order.orderDetailList.forEach {
-                                    item {
+                                    item(it.id) {
                                         Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier.padding(start = 8.dp)
                                         ) {
                                             FoodSmallImage(model = it.foodPic)
                                             Text(
@@ -102,7 +103,8 @@ fun MyOrderItem(order: Order) {
                             }
                             Text(
                                 text = order.createTime,
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                         }
                     }

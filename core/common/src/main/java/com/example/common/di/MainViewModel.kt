@@ -13,9 +13,16 @@ class MainViewModel @Inject constructor() : ViewModel() {
     val shoppingCard = mutableStateMapOf<Food,Int>()
 
     fun addFoodToShoppingCard(food: Food) {
-        shoppingCard
+        val foodCount = shoppingCard[food] ?: 0
+        shoppingCard[food] = foodCount + 1
     }
 
     fun removeFoodFromShoppingCard(food: Food) {
+        val f = shoppingCard[food]
+        if (f != null && f > 1) {
+            shoppingCard[food] = f - 1
+        } else {
+            shoppingCard -= food
+        }
     }
 }

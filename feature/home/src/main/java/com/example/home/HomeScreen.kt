@@ -31,15 +31,14 @@ fun HomeScreen(
         }
         is NetworkResult.Success<*> ->{
             SuccessContent(
-                data = foods.data!!,
                 onSearchClick = onSearchClick,
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,
                 onFoodClick = onFoodClick,
                 favoriteFoodIds = favoriteFoodIds,
-                shoppingCard = shoppingCard
+                shoppingCard = shoppingCard,
+                homeViewModel = homeViewModel
             )
-
         }
         is NetworkResult.Error -> {
             ErrorScreen(foods.error?.cause?.message ?: stringResource(id = R.string.unkown_erro))

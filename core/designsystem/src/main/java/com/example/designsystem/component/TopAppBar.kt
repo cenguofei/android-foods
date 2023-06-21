@@ -48,6 +48,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
+val foodsTopBarHeight = 100.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodsTopAppBar(
@@ -60,6 +62,7 @@ fun FoodsTopAppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(foodsTopBarHeight)
             .statusBarsPadding(),
         horizontalArrangement = if (endContent == null) Arrangement.Start else Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,

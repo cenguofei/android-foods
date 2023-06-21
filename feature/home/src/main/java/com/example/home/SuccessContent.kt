@@ -2,19 +2,14 @@ package com.example.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.example.home.widgets.ToTopButton
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
-import kotlinx.coroutines.launch
 import com.example.designsystem.R as designR
 
 object FoodType {
@@ -76,7 +71,6 @@ return Offset.Zero
  */
 @Composable
 fun SuccessContent(
-    data: Map<User, List<Food>>,
     onSearchClick: () -> Unit,
     position: Position = Position.NONE,
     types: List<Pair<Int, String>> = FoodType.types,
@@ -85,14 +79,13 @@ fun SuccessContent(
     onFoodClick: (foods: List<Food>, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
     shoppingCard: SnapshotStateMap<Food, Int>,
+    homeViewModel: HomeViewModel,
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    val lazyListState = rememberLazyListState()
+    val lazyStaggeredState = rememberLazyStaggeredGridState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        MainContent(
-            lazyListState = lazyListState,
+        MainSuccessContent(
             coroutineScope = coroutineScope,
             onSearchClick = onSearchClick,
             position = position,
@@ -101,17 +94,18 @@ fun SuccessContent(
             deleteFavorite = deleteFavorite,
             onFoodClick = onFoodClick,
             favoriteFoodIds = favoriteFoodIds,
-            data = data,
-            shoppingCard = shoppingCard
+            shoppingCard = shoppingCard,
+            lazyStaggeredState = lazyStaggeredState,
+            homeViewModel = homeViewModel
         )
-        ToTopButton(lazyListState = lazyListState,modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(bottom = 16.dp, end = 8.dp),
-        onClick = {
-            coroutineScope.launch {
-                lazyListState.scrollToItem(0)
-            }
-        })
+//        ToTopButton(lazyStaggeredState = lazyStaggeredState,modifier = Modifier
+//            .align(Alignment.BottomEnd)
+//            .padding(bottom = 16.dp, end = 8.dp),
+//        onClick = {
+//            coroutineScope.launch {
+//
+//            }
+//        })
     }
 }
 

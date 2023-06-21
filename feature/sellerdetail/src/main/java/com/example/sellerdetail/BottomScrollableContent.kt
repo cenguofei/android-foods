@@ -162,12 +162,13 @@ fun FoodsListItem(
                         .size(36.dp)
                         .padding(8.dp)
                         .clickable {
+                            mainViewModel.removeFoodFromShoppingCard(food)
+
                             val numFood = selectedFood[food] ?: 0
                             if (numFood != 0) {
                                 selectedFood[food] = numFood - 1
                             } else {
                                 selectedFood.remove(food)
-
                             }
                         }
                 )
@@ -180,6 +181,8 @@ fun FoodsListItem(
                         .size(36.dp)
                         .padding(8.dp)
                         .clickable {
+                            mainViewModel.addFoodToShoppingCard(food)
+
                             val numFood = selectedFood[food] ?: 0
                             selectedFood[food] = numFood + 1
                         }

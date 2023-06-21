@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -34,11 +35,11 @@ import com.example.model.remoteModel.Food
 fun FoodsHomeToolBar(
     position: Position,
     onSearchClick: () -> Unit,
-    shoppingCard: SnapshotStateMap<Food, Int>
+    shoppingCard: SnapshotStateMap<Food, Int>,
+    modifier: Modifier = Modifier
 ) {
     FoodsTopAppBar(
-        modifier = Modifier
-            .systemBarsPadding()
+        modifier = modifier
             .padding(horizontal = 8.dp)
             .fillMaxWidth(),
         needNavigation = false,
@@ -77,10 +78,11 @@ fun FoodsHomeToolBar(
                         )
                     }
                     Text(
-                        text = shoppingCard.size.toString(),
-                        modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 8.dp),
+                        text = if (shoppingCard.size == 0) "" else shoppingCard.size.toString(),
+                        modifier = Modifier.align(Alignment.TopEnd).padding(top = 2.dp, end = 5.dp),
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
                     )
                 }
 
@@ -124,7 +126,8 @@ private fun StartContent(position: Position) {
                 text = position.zone,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Medium,
-                color = color
+                color = color,
+                modifier = Modifier
             )
         }
     }
