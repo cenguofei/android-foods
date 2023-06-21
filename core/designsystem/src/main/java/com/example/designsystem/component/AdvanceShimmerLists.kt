@@ -53,18 +53,18 @@ fun ShimmerList() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        ShimmerItem(list, dpValue.value, shimmerAnimationType == ShimmerAnimationType.VERTICAL)
-        ShimmerItemBig(list, dpValue.value, shimmerAnimationType == ShimmerAnimationType.VERTICAL)
-        ShimmerItem(list, dpValue.value, shimmerAnimationType == ShimmerAnimationType.VERTICAL)
-        ShimmerItem(list, dpValue.value, shimmerAnimationType == ShimmerAnimationType.VERTICAL)
+        ShimmerItem(modifier = Modifier.statusBarsPadding(),lists = list, floatAnim = dpValue.value, isVertical = shimmerAnimationType == ShimmerAnimationType.VERTICAL)
+        ShimmerItemBig(lists = list, floatAnim = dpValue.value, isVertical = shimmerAnimationType == ShimmerAnimationType.VERTICAL)
+        ShimmerItem(lists = list, floatAnim = dpValue.value, isVertical = shimmerAnimationType == ShimmerAnimationType.VERTICAL)
+        ShimmerItem(lists = list, floatAnim = dpValue.value, isVertical = shimmerAnimationType == ShimmerAnimationType.VERTICAL)
     }
 }
 
 @Composable
-fun ShimmerItem(lists: List<Color>, floatAnim: Float = 0f, isVertical: Boolean) {
+fun ShimmerItem(modifier: Modifier = Modifier,lists: List<Color>, floatAnim: Float = 0f, isVertical: Boolean) {
     val brush = if (isVertical) Brush.verticalGradient(lists, 0f, floatAnim) else
         Brush.horizontalGradient(lists, 0f, floatAnim)
-    Row(modifier = Modifier.padding(16.dp)) {
+    Row(modifier = modifier.padding(16.dp)) {
         Spacer(
             modifier = Modifier
                 .size(100.dp)

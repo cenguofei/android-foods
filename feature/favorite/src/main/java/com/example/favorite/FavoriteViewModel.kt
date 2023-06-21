@@ -40,10 +40,10 @@ class FavoriteViewModel @Inject constructor(
         MutableStateFlow(NetworkResult.Loading())
     val myFavorites = _myFavorites
 
-    init {
-        _myFavorites.value = savedStateHandle.get<NetworkResult<List<Favorite>>>(FAVORITES_KEY)
-            ?: NetworkResult.Loading()
-    }
+//    init {
+//        _myFavorites.value = savedStateHandle.get<NetworkResult<List<Favorite>>>(FAVORITES_KEY)
+//            ?: NetworkResult.Loading()
+//    }
 
     @OptIn(SavedStateHandleSaveableApi::class)
     fun getFavorites(username: String) {
@@ -63,9 +63,6 @@ class FavoriteViewModel @Inject constructor(
                     favoriteFoodIds.clear()
                     favoriteFoodIds.addAll(it.map { it.id })
 
-                    savedStateHandle.saveable(FAVORITES_KEY) {
-                        NetworkResult.Success(it)
-                    }
                 }
         }
     }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -23,6 +22,7 @@ import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.ui.FoodsApp
 import cn.example.foods.composefoods.ui.FoodsAppState
 import cn.example.foods.composefoods.ui.rememberFoodsAppState
+import com.example.common.di.MainViewModel
 import com.example.datastore.SettingsUiState
 import com.example.datastore.SettingsViewModel
 import com.example.model.storagemodel.DarkThemeConfig
@@ -45,6 +45,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var settingsViewModel: SettingsViewModel
+
+    @Inject
+    lateinit var mainViewModel: MainViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalAnimationApi::class)
@@ -69,12 +72,14 @@ class MainActivity : ComponentActivity() {
                 androidTheme = shouldUseAndroidTheme(uiState.value),
                 disableDynamicTheming = shouldDisableDynamicTheming(uiState.value),
             ) {
+                val navController = rememberNavController()
                 val appState: FoodsAppState = rememberFoodsAppState(
                     networkMonitor = networkMonitor,
                     windowSizeClass = calculateWindowSizeClass(this),
                     sourceContainer = sourceContainer,
                     settingsViewModel = settingsViewModel,
-                    navController = rememberNavController()
+                    navController = navController,
+                    mainViewModel = mainViewModel
                 )
                 Crossfade(uiState) { settingsState ->
                     when (settingsState.value) {

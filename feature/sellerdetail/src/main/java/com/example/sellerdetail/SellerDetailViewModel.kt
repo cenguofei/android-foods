@@ -3,8 +3,11 @@ package com.example.sellerdetail
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.di.Dispatcher
@@ -22,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SellerDetailViewModel @Inject constructor(
     private val remoteRepository: FoodRepository,
-    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
+    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun commitOrder(
@@ -67,7 +70,7 @@ class SellerDetailViewModel @Inject constructor(
         Log.v("cgf", "提交订单：$order")
 
         viewModelScope.launch(dispatcher) {
-            val postOrder:HashMap<String,Any> = remoteRepository.postOrder(order)
+            val postOrder: HashMap<String, Any> = remoteRepository.postOrder(order)
             postOrder.string()
 
             try {
@@ -78,7 +81,7 @@ class SellerDetailViewModel @Inject constructor(
                     val msg = postOrder["msg"] as String
                     onCommitError(msg)
                 }
-            } catch (e:Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 onCommitError(e.message ?: "unknown error")
             }

@@ -17,6 +17,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.example.common.di.MainViewModel
 import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
@@ -36,6 +37,7 @@ fun rememberFoodsAppState(
     navController: NavHostController = rememberNavController(),
     sourceContainer: SourceContainer,
     settingsViewModel: SettingsViewModel,
+    mainViewModel: MainViewModel
 ): FoodsAppState {
     NavigationTrackingSideEffect(navController)
     return remember(
@@ -51,7 +53,8 @@ fun rememberFoodsAppState(
             windowSizeClass,
             networkMonitor,
             sourceContainer,
-            settingsViewModel
+            settingsViewModel,
+            mainViewModel
         )
     }
 }
@@ -63,7 +66,8 @@ class FoodsAppState(
     private val windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
     val sourceContainer: SourceContainer,
-    val settingsViewModel: SettingsViewModel
+    val settingsViewModel: SettingsViewModel,
+    val mainViewModel: MainViewModel
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -168,6 +172,8 @@ private fun NavigationTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
         val listener = NavController.OnDestinationChangedListener { _,destination,arguments ->
             Log.v("navigation_events","Foods Destination:${destination.route.toString()},arguments:$arguments")
+            val entries = navController.visibleEntries.value.toString()
+            Log.v("navigation_events","visibleEntries=$entries")
         }
 
         navController.addOnDestinationChangedListener(listener)

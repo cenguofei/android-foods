@@ -1,16 +1,13 @@
 package com.example.home
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.res.stringResource
 import com.example.designsystem.component.ErrorScreen
 import com.example.designsystem.component.ShimmerList
-import com.example.model.remoteModel.Favorite
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.User
@@ -24,6 +21,7 @@ fun HomeScreen(
     deleteFavorite: (food: Food, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
     onSearchClick: () -> Unit,
+    shoppingCard: SnapshotStateMap<Food, Int>,
 ) {
     val foods by homeViewModel.sellerToFoods.collectAsState()
 
@@ -38,7 +36,8 @@ fun HomeScreen(
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,
                 onFoodClick = onFoodClick,
-                favoriteFoodIds = favoriteFoodIds
+                favoriteFoodIds = favoriteFoodIds,
+                shoppingCard = shoppingCard
             )
 
         }

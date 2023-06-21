@@ -81,23 +81,6 @@ fun BoxTopSection(
     }
 }
 
-@Composable
-fun TopSectionOverlay(scrollState: MutableState<ScrollState>) {
-    //slowly increase alpha till it reaches 1
-    val dynamicAlpha = ((scrollState.value.value + 0.00f) / 1400).coerceIn(0f, 1f)
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(400.dp)
-            .background(
-                Color.White.copy( //white
-                    alpha = animateFloatAsState(dynamicAlpha).value
-                )
-            )
-    )
-}
-
-
 //@SuppressLint("CheckResult")
 //@Composable
 //fun GlideImage(

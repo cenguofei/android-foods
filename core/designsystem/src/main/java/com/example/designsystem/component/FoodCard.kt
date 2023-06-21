@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,7 +56,9 @@ import com.example.designsystem.theme.FoodsTheme
 import com.example.designsystem.verticalGradientBackground
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -112,10 +115,18 @@ fun FoodCard(
                         bitmap = bitmap
                     )
 
-                    Column(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 6.dp)
+                    ) {
                         Text(
                             text = food.foodName,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface.copy(
+                                    alpha = 0.8f
+                                )
+                            ),
                             maxLines = 5
                         )
                         Text(
@@ -186,32 +197,20 @@ fun FoodCard(
 fun FoodCardImage(
     model: String,
     rgb: MutableState<Int>,
-    bitmap: MutableState<Bitmap>
+    bitmap: MutableState<Bitmap>,
 ) {
     val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
     var textColor by remember { mutableStateOf(onSurface) }
-    val scope = rememberCoroutineScope()
-    val request = ImageRequest.Builder(LocalContext.current)
-        .data(model)
-        .target { drawable ->
-            // Handle the result.
-            //java.lang.IllegalStateException: unable to getPixels(), pixel access is not supported on Config#HARDWARE bitmaps
-            val notMutableBitmap = drawable.toBitmap()/*.asImageBitmap()*/
-            //转换为可变bitmap
-            val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888, true)
-            bitmap.value = mutableBitmap
-            Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
-
-            scope.launch(Dispatchers.Main) {
-                val swatch = mutableBitmap.generateDominantColorState()
-                rgb.value = swatch.rgb
-                textColor = swatch.bodyTextColor
-                Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
-            }
+    val request = rememberImageRequest(
+        model = model,
+        onLoaded = { dominantRgb, tc ->
+            rgb.value = dominantRgb
+            textColor = tc
+        }, onBitmapLoaded = {
+            bitmap.value = it
         }
-        .build()
+    )
     val context = LocalContext.current
-
 
     LaunchedEffect(key1 = model) {
         context.imageLoader.execute(request)
@@ -265,7 +264,7 @@ private fun SellerRow(
                     height = 38.dp
                 )
                 .clip(RoundedCornerShape(16))
-                .padding(start = 8.dp,top = 4.dp),
+                .padding(start = 8.dp, top = 4.dp),
             alignment = Alignment.Center
         )
         Spacer(modifier = Modifier.width(4.dp))
@@ -289,5 +288,41 @@ private fun FoodCardPreview() {
                 isFavoriteFood = true
             )
         }
+    }
+}
+
+
+val LocalCoroutineScope = staticCompositionLocalOf { CoroutineScope(SupervisorJob() + Dispatchers.IO) }
+
+@Composable
+fun rememberImageRequest(
+    model:String,
+    onLoaded:(dominantRgb:Int,textColor:Int) -> Unit,
+    onBitmapLoaded:(bitmap: Bitmap) -> Unit
+) : ImageRequest {
+    val context = LocalContext.current
+    val scope = LocalCoroutineScope.current
+    return remember {
+        ImageRequest.Builder(context)
+            .data(model)
+            .target { drawable ->
+                // Handle the result.
+                //java.lang.IllegalStateException: unable to getPixels(), pixel access is not supported on Config#HARDWARE bitmaps
+                val notMutableBitmap = drawable.toBitmap()/*.asImageBitmap()*/
+                //转换为可变bitmap
+                val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888, true)
+                onBitmapLoaded(mutableBitmap)
+//                bitmap.value = mutableBitmap
+                Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
+
+                scope.launch(Dispatchers.IO) {
+                    val swatch = mutableBitmap.generateDominantColorState()
+                    onLoaded(swatch.rgb,swatch.bodyTextColor)
+//                    rgb.value = swatch.rgb
+//                    textColor.value = swatch.bodyTextColor
+                    Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
+                }
+            }
+            .build()
     }
 }

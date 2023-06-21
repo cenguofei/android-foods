@@ -1,75 +1,35 @@
 package com.example.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.outlined.ChangeHistory
-import androidx.compose.material.icons.outlined.Circle
-import androidx.compose.material.icons.outlined.CropSquare
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.component.FoodCard
-import com.example.designsystem.component.FoodsTopAppBar
-import com.example.designsystem.component.SearchToolbar
-import com.example.designsystem.R as designR
+import com.example.home.widgets.ToTopButton
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.example.designsystem.R as designR
 
 object FoodType {
 
-    val ChineseStyleFastFood = designR.drawable.food1 to "中式快餐"
+    private val ChineseStyleFastFood = designR.drawable.food1 to "中式快餐"
 
-    val WesternStyleFastFood = designR.drawable.food2 to "西式快餐"
+    private val WesternStyleFastFood = designR.drawable.food2 to "西式快餐"
 
-    val Drink = designR.drawable.food3 to "饮品"
+    private val Drink = designR.drawable.food3 to "饮品"
 
-    val Noodle = designR.drawable.food4 to "面条"
+    private val Noodle = designR.drawable.food4 to "面条"
 
-    val Sweet = designR.drawable.food5 to "甜点"
+    private val Sweet = designR.drawable.food5 to "甜点"
 
-    val Snack = designR.drawable.food6 to "小吃"
+    private val Snack = designR.drawable.food6 to "小吃"
 
     val types = listOf(
         ChineseStyleFastFood,
@@ -81,378 +41,78 @@ object FoodType {
     )
 }
 
-/*
-    val innerScrollState = rememberLazyStaggeredGridState()
+/** TODO 嵌套滚动问题
+val innerScrollState = rememberLazyStaggeredGridState()
 
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            var consumedY = 0f
+val nestedScrollConnection = remember {
+object : NestedScrollConnection {
+var consumedY = 0f
 
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
-                consumedY += delta
-                //向上滑动 delta < 0
-                consumedY = consumedY.coerceAtMost(0f)
+override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+val delta = available.y
+consumedY += delta
+//向上滑动 delta < 0
+consumedY = consumedY.coerceAtMost(0f)
 
-                val percent = consumedY / totalTopHeightPx
+val percent = consumedY / totalTopHeightPx
 
 
-                if (percent > -1 && percent < 0) {
-                    Log.v(
-                        "nestedScrollConnection",
-                        "percent > -1 percent = $percent,consumedY = $consumedY, delta = $data"
-                    )
-                    coroutineScope.launch {
-                        outerScrollState.scrollBy(-available.y)
-                    }
+if (percent > -1 && percent < 0) {
+Log.v(
+"nestedScrollConnection",
+"percent > -1 percent = $percent,consumedY = $consumedY, delta = $data"
+)
+coroutineScope.launch {
+outerScrollState.scrollBy(-available.y)
+}
 
-                    return Offset(0F, available.y)
-                }
+return Offset(0F, available.y)
+}
 
-                return Offset.Zero
-            }
-        }
-    }
-
+return Offset.Zero
+}
+}
+}
  */
 @Composable
 fun SuccessContent(
     data: Map<User, List<Food>>,
     onSearchClick: () -> Unit,
-    searchQuery: String = "今天想吃点什么?",
     position: Position = Position.NONE,
     types: List<Pair<Int, String>> = FoodType.types,
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit,
     onFoodClick: (foods: List<Food>, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
+    shoppingCard: SnapshotStateMap<Food, Int>,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    val lazyListState = rememberLazyListState()
 
-    val map = remember { mutableMapOf<Food, User>() }
-    data.entries.forEach { entry ->
-        val key = entry.key
-        val value = entry.value
-        value.forEach { food ->
-            map[food] = key
-        }
-    }
-
-
-
-    val pairs = remember { data.values.flatten().toPairs() }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        item {
-            FoodsHomeToolBar(position, onSearchClick = onSearchClick)
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-//                SearchToolbar(
-//                    modifier = Modifier,
-//                    searchQuery = searchQuery,
-//                    onClick = {
-//                        onSearch(searchQuery)
-//                    },
-//                    enabled = false
-//                )
-                FoodTypes(types, coroutineScope)
-            }
-        }
-        pairs.forEach { pair ->
-            item {
-                val firstSeller = map[pair.first]!!
-                val firstFoods = data[firstSeller]!!
-
-                val secondSeller = pair.second?.let { map[it] }
-                val secondFoods = secondSeller?.let { data[it] }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    secondFoods?.let {
-                        FoodCard(
-                            modifier = Modifier.weight(1f),
-                            seller = secondSeller,
-                            food = pair.second!!,
-                            onClick = {
-                                onFoodClick(secondFoods, secondSeller)
-                            },
-                            saveFavorite = { food, seller ->
-                                saveFavorite(food, seller)
-                                favoriteFoodIds.add(food.id)
-                            },
-                            deleteFavorite = { food, seller ->
-                                deleteFavorite(food, seller)
-                                favoriteFoodIds.remove(food.id)
-                            },
-                            isFavoriteFood = pair.second!!.id in favoriteFoodIds
-                        )
-                    }
-                    FoodCard(
-                        modifier = Modifier.weight(1f),
-                        food = pair.first,
-                        seller = firstSeller,
-                        saveFavorite = { food, seller ->
-                            saveFavorite(food, seller)
-                            favoriteFoodIds.add(food.id)
-                        },
-                        onClick = {
-                            onFoodClick(firstFoods, firstSeller)
-                        },
-                        deleteFavorite = { food, seller ->
-                            deleteFavorite(food, seller)
-                            favoriteFoodIds.remove(food.id)
-                        },
-                        isFavoriteFood = pair.first.id in favoriteFoodIds
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FoodTypes(
-    types: List<Pair<Int, String>>,
-    coroutineScope: CoroutineScope,
-    visible: MutableState<Boolean> = remember { mutableStateOf(false) }
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Outlined.Circle,
-                        contentDescription = null,
-                        modifier = Modifier.size(10.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Row {
-                        Icon(
-                            imageVector = Icons.Outlined.CropSquare,
-                            contentDescription = null,
-                            modifier = Modifier.size(10.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Icon(
-                            imageVector = Icons.Outlined.ChangeHistory,
-                            contentDescription = null,
-                            modifier = Modifier.size(10.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.size(4.dp))
-                Text(
-                    text = "热门类别",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            val rotation = remember { Animatable(0f) }
-            LaunchedEffect(key1 = visible.value, block = {
-                if (visible.value) {
-                    coroutineScope.launch {
-                        rotation.animateTo(-180f)
-                    }
-                } else {
-                    coroutineScope.launch {
-                        rotation.animateTo(0f)
-                    }
-                }
-            })
-            IconButton(
-                onClick = { visible.value = !visible.value },
-                modifier = Modifier.graphicsLayer {
-                    rotationZ = rotation.value
-                }) {
-                Icon(
-                    imageVector = Icons.Default.ArrowDownward,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            types.take(3).forEach {
-                item { FoodsTypeImage(it) }
-            }
-        }
-        AnimatedVisibility(visible = visible.value) {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                types.reversed().take(3).forEach {
-                    item { FoodsTypeImage(it) }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FoodsTypeImage(foodType: Pair<Int, String>) {
-    Box(
-        modifier = Modifier
-            .height(75.dp)
-            .width(125.dp)
-            .clip(RoundedCornerShape(16)), contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = foodType.first),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+    Box(modifier = Modifier.fillMaxSize()) {
+        MainContent(
+            lazyListState = lazyListState,
+            coroutineScope = coroutineScope,
+            onSearchClick = onSearchClick,
+            position = position,
+            types = types,
+            saveFavorite = saveFavorite,
+            deleteFavorite = deleteFavorite,
+            onFoodClick = onFoodClick,
+            favoriteFoodIds = favoriteFoodIds,
+            data = data,
+            shoppingCard = shoppingCard
         )
-        Spacer(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.4f))
-        )
-        Text(
-            text = foodType.second,
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
-        )
-    }
-}
-
-@Composable
-fun FoodsHomeToolBar(position: Position,onSearchClick: () -> Unit) {
-    FoodsTopAppBar(
-        modifier = Modifier
-            .systemBarsPadding()
-            .padding(horizontal = 8.dp)
-            .fillMaxWidth(),
-        needNavigation = false,
-        startContent = {
-            StartContent(position)
-        },
-        endContent = {
-            Row(modifier = Modifier, horizontalArrangement = Arrangement.End) {
-                Box(modifier = Modifier.size(45.dp)) {
-                    IconButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.Center),
-                        onClick = {
-                            // TODO 消息通知
-                        }) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier.size(45.dp)
-                ) {
-                    IconButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.Center), onClick = {
-                            // TODO 购物车
-                        }) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier.size(45.dp)
-                ) {
-                    IconButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.Center), onClick = onSearchClick) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
+        ToTopButton(lazyListState = lazyListState,modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .padding(bottom = 16.dp, end = 8.dp),
+        onClick = {
+            coroutineScope.launch {
+                lazyListState.scrollToItem(0)
             }
-        }
-    )
+        })
+    }
 }
 
-@Composable
-fun StartContent(position: Position) {
-    Row(modifier = Modifier, horizontalArrangement = Arrangement.Start) {
-        Spacer(
-            modifier = Modifier
-                .size(width = 4.dp, height = 50.dp)
-                .background(MaterialTheme.colorScheme.primary)
-        )
-        Column(modifier = Modifier.padding(start = 12.dp)) {
-            val color =
-                if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface
-            Text(text = "你的位置", style = MaterialTheme.typography.labelSmall, color = color)
-            Text(
-                text = position.city,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-            Text(
-                text = position.zone,
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Medium,
-                color = color
-            )
-        }
-    }
-}
-private fun <T> List<T>.toPairs(): MutableList<Pair<T, T?>> {
-    if (this.isEmpty()) {
-        return mutableListOf()
-    }
-    if (this.size == 1) {
-        return mutableListOf(this[0] to null)
-    }
 
-    val pairs = mutableListOf<Pair<T, T?>>()
-    var pairList = mutableListOf<T>()
-    for (i in indices) {
-        if (pairList.size == 2) {
-            pairs.add(pairList[0] to pairList[1])
-            pairList = mutableListOf()
-        } else {
-            pairList.add(this[i])
-        }
-    }
-    if (pairList.isNotEmpty()) {
-        pairs.add(pairList[0] to null)
-    }
-    return pairs
-}

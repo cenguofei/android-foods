@@ -106,6 +106,9 @@ fun FoodsDrawer(
                 onSeeMyFavorites = {
                     closeDrawer()
                     appState.navigateToMyFavorite()
+                },
+                onLogout = {
+                    appState.setCurrentUser(User.NONE)
                 }
             )
         },

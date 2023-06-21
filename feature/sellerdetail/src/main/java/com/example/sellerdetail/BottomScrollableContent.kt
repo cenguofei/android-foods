@@ -3,7 +3,6 @@ package com.example.sellerdetail
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,19 +11,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -32,14 +25,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,24 +35,30 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.common.di.MainViewModel
 import com.example.designsystem.R
 import com.example.designsystem.component.FoodsContainer
 import com.example.model.remoteModel.Food
 
 
 @SuppressLint("AutoboxingStateCreation")
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomScrollableContent(
     selectedFood: SnapshotStateMap<Food, Int>,
     categoryFoods: Map<String, List<Food>>,
     targetState: MutableState<Int>,
-    scrollState: MutableState<ScrollState>
+    scrollState: MutableState<ScrollState>,
+    mainViewModel: MainViewModel
 ) {
     Crossfade(targetState = targetState.value) { pageIndex ->
         val values: List<List<Food>> = categoryFoods.values.toList()
         val foods = values[pageIndex]
-        FoodsScrollingSection(foods = foods, selectedFood = selectedFood,scrollState = scrollState)
+        FoodsScrollingSection(
+            foods = foods,
+            selectedFood = selectedFood,
+            scrollState = scrollState,
+            mainViewModel = mainViewModel
+        )
     }
 }
 
@@ -72,7 +66,8 @@ fun BottomScrollableContent(
 fun FoodsScrollingSection(
     foods: List<Food>,
     selectedFood: SnapshotStateMap<Food, Int>,
-    scrollState: MutableState<ScrollState>
+    scrollState: MutableState<ScrollState>,
+    mainViewModel: MainViewModel
 ) {
     scrollState.value = rememberScrollState()
     Column(
@@ -82,7 +77,12 @@ fun FoodsScrollingSection(
     ) {
         Spacer(modifier = Modifier.height(400.dp))
         foods.forEach {
-            FoodsListItem(food = it, Modifier, selectedFood = selectedFood)
+            FoodsListItem(
+                food = it,
+                Modifier,
+                selectedFood = selectedFood,
+                mainViewModel = mainViewModel
+            )
         }
         Spacer(modifier = Modifier.height(150.dp))
     }
@@ -91,9 +91,8 @@ fun FoodsScrollingSection(
 @Composable
 fun FoodsListItem(
     food: Food, modifier: Modifier,
-    isSelectedFood: Boolean = false,
-    isFoodCancelled: MutableState<Boolean> = mutableStateOf(false),
-    selectedFood: SnapshotStateMap<Food, Int>
+    selectedFood: SnapshotStateMap<Food, Int>,
+    mainViewModel: MainViewModel
 ) {
     FoodsContainer(
         modifier = modifier
@@ -106,12 +105,6 @@ fun FoodsListItem(
                     .fillMaxSize()
                     .weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
-                if (isSelectedFood) {
-//                    Checkbox(
-//                        checked = !isFoodCancelled.value,
-//                        onCheckedChange = { isFoodCancelled.value = !isFoodCancelled.value },
-//                    )
-                }
                 AsyncImage(
                     model = food.foodPic,
                     contentDescription = null,
@@ -132,17 +125,26 @@ fun FoodsListItem(
                     error = painterResource(id = R.drawable.food11),
                     alignment = Alignment.Center
                 )
-                Column(modifier = Modifier.padding(start = 8.dp)) {
-                    Text(text = food.foodName, style = MaterialTheme.typography.labelLarge)
+                Column(modifier = Modifier.padding(start = 8.dp), verticalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        text = food.foodName,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = food.taste,
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(vertical = 4.dp),
                         maxLines = 5,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        fontWeight = FontWeight.Bold
                     )
-                    Text(text = "￥ ${food.price}", style = MaterialTheme.typography.labelMedium)
+                    Text(
+                        text = "￥ ${food.price}",
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
                 }
             }
 
@@ -165,6 +167,7 @@ fun FoodsListItem(
                                 selectedFood[food] = numFood - 1
                             } else {
                                 selectedFood.remove(food)
+
                             }
                         }
                 )
@@ -183,49 +186,5 @@ fun FoodsListItem(
                 )
             }
         }
-    }
-}
-
-
-@Composable
-fun DownloadedRow() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = "Download",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        var switched by remember { mutableStateOf(true) }
-
-        Switch(
-            checked = switched,
-            colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colorScheme.primary),
-            modifier = Modifier.padding(8.dp),
-            onCheckedChange = { switched = it }
-        )
-    }
-}
-
-@Composable
-fun ShuffleButton() {
-    Button(
-        onClick = {},
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 100.dp)
-            .clip(CircleShape),
-    ) {
-        Text(
-            text = "SHUFFLE PLAY",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-        )
     }
 }

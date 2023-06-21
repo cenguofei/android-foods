@@ -61,6 +61,8 @@ fun FoodsNavHost(
     val navController = appState.navController
     val homeViewModel: HomeViewModel = viewModel()
     val favoriteViewModel: FavoriteViewModel = viewModel()
+
+
     LaunchedEffect(key1 = appState.currentUser.value, block = {
         favoriteViewModel.getFavorites(appState.currentUser.value.username)
     })
@@ -135,7 +137,8 @@ private fun NavGraphBuilder.homeScreen(
                 )
             },
             favoriteFoodIds = favoriteViewModel.favoriteFoodIds,
-            onSearchClick = onSearchClick
+            onSearchClick = onSearchClick,
+            shoppingCard = appState.mainViewModel.shoppingCard
         )
     }
 }
@@ -154,6 +157,7 @@ private fun NavGraphBuilder.startScreen(appState: FoodsAppState) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.sellerDetailScreen(appState: FoodsAppState) {
     composable(Screens.SellerDetail.route) {
         SellerDetailRoute(
@@ -162,7 +166,8 @@ private fun NavGraphBuilder.sellerDetailScreen(appState: FoodsAppState) {
             onBackClick = {
                 appState.navigateToTopLevelDestination()
             },
-            currentLoginUser = appState.currentUser
+            currentLoginUser = appState.currentUser,
+            mainViewModel = appState.mainViewModel
         )
     }
 }

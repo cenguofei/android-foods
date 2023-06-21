@@ -74,6 +74,7 @@ fun DrawerContent(
     onLogin: () -> Unit,
     onSeeMyOrder: () -> Unit,
     onSeeMyFavorites: () -> Unit,
+    onLogout: () -> Unit,
 ) {
     FoodsBackground(
         modifier = Modifier
@@ -162,8 +163,9 @@ fun DrawerContent(
                             onClick = onSeeMyFavorites
                         )
                         SettingsClickBarExpandable(
-                            text = "我的邮箱",
-                            startIcon = Icons.Default.Logout
+                            text = "退出登录",
+                            startIcon = Icons.Default.Logout,
+                            onClick = onLogout
                         )
                     }
                 }

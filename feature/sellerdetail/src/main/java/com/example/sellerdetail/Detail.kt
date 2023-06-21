@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PinDrop
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -43,7 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.common.di.MainViewModel
 import com.example.designsystem.component.FoodsMaterial3AlertDialog
 import com.example.designsystem.component.FoodsOutlinedTextField
 import com.example.model.remoteModel.Food
@@ -73,15 +74,16 @@ sealed class DominantState {
 @Composable
 fun FoodsDetailScreen(
     seller: User,
-    foods: List<Food>,
     scaffoldState: BottomSheetScaffoldState,
     selectedFood: SnapshotStateMap<Food, Int>,
     onBackClick: () -> Unit,
-    currentLoginUser: MutableState<User>
+    currentLoginUser: MutableState<User>,
+    sellerDetailViewModel: SellerDetailViewModel,
+    categoryFoods: Map<String, List<Food>>,
+    mainViewModel: MainViewModel
 ) {
     val scrollState = remember { mutableStateOf(ScrollState(initial = 0)) }
     val coroutineScope = rememberCoroutineScope()
-    val sellerDetailViewModel: SellerDetailViewModel = hiltViewModel()
 
     var shouldShowDialog by remember { mutableStateOf(false) }
 //    var commitButtonEnabled by remember { mutableStateOf(true) }
@@ -138,7 +140,7 @@ fun FoodsDetailScreen(
                     color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(30)
                 ) {
-                    androidx.compose.material.Text(
+                    Text(
                         text = "确认",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.surface,
@@ -170,7 +172,7 @@ fun FoodsDetailScreen(
         scaffoldState = scaffoldState,
         floatingActionButtonPosition = FabPosition.Center,
         sheetContent = {
-            FoodsSheetBillContent(selectedFood = selectedFood)
+            FoodsSheetBillContent(selectedFood = selectedFood,mainViewModel = mainViewModel)
         },
         sheetElevation = 8.dp,
         sheetShape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10),
@@ -180,11 +182,11 @@ fun FoodsDetailScreen(
         Box {
             SellerDetailContent(
                 seller = seller,
-                foods = foods,
                 scrollState = scrollState,
                 selectedFood = selectedFood,
                 onBackClick = onBackClick,
-                coroutineScope = coroutineScope
+                categoryFoods = categoryFoods,
+                mainViewModel = mainViewModel
             )
 
             FoodsFAB(
@@ -277,19 +279,15 @@ fun AnimatedToolBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-//            .horizontalGradientBackground(
-////                if (Dp(scrollState.value.toFloat()) < 1080.dp)
-////                    listOf(Color.Transparent, Color.Transparent) else surfaceGradient
-//                surfaceGradient
-//            )
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.clickable(onClick = onBackClick),
-            contentDescription = null
-        )
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null
+            )
+        }
         Text(
             text = seller.canteenName,
             color = MaterialTheme.colorScheme.onSurface,

@@ -31,12 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.imageLoader
 import coil.request.ImageRequest
+import com.example.common.di.MainViewModel
 import com.example.designsystem.R
 import com.example.designsystem.generateDominantColorState
 import com.example.designsystem.verticalGradientBackground
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -45,11 +45,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun SellerDetailContent(
     seller: User,
-    foods: List<Food>,
     scrollState: MutableState<ScrollState>,
     selectedFood: SnapshotStateMap<Food, Int>,
     onBackClick: () -> Unit,
-    coroutineScope: CoroutineScope
+    categoryFoods: Map<String, List<Food>>,
+    mainViewModel: MainViewModel,
 ) {
     var rgb by remember { mutableStateOf(0) }
     val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
@@ -88,7 +88,7 @@ fun SellerDetailContent(
 
 
     LaunchedEffect(key1 = seller.headImg) {
-        context.imageLoader.execute(request)
+        context.imageLoader.enqueue(request)
     }
 
     val gradientModifier = Modifier
@@ -112,10 +112,7 @@ fun SellerDetailContent(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            val categoryFoods = remember(foods) { foods.groupBy { it.foodCategory } }
             val targetState = remember { mutableStateOf(0) }
-
-
             SideBar(
                 categoryFoods = categoryFoods,
                 modifier = Modifier.width(50.dp),
@@ -141,7 +138,8 @@ fun SellerDetailContent(
                     selectedFood = selectedFood,
                     categoryFoods = categoryFoods,
                     targetState = targetState,
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    mainViewModel = mainViewModel
                 )
             }
         }

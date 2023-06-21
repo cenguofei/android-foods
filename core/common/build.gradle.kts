@@ -11,6 +11,8 @@ android {
 dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.foundation)
 
     implementation(project(":core:model"))
 }
