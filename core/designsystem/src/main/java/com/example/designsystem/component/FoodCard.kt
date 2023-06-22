@@ -18,13 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,7 +27,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -51,6 +45,7 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.designsystem.DataProvider
 import com.example.designsystem.R
+import com.example.designsystem.common.StarButton
 import com.example.designsystem.generateDominantColorState
 import com.example.designsystem.theme.FoodsTheme
 import com.example.designsystem.verticalGradientBackground
@@ -139,53 +134,20 @@ fun FoodCard(
                         )
                     }
                 }
-                ScoreIcon(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                )
-
+                ScoreIcon(modifier = Modifier.align(Alignment.TopEnd),seller = seller)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomEnd),
                     horizontalArrangement = Arrangement.End
                 ) {
-//                    var favorite by remember { mutableStateOf(false) }
-//                    var previousState by remember { mutableStateOf(false) }
-
-                    IconButton(
-                        onClick = {
-//                            favorite = !favorite
-                            if (isFavoriteFood) {
-                                deleteFavorite(food, seller)
-                            } else {
-                                saveFavorite(food, seller)
-                            }
-                        },
-                        modifier = Modifier/*.padding(bottom = 4.dp, end = 4.dp)*/
-                    ) {
-                        if (isFavoriteFood) {
-                            Log.v("cgf", "首页card Rounded.Favorite")
-                            Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-//                            previousState = true
-//                            saveFavorite(food, seller)
-                        } else {
-                            Log.v("cgf", "首页card Outlined.Favorite")
-                            Icon(
-                                imageVector = Icons.Outlined.FavoriteBorder,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-//                            if (previousState) {
-//                                deleteFavorite(food, seller)
-//                                previousState = false
-//                            }
-                        }
-                    }
+                    StarButton(
+                        seller = seller,
+                        food = food,
+                        saveFavorite = saveFavorite,
+                        deleteFavorite = deleteFavorite,
+                        isFavoriteFood = isFavoriteFood
+                    )
                 }
             }
         }
@@ -226,7 +188,7 @@ fun FoodCardImage(
 }
 
 @Composable
-fun ScoreIcon(modifier: Modifier) {
+fun ScoreIcon(modifier: Modifier, seller: User) {
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(50),
@@ -236,7 +198,7 @@ fun ScoreIcon(modifier: Modifier) {
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
-                text = Random.nextInt(0, 9).toString() + ".0",
+                text = seller.score.toString(),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelSmall
             )

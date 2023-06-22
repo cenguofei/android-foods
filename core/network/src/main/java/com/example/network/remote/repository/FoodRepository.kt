@@ -27,20 +27,6 @@ class FoodRepository @Inject constructor(
         emit(result)
     }
 
-
-    suspend fun postOrder(order: Order): HashMap<String, Any> {
-        return withContext(dispatcher) {
-            remoteService.postOrder(order)
-        }
-    }
-
-    suspend fun getUserOrders(username: String): Flow<HashMap<String, Any>> = flow {
-        val result = withContext(dispatcher) {
-            remoteService.getUserOrders(username)
-        }
-        emit(result)
-    }
-
     suspend fun queryLike(
         foodName:String,
         offset:Int = 0,

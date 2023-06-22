@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,9 +34,9 @@ class FavoriteRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteFavorite(id: Long): HashMap<String, Any> {
+    suspend fun deleteFavorite(username: String, foodId:Long): HashMap<String, Any> {
         return withContext(dispatcher) {
-            remoteService.deleteFavorite(id)
+            remoteService.deleteFavorite(username,foodId)
         }
     }
 }

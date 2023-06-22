@@ -7,7 +7,8 @@ enum class Screens(val route: String) {
     Start("start"),
     MyOrder("start"),
     Favorite("favorite"),
-    Search("search")
+    Search("search"),
+    FoodDetail("food_detail")
 }
 
 object NavigationRoutes {

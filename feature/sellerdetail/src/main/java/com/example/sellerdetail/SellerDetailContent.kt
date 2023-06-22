@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -31,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import coil.imageLoader
 import coil.request.ImageRequest
-import com.example.common.di.MainViewModel
+import com.example.common.di.ShoppingCardViewModel
 import com.example.designsystem.R
 import com.example.designsystem.generateDominantColorState
 import com.example.designsystem.verticalGradientBackground
@@ -41,15 +38,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @SuppressLint("AutoboxingStateCreation")
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun SellerDetailContent(
     seller: User,
     scrollState: MutableState<ScrollState>,
-    selectedFood: SnapshotStateMap<Food, Int>,
     onBackClick: () -> Unit,
-    categoryFoods: Map<String, List<Food>>,
-    mainViewModel: MainViewModel,
+    mainViewModel: ShoppingCardViewModel,
+    onSellerSingleFoodClick: (Food) -> Unit = {},
+    categories: List<String>,
+    categoryFoodsList: List<List<Food>>,
 ) {
     var rgb by remember { mutableStateOf(0) }
     val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
@@ -114,7 +111,7 @@ fun SellerDetailContent(
         ) {
             val targetState = remember { mutableStateOf(0) }
             SideBar(
-                categoryFoods = categoryFoods,
+                categories = categories,
                 modifier = Modifier.width(50.dp),
                 onCategoryClick = { pagerIndex ->
                     targetState.value = pagerIndex
@@ -135,11 +132,11 @@ fun SellerDetailContent(
                 //有background
                 //可滚动的内容，占全屏，有480高的Spacer占位符
                 SellerPager(
-                    selectedFood = selectedFood,
-                    categoryFoods = categoryFoods,
+                    categoryFoodsList = categoryFoodsList,
                     targetState = targetState,
                     scrollState = scrollState,
-                    mainViewModel = mainViewModel
+                    mainViewModel = mainViewModel,
+                    onSellerSingleFoodClick = onSellerSingleFoodClick,
                 )
             }
         }

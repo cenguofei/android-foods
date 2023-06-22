@@ -1,15 +1,8 @@
 package com.example.favorite
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,7 +36,7 @@ fun FavoriteScreen(
     ) {
         item {
             FoodsTopAppBar(
-               onBack = onBack
+                onBack = onBack,
             )
         }
         item { ActionsRow() }
@@ -60,7 +53,7 @@ fun FavoriteScreen(
 
             is NetworkResult.Success -> {
                 uiState.value.data?.forEach {
-                    item { FavoriteItem(favorite = it) }
+                    item(key = it.id) { FavoriteItem(favorite = it) }
                 }
             }
 

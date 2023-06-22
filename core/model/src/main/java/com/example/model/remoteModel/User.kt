@@ -18,8 +18,10 @@ data class User(
     var headImg:String = "",
     val img:Int = 0, //测试用
     val canteenName: String = "",
-    val foodType:String = ""
+    val foodType:String = "",
+    var score: Double = 0.0
 ) : Parcelable {
+
 
     /**
      * //TODO BUG

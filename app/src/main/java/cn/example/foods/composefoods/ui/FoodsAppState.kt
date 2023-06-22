@@ -17,11 +17,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.example.common.di.MainViewModel
+import com.example.common.di.ShoppingCardViewModel
 import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
 import com.example.datastore.SettingsViewModel
+import com.example.home.HomeViewModel
 import com.example.network.netstate.NetworkMonitor
 import com.example.model.remoteModel.User
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +38,8 @@ fun rememberFoodsAppState(
     navController: NavHostController = rememberNavController(),
     sourceContainer: SourceContainer,
     settingsViewModel: SettingsViewModel,
-    mainViewModel: MainViewModel
+    mainViewModel: ShoppingCardViewModel,
+    homeViewModel: HomeViewModel
 ): FoodsAppState {
     NavigationTrackingSideEffect(navController)
     return remember(
@@ -54,7 +56,8 @@ fun rememberFoodsAppState(
             networkMonitor,
             sourceContainer,
             settingsViewModel,
-            mainViewModel
+            mainViewModel,
+            homeViewModel
         )
     }
 }
@@ -67,7 +70,8 @@ class FoodsAppState(
     networkMonitor: NetworkMonitor,
     val sourceContainer: SourceContainer,
     val settingsViewModel: SettingsViewModel,
-    val mainViewModel: MainViewModel
+    val mainViewModel: ShoppingCardViewModel,
+    val homeViewModel: HomeViewModel
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -135,8 +139,8 @@ class FoodsAppState(
         navController.navigate(Screens.Search.route)
     }
 
-    fun navigateToSellerDetail() {
-        navController.navigate(Screens.SellerDetail.route)
+    fun navigateToSellerDetail(shouldShowDialog:Boolean = false) {
+        navController.navigate(Screens.SellerDetail.route+"/$shouldShowDialog")
     }
 
     fun navigateToLoginOrSignUp(isRegister:Boolean = false) {
@@ -156,6 +160,10 @@ class FoodsAppState(
 
     fun navigateToMyFavorite() {
         navController.navigate(Screens.Favorite.route)
+    }
+
+    fun navigateToFoodDetail() {
+        navController.navigate(Screens.FoodDetail.route)
     }
 }
 

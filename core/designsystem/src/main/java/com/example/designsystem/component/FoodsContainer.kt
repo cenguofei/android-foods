@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.contentColorFor
 import androidx.compose.material.primarySurface
@@ -31,6 +32,7 @@ import com.example.designsystem.theme.LocalGradientColors
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FoodsContainer(
     modifier: Modifier = Modifier,
@@ -40,6 +42,7 @@ fun FoodsContainer(
     border: BorderStroke? = null,
     elevation: Dp = 8.dp,
     size: DpSize = DpSize(width = 100.dp, height = 250.dp),
+    onClick:() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
     Surface(
@@ -50,7 +53,8 @@ fun FoodsContainer(
         color = color,
         contentColor = contentColor,
         elevation = elevation,
-        border = border
+        border = border,
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier

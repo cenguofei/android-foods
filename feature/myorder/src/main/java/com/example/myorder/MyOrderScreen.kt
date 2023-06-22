@@ -1,17 +1,11 @@
 package com.example.myorder
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -69,7 +63,7 @@ private fun MyOrderScreenRoute(
     ) {
         item {
             FoodsTopAppBar(
-                onBack = onBack
+                onBack = onBack,
             )
         }
 
@@ -77,8 +71,9 @@ private fun MyOrderScreenRoute(
             ActionsRow()
         }
 
+        Log.v("order_test","orders:$orders")
         orders.forEach {
-            item {
+            item(key = it.ordernum) {
                 MyOrderItem(order = it)
             }
         }

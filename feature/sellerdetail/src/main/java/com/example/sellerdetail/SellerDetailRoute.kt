@@ -1,15 +1,15 @@
 package com.example.sellerdetail
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.common.di.MainViewModel
+import com.example.common.di.ShoppingCardViewModel
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
 
@@ -22,12 +22,30 @@ fun SellerDetailRoute(
     foods: List<Food>,
     onBackClick: () -> Unit,
     currentLoginUser: MutableState<User>,
-    mainViewModel: MainViewModel
+    mainViewModel: ShoppingCardViewModel,
+    onSellerSingleFoodClick: (Food) -> Unit = {},
+    shouldShowDialogForNav: MutableState<Boolean>,
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
-    val selectedFood = remember { mutableStateMapOf<Food, Int>() }
+    val selectedFood = mainViewModel.getSelectedFood(seller)
+
+    Log.v("BottomScrollableContent","foods=$foods")
     val sellerDetailViewModel: SellerDetailViewModel = hiltViewModel()
-    val categoryFoods = remember { foods.groupBy { it.foodCategory } }
+    val categoryFoods = remember(foods) {
+        foods.groupBy { it.foodCategory }
+    }
+    val categories = remember {
+        categoryFoods.keys.toList()
+    }
+    val categoryFoodsList = remember {
+        categories.map {
+            categoryFoods[it]!!
+        }
+    }
+
+    Log.v("BottomScrollableContent","categoryFoods=$categoryFoods")
+    Log.v("BottomScrollableContent","categoryFoodsList=$categoryFoodsList")
+    Log.v("BottomScrollableContent","categories=$categories")
 
     FoodsDetailScreen(
         seller = seller,
@@ -36,8 +54,11 @@ fun SellerDetailRoute(
         onBackClick = onBackClick,
         currentLoginUser = currentLoginUser,
         sellerDetailViewModel = sellerDetailViewModel,
-        categoryFoods = categoryFoods,
-        mainViewModel = mainViewModel
+        categories = categories,
+        categoryFoodsList = categoryFoodsList,
+        mainViewModel = mainViewModel,
+        onSellerSingleFoodClick = onSellerSingleFoodClick,
+        shouldShowDialogForNav = shouldShowDialogForNav
     )
 }
 

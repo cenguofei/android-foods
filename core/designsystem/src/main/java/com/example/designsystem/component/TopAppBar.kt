@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -47,8 +46,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.model.remoteModel.Food
 
-val foodsTopBarHeight = 100.dp
+val foodsTopBarHeight = 56.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,8 +56,8 @@ fun FoodsTopAppBar(
     modifier: Modifier = Modifier,
     needNavigation: Boolean = true,
     onBack: () -> Unit = {},
-    startContent: @Composable RowScope.() -> Unit = {},
-    endContent: (@Composable RowScope.() -> Unit)? = null,
+    startContent: @Composable() (RowScope.() -> Unit) = {},
+    endContent: @Composable() (RowScope.() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier

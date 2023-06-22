@@ -16,4 +16,5 @@ plugins {
     id("org.jetbrains.kotlin.android").version("1.8.20").apply(false)
     //hilt
     id("com.google.dagger.hilt.android").version("2.44").apply(false)
+    id("org.jetbrains.kotlin.jvm").version("1.8.20").apply(false)
 }

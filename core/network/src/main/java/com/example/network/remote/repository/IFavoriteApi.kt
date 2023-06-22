@@ -11,5 +11,5 @@ interface IFavoriteApi {
 
     suspend fun addFavorite(favorite: Favorite) : HashMap<String,Any>
 
-    suspend fun deleteFavorite(id:Long) : HashMap<String,Any>
+    suspend fun deleteFavorite(username: String,foodId:Long) : HashMap<String,Any>
 }

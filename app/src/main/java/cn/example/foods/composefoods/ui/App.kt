@@ -60,7 +60,7 @@ import com.example.designsystem.theme.LocalGradientColors
 @Composable
 fun FoodsApp(
     appState: FoodsAppState,
-    startScreen: Screens
+    startScreen: Screens,
 ) {
     val shouldShowGradientBackground =
         appState.currentTopLevelDestination == TopLevelDestination.HOME

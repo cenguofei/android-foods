@@ -1,14 +1,11 @@
 package com.example.favorite
 
-import android.accounts.NetworkErrorException
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import com.example.model.remoteModel.Favorite
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.NetworkResult
@@ -16,17 +13,15 @@ import com.example.model.remoteModel.User
 import com.example.network.remote.repository.FavoriteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.random.Random
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     companion object {
@@ -34,52 +29,74 @@ class FavoriteViewModel @Inject constructor(
     }
 
 
-    val favoriteFoodIds: SnapshotStateList<Long> = mutableStateListOf()
-
     private var _myFavorites: MutableStateFlow<NetworkResult<List<Favorite>>> =
         MutableStateFlow(NetworkResult.Loading())
-    val myFavorites = _myFavorites
+    val myFavorites: StateFlow<NetworkResult<List<Favorite>>> = _myFavorites
 
-//    init {
-//        _myFavorites.value = savedStateHandle.get<NetworkResult<List<Favorite>>>(FAVORITES_KEY)
-//            ?: NetworkResult.Loading()
-//    }
+    /**
+     * 存储food的id
+     */
+    val favoriteFoodIds: SnapshotStateList<Long> = mutableStateListOf()
+    private val favorites: SnapshotStateList<Favorite> = mutableStateListOf()
 
-    @OptIn(SavedStateHandleSaveableApi::class)
+    fun foodInFavorites(food: Food) : Boolean =
+        favorites.firstOrNull { it.foodId == food.id } != null
+
     fun getFavorites(username: String) {
         viewModelScope.launch {
-            favoriteRepository.getAllFavorites(username)
-                .catch {
-                    Log.v("cgf", "获取用户喜欢出错：${it.message}")
-                    it.printStackTrace()
-                    _myFavorites.emit(
-                        NetworkResult.Error(Error(it.message))
-                    )
-                }
-                .collect {
-                    Log.v("cgf", "用户：$username 的收藏：$it")
-                    _myFavorites.emit(NetworkResult.Success(it))
+            try {
+                favoriteRepository.getAllFavorites(username)
+                    .catch {
+                        Log.v("cgf", "获取用户喜欢出错：${it.message}")
+                        it.printStackTrace()
+                        _myFavorites.emit(
+                            NetworkResult.Error(Error(it.message))
+                        )
+                    }
+                    .collect {
+                        Log.v("cgf", "用户：$username 的收藏：$it")
+                        _myFavorites.emit(NetworkResult.Success(it))
 
-                    favoriteFoodIds.clear()
-                    favoriteFoodIds.addAll(it.map { it.id })
-
-                }
+                        favoriteFoodIds.clear()
+                        favoriteFoodIds.addAll(it.map { fa -> fa.id })
+                        favorites.clear()
+                        favorites.addAll(it)
+                    }
+            } catch (e:Exception) {
+                _myFavorites.emit(NetworkResult.Error(e))
+                e.printStackTrace()
+            }
         }
     }
 
     fun deleteFavorite(
-        id: Long,
-        onError: onError,
-        onSuccess: onSuccess
+        onError: onError = {},
+        onSuccess: onSuccess = {},
+        food: Food,
+        currentUser: User
     ) {
-        viewModelScope.launch {
-            val result = favoriteRepository.deleteFavorite(id)
-            val isSuccess = result["isSuccess"] as Boolean
-            if (isSuccess) {
-                onSuccess()
-            } else {
-                onError(result["msg"] as String)
+        favoriteFoodIds.remove(food.id)
+
+        Log.v("myFavorites","移除喜欢：$food")
+        Log.v("myFavorites","当前喜欢：${favorites.toList()}")
+        if (myFavorites.value is NetworkResult.Success) {
+            Log.v("myFavorites","myFavorites.value is NetworkResult.Success")
+            val favorite = favorites.firstOrNull { it.foodId == food.id } ?: return
+            Log.v("myFavorites","开始移除喜欢：$favorite")
+            viewModelScope.launch {
+                val result = favoriteRepository.deleteFavorite(currentUser.username,food.id)
+                Log.v("myFavorites","删除结果：$result")
+                val isSuccess = result["isSuccess"] as Boolean
+                if (isSuccess) {
+                    onSuccess()
+                } else {
+                    onError(result["msg"] as String)
+                }
+
+                favorites.removeIf { it.foodId == food.id }
             }
+        } else {
+            Log.v("myFavorites","删除喜欢，$food 失败")
         }
     }
 
@@ -87,21 +104,20 @@ class FavoriteViewModel @Inject constructor(
         currentUser: User,
         seller: User,
         food: Food,
-        onError: onError,
-        onSuccess: onSuccess
+        onError: onError = {},
+        onSuccess: onSuccess = {}
     ) {
+        favoriteFoodIds.add(food.id)
         viewModelScope.launch {
-            var score = Random.nextDouble(0.0,9.0).toInt().toDouble()
-            if (Random.nextBoolean()) { score += 0.5 }
             val favorite = Favorite(
                 foodId = food.id,
                 username = currentUser.username,
                 sellerId = seller.id,
                 sellerPic = seller.headImg,
                 canteenName = seller.canteenName,
-                score = score,
+                score = seller.score,
                 foodType = seller.foodType
-            )
+            ).also { favorites.add(it) }
             val result = favoriteRepository.addFavorite(favorite)
             val isSuccess = result["isSuccess"] as Boolean
             if (isSuccess) {

@@ -16,14 +16,14 @@ import com.example.model.remoteModel.User
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    onFoodClick: (food: List<Food>, seller: User) -> Unit = { _, _ -> },
+    onSellerFoodClick: (food: List<Food>, seller: User) -> Unit = { _, _ -> },
     saveFavorite: (food: Food, seller: User) -> Unit,
     deleteFavorite: (food: Food, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
     onSearchClick: () -> Unit,
     shoppingCard: SnapshotStateMap<Food, Int>,
 ) {
-    val foods by homeViewModel.sellerToFoods.collectAsState()
+    val foods by homeViewModel.homeUiState.collectAsState()
 
     when(foods) {
         is NetworkResult.Loading -> {
@@ -34,7 +34,7 @@ fun HomeScreen(
                 onSearchClick = onSearchClick,
                 saveFavorite = saveFavorite,
                 deleteFavorite = deleteFavorite,
-                onFoodClick = onFoodClick,
+                onFoodClick = onSellerFoodClick,
                 favoriteFoodIds = favoriteFoodIds,
                 shoppingCard = shoppingCard,
                 homeViewModel = homeViewModel

@@ -65,4 +65,8 @@ data class Food(
     val foodCategory:String = "",
 
 //    val createTime: Date? = null
-) : Parcelable
+) : Parcelable {
+    companion object {
+        val NONE: Food = Food(id = -1)
+    }
+}

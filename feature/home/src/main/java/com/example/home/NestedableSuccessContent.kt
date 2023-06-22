@@ -1,5 +1,6 @@
 package com.example.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
@@ -71,15 +72,15 @@ fun MainSuccessContent(
                             seller = seller,
                             food = pair.second,
                             onClick = {
-                                onFoodClick(homeViewModel.userToFoodsMap[seller]!!, seller)
+                                val foods = homeViewModel.sellerFoods(seller)
+                                Log.v("BottomScrollableContent","MainSuccessContent categoryFoodsList=$foods")
+                                onFoodClick(foods, seller)
                             },
                             saveFavorite = { _, _ ->
                                 saveFavorite(food, seller)
-                                favoriteFoodIds.add(food.id)
                             },
                             deleteFavorite = { _, _ ->
                                 deleteFavorite(food, seller)
-                                favoriteFoodIds.remove(food.id)
                             },
                             isFavoriteFood = food.id in favoriteFoodIds
                         )

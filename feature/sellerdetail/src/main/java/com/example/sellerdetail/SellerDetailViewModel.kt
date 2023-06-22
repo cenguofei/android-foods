@@ -3,11 +3,8 @@ package com.example.sellerdetail
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.di.Dispatcher
@@ -17,19 +14,26 @@ import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
 import com.example.model.remoteModel.User
 import com.example.network.remote.repository.FoodRepository
+import com.example.network.remote.repository.OrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+data class InputInfo(
+    val address: String,
+    val tel:String
+)
+
 @HiltViewModel
 class SellerDetailViewModel @Inject constructor(
-    private val remoteRepository: FoodRepository,
+    private val remoteRepository: OrderRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun commitOrder(
-        selectedFood: SnapshotStateMap<Food, Int>,
+        selectedFood: Map<Food, Int>,
         currentLoginUser: MutableState<User>,
         address: String,
         tel: String,
@@ -88,7 +92,7 @@ class SellerDetailViewModel @Inject constructor(
         }
     }
 
-    fun calculatePrice(selectedFood: SnapshotStateMap<Food, Int>): Double {
+    fun calculatePrice(selectedFood: Map<Food, Int>): Double {
         if (selectedFood.isEmpty()) {
             return 0.0
         }

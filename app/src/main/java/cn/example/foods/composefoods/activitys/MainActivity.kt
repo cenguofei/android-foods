@@ -22,12 +22,13 @@ import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.ui.FoodsApp
 import cn.example.foods.composefoods.ui.FoodsAppState
 import cn.example.foods.composefoods.ui.rememberFoodsAppState
-import com.example.common.di.MainViewModel
+import com.example.common.di.ShoppingCardViewModel
 import com.example.datastore.SettingsUiState
 import com.example.datastore.SettingsViewModel
 import com.example.model.storagemodel.DarkThemeConfig
 import com.example.model.storagemodel.ThemeBrand
 import com.example.designsystem.theme.FoodsTheme
+import com.example.home.HomeViewModel
 import com.example.network.netstate.NetworkMonitor
 import com.example.start.splash.FoodsSplashScreen
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -47,7 +48,10 @@ class MainActivity : ComponentActivity() {
     lateinit var settingsViewModel: SettingsViewModel
 
     @Inject
-    lateinit var mainViewModel: MainViewModel
+    lateinit var mainViewModel: ShoppingCardViewModel
+
+    @Inject
+    lateinit var homeViewModel: HomeViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalAnimationApi::class)
@@ -79,7 +83,8 @@ class MainActivity : ComponentActivity() {
                     sourceContainer = sourceContainer,
                     settingsViewModel = settingsViewModel,
                     navController = navController,
-                    mainViewModel = mainViewModel
+                    mainViewModel = mainViewModel,
+                    homeViewModel = homeViewModel
                 )
                 Crossfade(uiState) { settingsState ->
                     when (settingsState.value) {

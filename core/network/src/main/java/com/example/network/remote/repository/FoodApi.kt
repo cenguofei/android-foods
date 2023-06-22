@@ -12,15 +12,6 @@ import retrofit2.http.Query
 interface FoodApi {
     @GET("frontfood/all")
     suspend fun getAllFood() : List<Food>
-
-    @Headers("Content-Type:application/json")
-    @POST("frontorder/add")
-    suspend fun postOrder(@Body order: Order) : HashMap<String,Any>
-
-
-    @GET("frontorder/queryOrderByUsername")
-    suspend fun getUserOrders(@Query("username") username:String) : HashMap<String,Any>
-
     @GET("food/listpage")
     suspend fun queryLike(
         @Query("foodName") foodName:String,

@@ -97,6 +97,7 @@ dependencies {
     implementation(project(":feature:myorder"))
     implementation(project(":feature:favorite"))
     implementation(project(":feature:search"))
+    implementation(project(":feature:fooddetail"))
 
 
     testImplementation(libs.test.junit)

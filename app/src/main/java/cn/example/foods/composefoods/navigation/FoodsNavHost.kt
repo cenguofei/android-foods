@@ -24,6 +24,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,6 +39,7 @@ import cn.example.foods.composefoods.ui.FoodsAppState
 import com.example.datastore.SettingsUiState
 import com.example.favorite.FavoriteScreen
 import com.example.favorite.FavoriteViewModel
+import com.example.fooddetail.FoodDetailScreen
 import com.example.home.HomeScreen
 import com.example.home.HomeViewModel
 import com.example.login.ui.LoginScreenRoute
@@ -59,7 +62,6 @@ fun FoodsNavHost(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val navController = appState.navController
-    val homeViewModel: HomeViewModel = viewModel()
     val favoriteViewModel: FavoriteViewModel = viewModel()
 
 
@@ -76,21 +78,26 @@ fun FoodsNavHost(
         startScreen(appState = appState)
         homeScreen(
             appState = appState,
-            homeViewModel = homeViewModel,
+            homeViewModel = appState.homeViewModel,
             favoriteViewModel = favoriteViewModel,
             onSearchClick = {
                 appState.navigateToSearch()
             }
         )
         searchScreen(
-            onBack = { appState.navigateToTopLevelDestination()}
+            onBack = { appState.navigateToTopLevelDestination() }
         )
-        sellerDetailScreen(appState = appState)
+        sellerDetailScreen(appState = appState, homeViewModel = appState.homeViewModel)
         loginScreen(appState = appState)
         myOrderScreen(appState = appState)
         favoriteScreen(
             appState = appState,
             favoriteViewModel = favoriteViewModel
+        )
+        foodDetailScreen(
+            favoriteViewModel = favoriteViewModel,
+            homeViewModel = appState.homeViewModel,
+            appState = appState
         )
     }
 }
@@ -111,9 +118,9 @@ private fun NavGraphBuilder.homeScreen(
 
         HomeScreen(
             homeViewModel = homeViewModel,
-            onFoodClick = { foods: List<Food>, seller: User ->
-                HomeViewModel.foods = foods
-                HomeViewModel.seller = seller
+            onSellerFoodClick = { foods: List<Food>, seller: User ->
+                homeViewModel.setNewSellerHolder(foods, seller)
+                Log.v("BottomScrollableContent","HomeScreen:homeViewModel=$homeViewModel")
                 appState.navigateToSellerDetail()
             },
             saveFavorite = { food, seller ->
@@ -122,18 +129,19 @@ private fun NavGraphBuilder.homeScreen(
                     seller = seller,
                     food = food,
                     onError = {
-                        //TODO while save favorite failed.
+                        // TODO while save favorite failed.
                     },
                     onSuccess = { }
                 )
             },
             deleteFavorite = { food, seller ->
                 favoriteViewModel.deleteFavorite(
-                    id = food.id,
+                    food = food,
                     onSuccess = {},
                     onError = {
-                        //TODO while delete favorite failed.
-                    }
+                        // TODO while delete favorite failed.
+                    },
+                    currentUser = appState.currentUser.value
                 )
             },
             favoriteFoodIds = favoriteViewModel.favoriteFoodIds,
@@ -142,6 +150,7 @@ private fun NavGraphBuilder.homeScreen(
         )
     }
 }
+
 private fun NavGraphBuilder.startScreen(appState: FoodsAppState) {
     composable(route = Screens.Start.route) {
         StartScreen(
@@ -158,16 +167,33 @@ private fun NavGraphBuilder.startScreen(appState: FoodsAppState) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.sellerDetailScreen(appState: FoodsAppState) {
-    composable(Screens.SellerDetail.route) {
+private fun NavGraphBuilder.sellerDetailScreen(
+    appState: FoodsAppState,
+    homeViewModel: HomeViewModel
+) {
+    composable(
+        Screens.SellerDetail.route + "/{shouldShowDialog}",
+        arguments = listOf(
+            navArgument("shouldShowDialog") {
+                type = NavType.BoolType
+                defaultValue = false
+            }
+        )
+    ) { navBackEntry ->
+        val shouldShowDialog = remember { mutableStateOf(navBackEntry.arguments?.getBoolean("shouldShowDialog") ?: false) }
         SellerDetailRoute(
-            seller = HomeViewModel.seller,
-            foods = HomeViewModel.foods,
+            seller = homeViewModel.seller,
+            foods = homeViewModel.foods,
             onBackClick = {
                 appState.navigateToTopLevelDestination()
             },
             currentLoginUser = appState.currentUser,
-            mainViewModel = appState.mainViewModel
+            mainViewModel = appState.mainViewModel,
+            onSellerSingleFoodClick = {
+                homeViewModel.updateClickedFood(it)
+                appState.navigateToFoodDetail()
+            },
+            shouldShowDialogForNav = shouldShowDialog
         )
     }
 }
@@ -232,9 +258,37 @@ private fun NavGraphBuilder.favoriteScreen(
 }
 
 private fun NavGraphBuilder.searchScreen(
-    onBack:() -> Unit
+    onBack: () -> Unit
 ) {
     composable(Screens.Search.route) {
         SearchScreen(onBack = onBack)
+    }
+}
+
+
+private fun NavGraphBuilder.foodDetailScreen(
+    homeViewModel: HomeViewModel,
+    favoriteViewModel: FavoriteViewModel,
+    appState: FoodsAppState,
+) {
+    composable(Screens.FoodDetail.route) {
+        FoodDetailScreen(
+            food = homeViewModel.clickedFood,
+            seller = homeViewModel.seller,
+            onBack = {
+                appState.navigateToSellerDetail()
+            },
+            saveFavorite = { _, _ ->
+                favoriteViewModel.addFavorite(appState.currentUser.value,homeViewModel.seller, homeViewModel.clickedFood)
+            },
+            deleteFavorite = { _, _ ->
+                favoriteViewModel.deleteFavorite(food = homeViewModel.clickedFood, currentUser = appState.currentUser.value)
+            },
+            isFavoriteFood = favoriteViewModel.foodInFavorites(homeViewModel.clickedFood),
+            mainViewModel = appState.mainViewModel,
+            onCommitOrder = {
+                appState.navigateToSellerDetail(true)
+            }
+        )
     }
 }

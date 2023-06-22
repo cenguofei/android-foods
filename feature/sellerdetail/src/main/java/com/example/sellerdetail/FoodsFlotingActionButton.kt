@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,7 @@ fun FoodsFAB(
     onCommitClick: () -> Unit,
     coroutineScope: CoroutineScope,
     sellerDetailViewModel: SellerDetailViewModel,
-    selectedFood: SnapshotStateMap<Food, Int>,
+    selectedFood: Map<Food,Int>,
 ) {
     Surface(
         modifier = modifier
@@ -55,7 +54,7 @@ fun FoodsFAB(
                     .clickable(onClick = {
                         coroutineScope.launch {
                             if (scaffoldState.bottomSheetState.isCollapsed) {
-                                if (selectedFood.size > 0) {
+                                if (selectedFood.isNotEmpty()) {
                                     scaffoldState.bottomSheetState.expand()
                                 }
                             } else {

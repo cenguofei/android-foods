@@ -20,6 +20,6 @@ interface FavoriteApi : IFavoriteApi {
     override suspend fun addFavorite(@Body favorite: Favorite) : HashMap<String,Any>
 
     @Headers("Content-Type:application/json")
-    @POST("frontfavorite/addFavorite/{id}")
-    override suspend fun deleteFavorite(@Path("id") id:Long) : HashMap<String,Any>
+    @POST("frontfavorite/deleteFavorite")
+    override suspend fun deleteFavorite(@Query("username") username: String,@Query("foodId") foodId:Long) : HashMap<String,Any>
 }
