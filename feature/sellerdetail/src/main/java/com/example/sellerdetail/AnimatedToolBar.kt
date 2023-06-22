@@ -25,7 +25,6 @@ import com.example.model.remoteModel.User
 @Composable
 fun AnimatedToolBar(
     scrollState: MutableState<ScrollState>,
-    surfaceGradient: List<Color>,
     seller: User,
     onBackClick: () -> Unit
 ) {

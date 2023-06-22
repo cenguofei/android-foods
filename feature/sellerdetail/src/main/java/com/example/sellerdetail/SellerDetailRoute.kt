@@ -17,7 +17,7 @@ import com.example.model.remoteModel.User
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SellerDetailRoute(
+fun SellerDetailScreen(
     seller: User,
     foods: List<Food>,
     onBackClick: () -> Unit,
@@ -25,6 +25,7 @@ fun SellerDetailRoute(
     mainViewModel: ShoppingCardViewModel,
     onSellerSingleFoodClick: (Food) -> Unit = {},
     shouldShowDialogForNav: MutableState<Boolean>,
+    shouldStatusBarContentDark:(Boolean) -> Unit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val selectedFood = mainViewModel.getSelectedFood(seller)
@@ -42,12 +43,7 @@ fun SellerDetailRoute(
             categoryFoods[it]!!
         }
     }
-
-    Log.v("BottomScrollableContent","categoryFoods=$categoryFoods")
-    Log.v("BottomScrollableContent","categoryFoodsList=$categoryFoodsList")
-    Log.v("BottomScrollableContent","categories=$categories")
-
-    FoodsDetailScreen(
+    FoodsDetailContent(
         seller = seller,
         scaffoldState = scaffoldState,
         selectedFood = selectedFood,
@@ -58,7 +54,8 @@ fun SellerDetailRoute(
         categoryFoodsList = categoryFoodsList,
         mainViewModel = mainViewModel,
         onSellerSingleFoodClick = onSellerSingleFoodClick,
-        shouldShowDialogForNav = shouldShowDialogForNav
+        shouldShowDialogForNav = shouldShowDialogForNav,
+        shouldStatusBarContentDark = shouldStatusBarContentDark
     )
 }
 

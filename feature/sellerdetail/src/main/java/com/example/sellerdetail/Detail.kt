@@ -52,7 +52,7 @@ object FoodsDataProvider {
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FoodsDetailScreen(
+fun FoodsDetailContent(
     seller: User,
     scaffoldState: BottomSheetScaffoldState,
     selectedFood: List<Food>,
@@ -64,10 +64,10 @@ fun FoodsDetailScreen(
     categories: List<String>,
     categoryFoodsList: List<List<Food>>,
     shouldShowDialogForNav: MutableState<Boolean>,
+    shouldStatusBarContentDark:(Boolean) -> Unit
 ) {
     val scrollState = remember { mutableStateOf(ScrollState(initial = 0)) }
     val coroutineScope = rememberCoroutineScope()
-
     var shouldShowDialog by remember { mutableStateOf(false) }
     val address = remember { mutableStateOf(TextFieldValue("")) }
     val tel = remember { mutableStateOf(TextFieldValue("")) }
@@ -106,7 +106,6 @@ fun FoodsDetailScreen(
             }
         )
     }
-
     if (shouldShowDialog || shouldShowDialogForNav.value) {
         if (shouldShowDialogForNav.value) {
             shouldShowDialogForNav.value = false
@@ -184,6 +183,7 @@ fun FoodsDetailScreen(
                 categoryFoodsList = categoryFoodsList,
                 mainViewModel = mainViewModel,
                 onSellerSingleFoodClick = onSellerSingleFoodClick,
+                shouldStatusBarContentDark = shouldStatusBarContentDark
             )
 
             FoodsFAB(

@@ -14,15 +14,15 @@ inline fun <reified T : Parcelable> createParcelableNavType(nullable: Boolean = 
             get() = "SupportParcelable"
 
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-        override fun get(bundle: Bundle, key: String): T? {  //从Bundle中检索 Parcelable类型
+        override fun get(bundle: Bundle, key: String): T? {
             return bundle.getParcelable(key,T::class.java)
         }
 
-        override fun parseValue(value: String): T {  //定义传递给 String 的 Parsing 方法
+        override fun parseValue(value: String): T {
             return Gson().fromJson(value, T::class.java)
         }
 
-        override fun put(bundle: Bundle, key: String, value: T) {  //作为 Parcelable 类型添加到 Bundle
+        override fun put(bundle: Bundle, key: String, value: T) {
             bundle.putParcelable(key, value)
         }
     }

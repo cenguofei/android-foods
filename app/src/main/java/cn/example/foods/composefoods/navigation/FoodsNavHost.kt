@@ -18,16 +18,22 @@ package cn.example.foods.composefoods.navigation
 
 import android.os.Build
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -35,6 +41,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import cn.example.foods.composefoods.activitys.MyBackHandler
+import cn.example.foods.composefoods.activitys.shouldUseDarkTheme
 import cn.example.foods.composefoods.ui.FoodsAppState
 import com.example.datastore.SettingsUiState
 import com.example.favorite.FavoriteScreen
@@ -47,7 +54,7 @@ import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
 import com.example.myorder.MyOrderScreen
 import com.example.search.SearchScreen
-import com.example.sellerdetail.SellerDetailRoute
+import com.example.sellerdetail.SellerDetailScreen
 import com.example.start.StartScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -85,7 +92,7 @@ fun FoodsNavHost(
             }
         )
         searchScreen(
-            onBack = { appState.navigateToTopLevelDestination() }
+            onBack = appState.navController::popBackStack
         )
         sellerDetailScreen(appState = appState, homeViewModel = appState.homeViewModel)
         loginScreen(appState = appState)
@@ -121,7 +128,7 @@ private fun NavGraphBuilder.homeScreen(
             onSellerFoodClick = { foods: List<Food>, seller: User ->
                 homeViewModel.setNewSellerHolder(foods, seller)
                 Log.v("BottomScrollableContent","HomeScreen:homeViewModel=$homeViewModel")
-                appState.navigateToSellerDetail()
+                appState.navigateToSellerDetail(fromHome = true)
             },
             saveFavorite = { food, seller ->
                 favoriteViewModel.addFavorite(
@@ -181,11 +188,17 @@ private fun NavGraphBuilder.sellerDetailScreen(
         )
     ) { navBackEntry ->
         val shouldShowDialog = remember { mutableStateOf(navBackEntry.arguments?.getBoolean("shouldShowDialog") ?: false) }
-        SellerDetailRoute(
+        val isDark = isSystemInDarkTheme()
+        var navBack by remember {
+            mutableStateOf(false)
+        }
+        SellerDetailScreen(
             seller = homeViewModel.seller,
             foods = homeViewModel.foods,
             onBackClick = {
-                appState.navigateToTopLevelDestination()
+                Log.v("darkTheme","Seller Detail darkTheme=$isDark")
+                navBack = true
+                appState.navController.popBackStack()
             },
             currentLoginUser = appState.currentUser,
             mainViewModel = appState.mainViewModel,
@@ -193,8 +206,30 @@ private fun NavGraphBuilder.sellerDetailScreen(
                 homeViewModel.updateClickedFood(it)
                 appState.navigateToFoodDetail()
             },
-            shouldShowDialogForNav = shouldShowDialog
+            shouldShowDialogForNav = shouldShowDialog,
+            shouldStatusBarContentDark = {
+                Log.v("darkTheme","Seller Detail darkTheme=$it")
+                appState.shouldStatusBarContentDark.value = it
+            }
         )
+        val uiState: State<SettingsUiState> = appState.settingsViewModel.settingsUiState.collectAsState()
+        val darkTheme = shouldUseDarkTheme(uiState = uiState.value)
+
+        LaunchedEffect(navBack,appState.shouldStatusBarContentDark.value) {
+            if (navBack) {
+                appState.systemUiController.systemBarsDarkContentEnabled = !darkTheme
+                appState.systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = !darkTheme)
+            } else {
+                appState.systemUiController.systemBarsDarkContentEnabled = appState.shouldStatusBarContentDark.value
+                appState.systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = appState.shouldStatusBarContentDark.value)
+            }
+        }
+
+        BackHandler {
+            appState.systemUiController.systemBarsDarkContentEnabled = !darkTheme
+            appState.systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = !darkTheme)
+            appState.navController.popBackStack()
+        }
     }
 }
 
@@ -216,8 +251,8 @@ private fun NavGraphBuilder.loginScreen(appState: FoodsAppState) {
                     "navigation_test",
                     "loginNavigation navigateToTopLevelDestination(TopLevelDestination.HOME)"
                 )
-                appState.navigateToTopLevelDestination()
                 appState.setCurrentUser(it)
+                appState.navigateToTopLevelDestination()
             },
             onError = {
                 //TODO BUG
@@ -234,9 +269,7 @@ private fun NavGraphBuilder.loginScreen(appState: FoodsAppState) {
 private fun NavGraphBuilder.myOrderScreen(appState: FoodsAppState) {
     composable(Screens.MyOrder.route) {
         MyOrderScreen(
-            onBack = {
-                appState.navigateToTopLevelDestination()
-            },
+            onBack = appState.navController::popBackStack,
             currentLoginUser = appState.currentUser.value
         )
     }
@@ -248,9 +281,7 @@ private fun NavGraphBuilder.favoriteScreen(
 ) {
     composable(Screens.Favorite.route) {
         FavoriteScreen(
-            onBack = {
-                appState.navigateToTopLevelDestination()
-            },
+            onBack = appState.navController::popBackStack,
             currentUser = appState.currentUser.value,
             favoriteViewModel = favoriteViewModel
         )

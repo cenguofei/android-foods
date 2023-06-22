@@ -17,7 +17,5 @@ class FoodsApp : Application() {
         _currentUser = user
     }
 
-    fun getCurrentUser():User {
-        return _currentUser
-    }
+    fun getCurrentUser():User = _currentUser
 }

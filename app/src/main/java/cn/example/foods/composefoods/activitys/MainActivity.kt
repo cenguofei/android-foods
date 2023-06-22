@@ -2,6 +2,7 @@ package cn.example.foods.composefoods.activitys
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -17,7 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.ui.FoodsApp
 import cn.example.foods.composefoods.ui.FoodsAppState
@@ -42,9 +42,6 @@ class MainActivity : ComponentActivity() {
     lateinit var networkMonitor: NetworkMonitor
 
     @Inject
-    lateinit var sourceContainer: SourceContainer
-
-    @Inject
     lateinit var settingsViewModel: SettingsViewModel
 
     @Inject
@@ -61,10 +58,24 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
+            val navController = rememberNavController()
+            val systemUiController = rememberSystemUiController()
+
+            val appState: FoodsAppState = rememberFoodsAppState(
+                networkMonitor = networkMonitor,
+                windowSizeClass = calculateWindowSizeClass(this),
+                settingsViewModel = settingsViewModel,
+                navController = navController,
+                mainViewModel = mainViewModel,
+                homeViewModel = homeViewModel,
+                systemUiController = systemUiController
+            )
+
             val uiState: State<SettingsUiState> = settingsViewModel.settingsUiState.collectAsState()
 
-            val systemUiController = rememberSystemUiController()
+
             val darkTheme = shouldUseDarkTheme(uiState.value)
+            Log.v("darkTheme","MainActivity darkTheme=$darkTheme")
 
             LaunchedEffect(systemUiController, darkTheme) {
                 systemUiController.systemBarsDarkContentEnabled = !darkTheme
@@ -76,26 +87,17 @@ class MainActivity : ComponentActivity() {
                 androidTheme = shouldUseAndroidTheme(uiState.value),
                 disableDynamicTheming = shouldDisableDynamicTheming(uiState.value),
             ) {
-                val navController = rememberNavController()
-                val appState: FoodsAppState = rememberFoodsAppState(
-                    networkMonitor = networkMonitor,
-                    windowSizeClass = calculateWindowSizeClass(this),
-                    sourceContainer = sourceContainer,
-                    settingsViewModel = settingsViewModel,
-                    navController = navController,
-                    mainViewModel = mainViewModel,
-                    homeViewModel = homeViewModel
-                )
                 Crossfade(uiState) { settingsState ->
                     when (settingsState.value) {
                         is SettingsUiState.Loading -> {
                             FoodsSplashScreen()
                         }
-
                         is SettingsUiState.Success -> {
                             if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
+                                Log.v("SettingsUiState","isFirstUse:true")
                                 FoodsApp(appState = appState, startScreen = Screens.Start)
                             } else {
+                                Log.v("SettingsUiState","isFirstUse:false")
                                 FoodsApp(appState = appState, startScreen = Screens.Home)
                             }
                         }
@@ -136,7 +138,7 @@ private fun shouldDisableDynamicTheming(
  * current system context.
  */
 @Composable
-private fun shouldUseDarkTheme(
+fun shouldUseDarkTheme(
     uiState: SettingsUiState,
 ): Boolean = when (uiState) {
     SettingsUiState.Loading -> isSystemInDarkTheme()

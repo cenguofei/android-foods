@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -47,6 +48,7 @@ fun SellerDetailContent(
     onSellerSingleFoodClick: (Food) -> Unit = {},
     categories: List<String>,
     categoryFoodsList: List<List<Food>>,
+    shouldStatusBarContentDark: (Boolean) -> Unit,
 ) {
     var rgb by remember { mutableStateOf(0) }
     val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
@@ -60,23 +62,55 @@ fun SellerDetailContent(
             )
         )
     }
+    val darkTheme = isSystemInDarkTheme()
 
     val scope = rememberCoroutineScope()
     val request = ImageRequest.Builder(LocalContext.current)
         .data(seller.headImg)
         .target { drawable ->
             // Handle the result.
-            //java.lang.IllegalStateException: unable to getPixels(), pixel access is not supported on Config#HARDWARE bitmaps
+            // java.lang.IllegalStateException: unable to getPixels(), pixel access is not supported on Config#HARDWARE bitmaps
             val notMutableBitmap = drawable.toBitmap()/*.asImageBitmap()*/
-            //转换为可变bitmap
+            // 转换为可变bitmap
             val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888,true)
             bitmap.value = mutableBitmap
             Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
 
-            scope.launch(Dispatchers.Main) {
+            scope.launch(Dispatchers.Default) {
                 val swatch = mutableBitmap.generateDominantColorState()
                 rgb = swatch.rgb
                 textColor = swatch.bodyTextColor
+
+                val luminance = ColorUtils.calculateLuminance(swatch.rgb)
+                if (darkTheme && luminance <= 0.5) {
+                    //不变
+                } else if (!darkTheme && luminance <= 0.5) {
+                    //之前为亮色，计算得暗色
+                    shouldStatusBarContentDark(false)
+                    Log.v("darkTheme","darkTheme=false")
+                } else if (darkTheme && luminance > 0.5) {
+                    //之前为暗色，计算得亮色
+                    shouldStatusBarContentDark(true)
+                    Log.v("darkTheme","darkTheme=true")
+                } else if (!darkTheme && luminance > 0.5) {
+                    //之前为亮色，计算得亮色
+                    //不变
+                }
+//                val grey = color.red * 0.299 + color.green * 0.587 + color.blue * 0.114
+//                val dark = grey >= 192
+//                if (darkTheme && !dark) { //之前是 暗，现在是 明
+//                    Log.v("darkTheme","shouldUseDarkTheme(true)")
+//                    shouldUseDarkTheme(true)
+//                } else if (darkTheme && dark) {
+//                    // 不变
+//                    Log.v("darkTheme","不变")
+//                } else if (!darkTheme && dark) { //之前是明，现在是 dark
+//                    Log.v("darkTheme","shouldUseDarkTheme(false)")
+//                    shouldUseDarkTheme(false)
+//                } else if (!darkTheme && !dark) { //之前是明，现在是明
+//                    //不变
+//                    Log.v("darkTheme","不变")
+//                }
                 Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
             }
         }
@@ -93,15 +127,11 @@ fun SellerDetailContent(
         .verticalGradientBackground(listOf(Color(rgb), MaterialTheme.colorScheme.surface))
 
     Column(modifier = gradientModifier.fillMaxSize()) {
-        val surfaceGradient = FoodsDataProvider
-            .foodsSurfaceGradient(isSystemInDarkTheme()).asReversed()
-
         //有background
         //当滚动距离小于1000px时为TRANSPARENT，否则为surfaceGradient
         AnimatedToolBar(
             seller = seller,
             scrollState = scrollState,
-            surfaceGradient = surfaceGradient,
             onBackClick = onBackClick
         )
         Row(
@@ -142,3 +172,8 @@ fun SellerDetailContent(
         }
     }
 }
+
+private fun Color.contraryColor(): Int {
+    return Color(red - 255,green-255,blue-255).toArgb()
+}
+

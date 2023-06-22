@@ -12,19 +12,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.PopUpToBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.common.di.ShoppingCardViewModel
-import cn.example.foods.composefoods.datasource.SourceContainer
 import cn.example.foods.composefoods.navigation.Screens
 import cn.example.foods.composefoods.navigation.TopLevelDestination
 import com.example.datastore.SettingsViewModel
 import com.example.home.HomeViewModel
 import com.example.network.netstate.NetworkMonitor
 import com.example.model.remoteModel.User
+import com.google.accompanist.systemuicontroller.SystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -36,10 +39,10 @@ fun rememberFoodsAppState(
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
-    sourceContainer: SourceContainer,
     settingsViewModel: SettingsViewModel,
     mainViewModel: ShoppingCardViewModel,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    systemUiController: SystemUiController
 ): FoodsAppState {
     NavigationTrackingSideEffect(navController)
     return remember(
@@ -54,10 +57,10 @@ fun rememberFoodsAppState(
             coroutineScope,
             windowSizeClass,
             networkMonitor,
-            sourceContainer,
             settingsViewModel,
             mainViewModel,
-            homeViewModel
+            homeViewModel,
+            systemUiController = systemUiController
         )
     }
 }
@@ -68,14 +71,16 @@ class FoodsAppState(
     coroutineScope: CoroutineScope,
     private val windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
-    val sourceContainer: SourceContainer,
     val settingsViewModel: SettingsViewModel,
     val mainViewModel: ShoppingCardViewModel,
-    val homeViewModel: HomeViewModel
+    val homeViewModel: HomeViewModel,
+    val systemUiController: SystemUiController
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
+
+    val shouldStatusBarContentDark:MutableState<Boolean> = mutableStateOf(false)
 
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
@@ -103,54 +108,83 @@ class FoodsAppState(
      */
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
+
     /**
-     * UI logic for navigating to a top level destination in the app. Top level destinations have
-     * only one copy of the destination of the back stack, and save and restore state whenever you
-     * navigate to and from it.
-     *
-     * @param topLevelDestination: The destination the app needs to navigate to.
+     * 导航到HOME
+     * 判断是否是从from导航，如果是，只popUpTo from 一次
      */
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination = TopLevelDestination.HOME) {
-            val topLevelNavOptions = navOptions {
-                // Pop up to the start destination of the graph to
-                // avoid building up a large stack of destinations
-                // on the back stack as users select items
-
-//                popUpTo(navController.graph.findStartDestination().id) {
-//                    saveState = true
-//                    inclusive = false
-//                }
-//                // Avoid multiple copies of the same destination when
-//                // reselecting the same item
-//                launchSingleTop = true
-//                // Restore state when reselecting a previously selected item
-//                restoreState = true
+    fun navigateToTopLevelDestination(
+        topLevelDestination: TopLevelDestination = TopLevelDestination.HOME,
+    ) {
+        val navOptions = navOptions {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
             }
+            launchSingleTop = true
+            restoreState = true
+        }
 
-            when (topLevelDestination) {
-                TopLevelDestination.HOME -> navController.navigateToHome(topLevelNavOptions)
-                else -> {
+        when (topLevelDestination) {
+            TopLevelDestination.HOME -> navController.navigateToHome(navOptions)
+            else -> {
 
-                }
             }
+        }
     }
 
     fun navigateToSearch() {
         navController.navigate(Screens.Search.route)
     }
 
-    fun navigateToSellerDetail(shouldShowDialog:Boolean = false) {
-        navController.navigate(Screens.SellerDetail.route+"/$shouldShowDialog")
+    fun navigateToSellerDetail(shouldShowDialog: Boolean = false, fromHome: Boolean = false) {
+        val navOptions = if (!fromHome) {
+            navOptions {
+                popUpTo(Screens.FoodDetail.route) {
+                    /**
+                     * Whether the `popUpTo` destination should be popped from the back stack.
+                     */
+                    inclusive = true
+
+                    /**
+                     * Whether the back stack and the state of all destinations between the
+                     * current destination and the [NavOptionsBuilder.popUpTo] ID should be saved for later
+                     * restoration via [NavOptionsBuilder.restoreState] or the `restoreState` attribute using
+                     * the same [NavOptionsBuilder.popUpTo] ID (note: this matching ID is true whether
+                     * [inclusive] is true or false).
+                     *
+                     * 当使用 NavOptionsBuilder.popUpTo ID 属性来指定要弹出到的目标 ID 时，
+                     * 是否应该保存当前目标和弹出目标之间所有目标的状态和后退栈，
+                     * 以便稍后通过 NavOptionsBuilder.restoreState 或 restoreState 属性进行恢复。
+                     * 这个 ID 参数需要匹配，无论 inclusive 是否为 true。
+                     */
+                    saveState = false
+                }
+                /**
+                 * Whether this navigation action should launch as single-top (i.e., there will be at most
+                 * one copy of a given destination on the top of the back stack).
+                 */
+                launchSingleTop = true
+                /**
+                 * Whether this navigation action should restore any state previously saved
+                 * by [PopUpToBuilder.saveState] or the `popUpToSaveState` attribute. If no state was
+                 * previously saved with the destination ID being navigated to, this has no effect.
+                 */
+                restoreState = false
+            }
+        } else {
+            navOptions { }
+        }
+        navController.navigate(Screens.SellerDetail.route + "/$shouldShowDialog", navOptions)
     }
 
-    fun navigateToLoginOrSignUp(isRegister:Boolean = false) {
-        navController.navigate(Screens.Login.route+"/$isRegister")
+    fun navigateToLoginOrSignUp(isRegister: Boolean = false) {
+        navController.navigate(Screens.Login.route + "/$isRegister")
     }
 
-    private var _currentUser:MutableState<User> = mutableStateOf(User.NONE)
+    private var _currentUser: MutableState<User> = mutableStateOf(User.NONE)
     val currentUser = _currentUser
     fun setCurrentUser(user: User) {
-        Log.v("cgf","setCurrentUser:$user")
+        Log.v("cgf", "setCurrentUser:$user")
         _currentUser.value = user
     }
 
@@ -168,8 +202,8 @@ class FoodsAppState(
 }
 
 private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
-    Log.v("navigation_test","NavHostController.navigateToHome(topLevelNavOptions: NavOptions)")
-    navigate(route = Screens.Home.route,navOptions = topLevelNavOptions)
+    Log.v("navigation_test", "NavHostController.navigateToHome(topLevelNavOptions: NavOptions)")
+    navigate(route = Screens.Home.route, navOptions = topLevelNavOptions)
 }
 
 /**
@@ -178,10 +212,13 @@ private fun NavHostController.navigateToHome(topLevelNavOptions: NavOptions) {
 @Composable
 private fun NavigationTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
-        val listener = NavController.OnDestinationChangedListener { _,destination,arguments ->
-            Log.v("navigation_events","Foods Destination:${destination.route.toString()},arguments:$arguments")
+        val listener = NavController.OnDestinationChangedListener { _, destination, arguments ->
+            Log.v(
+                "navigation_events",
+                "Foods Destination:${destination.route.toString()},arguments:$arguments"
+            )
             val entries = navController.visibleEntries.value.toString()
-            Log.v("navigation_events","visibleEntries=$entries")
+            Log.v("navigation_events", "visibleEntries=$entries")
         }
 
         navController.addOnDestinationChangedListener(listener)
