@@ -1,6 +1,5 @@
 package com.example.fooddetail
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,12 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
@@ -24,11 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,13 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.common.di.ShoppingCardViewModel
 import com.example.designsystem.common.AddAndRemoveFood
-import com.example.designsystem.common.StarButton
 import com.example.designsystem.component.FoodsCenterRow
-import com.example.designsystem.component.FoodsTopAppBar
-import com.example.designsystem.component.foodsTopBarHeight
 import com.example.designsystem.theme.LocalTintTheme
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
@@ -52,7 +40,8 @@ import com.example.model.remoteModel.User
 fun FoodDetailContent(
     food: Food,
     mainViewModel: ShoppingCardViewModel,
-    onCommitOrder:() -> Unit
+    onCommitOrder: () -> Unit,
+    currentUser: User
 ) {
     Column(
         modifier = Modifier
@@ -61,12 +50,18 @@ fun FoodDetailContent(
     ) {
         Spacer(modifier = Modifier.height(350.dp + scoreSize + 32.dp))
 
-        Column(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        ) {
             Text(
                 text = food.foodName,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = MaterialTheme.colorScheme.onSurface
             )
+
             Text(
                 text = "￥${food.price}",
                 style = MaterialTheme.typography.labelLarge,
@@ -75,9 +70,10 @@ fun FoodDetailContent(
             )
 
             val foodDesc = buildAnnotatedString {
+                pushStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface))
+
                 pushStyle(
                     SpanStyle(
-                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -113,12 +109,12 @@ fun FoodDetailContent(
                 AddAndRemoveFood(
                     modifier = Modifier
                         .padding(end = 4.dp, bottom = 4.dp),
-                    num = mainViewModel.shoppingCard[food] ?: 0,
+                    num = mainViewModel.getFoodNumInShoppingCart(food.id,currentUser),
                     onAdd = {
-                        mainViewModel.addFoodToShoppingCard(food)
+                        mainViewModel.addFoodToShoppingCard(food,currentUser)
                     },
                     onRemove = {
-                        mainViewModel.removeFoodFromShoppingCard(food)
+                        mainViewModel.removeFoodFromShoppingCard(food,currentUser)
                     }
                 )
             }
@@ -151,7 +147,7 @@ fun FoodDetailContent(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = { mainViewModel.addFoodToShoppingCard(food) },
+                        onClick = { mainViewModel.addFoodToShoppingCard(food,currentUser) },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .padding(end = 16.dp)

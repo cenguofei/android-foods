@@ -1,4 +1,4 @@
-package cn.itfxq.foods;
+package cn.example.foods;
 
 import static org.junit.Assert.assertEquals;
 

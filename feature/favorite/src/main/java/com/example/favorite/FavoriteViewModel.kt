@@ -11,6 +11,7 @@ import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.User
 import com.example.network.remote.repository.FavoriteRepository
+import com.example.network.remote.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ import kotlin.random.Random
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
+    private val foodRepository: FoodRepository
 ) : ViewModel() {
 
     companion object {
@@ -37,9 +39,9 @@ class FavoriteViewModel @Inject constructor(
      * 存储food的id
      */
     val favoriteFoodIds: SnapshotStateList<Long> = mutableStateListOf()
-    private val favorites: SnapshotStateList<Favorite> = mutableStateListOf()
+    val favorites: SnapshotStateList<Favorite> = mutableStateListOf()
 
-    fun foodInFavorites(food: Food) : Boolean =
+    fun foodInFavorites(food: Food): Boolean =
         favorites.firstOrNull { it.foodId == food.id } != null
 
     fun getFavorites(username: String) {
@@ -56,13 +58,12 @@ class FavoriteViewModel @Inject constructor(
                     .collect {
                         Log.v("cgf", "用户：$username 的收藏：$it")
                         _myFavorites.emit(NetworkResult.Success(it))
-
                         favoriteFoodIds.clear()
                         favoriteFoodIds.addAll(it.map { fa -> fa.id })
                         favorites.clear()
                         favorites.addAll(it)
                     }
-            } catch (e:Exception) {
+            } catch (e: Exception) {
                 _myFavorites.emit(NetworkResult.Error(e))
                 e.printStackTrace()
             }
@@ -76,29 +77,24 @@ class FavoriteViewModel @Inject constructor(
         currentUser: User
     ) {
         favoriteFoodIds.remove(food.id)
-
-        Log.v("myFavorites","移除喜欢：$food")
-        Log.v("myFavorites","当前喜欢：${favorites.toList()}")
+        Log.v("myFavorites", "移除喜欢：$food \n当前喜欢：${favorites.toList()}")
         if (myFavorites.value is NetworkResult.Success) {
-            Log.v("myFavorites","myFavorites.value is NetworkResult.Success")
-            val favorite = favorites.firstOrNull { it.foodId == food.id } ?: return
-            Log.v("myFavorites","开始移除喜欢：$favorite")
+//            val favorite = favorites.firstOrNull { it.foodId == food.id } ?: return
             viewModelScope.launch {
-                val result = favoriteRepository.deleteFavorite(currentUser.username,food.id)
-                Log.v("myFavorites","删除结果：$result")
+                val result = favoriteRepository.deleteFavorite(currentUser.username, food.id)
+                Log.v("myFavorites", "删除结果：$result")
                 val isSuccess = result["isSuccess"] as Boolean
                 if (isSuccess) {
                     onSuccess()
                 } else {
                     onError(result["msg"] as String)
                 }
-
                 favorites.removeIf { it.foodId == food.id }
             }
-        } else {
-            Log.v("myFavorites","删除喜欢，$food 失败")
         }
     }
+
+    var id = Long.MIN_VALUE
 
     fun addFavorite(
         currentUser: User,
@@ -116,8 +112,14 @@ class FavoriteViewModel @Inject constructor(
                 sellerPic = seller.headImg,
                 canteenName = seller.canteenName,
                 score = seller.score,
-                foodType = seller.foodType
-            ).also { favorites.add(it) }
+                foodType = seller.foodType,
+                foodName = food.foodName,
+                foodPic = food.foodPic
+            ).also {
+                //服务端已经自动自增id，客户端为了不在添加Favorite的时候每次都更新id，所以模拟生成不一样的id
+                //防止Lazy布局的时候使用id出错
+                favorites.add(it.copy(id = id++))
+            }
             val result = favoriteRepository.addFavorite(favorite)
             val isSuccess = result["isSuccess"] as Boolean
             if (isSuccess) {

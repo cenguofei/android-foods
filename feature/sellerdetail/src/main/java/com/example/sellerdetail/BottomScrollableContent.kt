@@ -35,16 +35,18 @@ import com.example.designsystem.common.AddAndRemoveFood
 import com.example.designsystem.component.FoodsContainer
 import com.example.designsystem.theme.LocalTintTheme
 import com.example.model.remoteModel.Food
+import com.example.model.remoteModel.User
 
 
 @SuppressLint("AutoboxingStateCreation")
 @Composable
-fun BottomScrollableContent(
+fun SellerPager(
     targetState: MutableState<Int>,
     scrollState: MutableState<ScrollState>,
     mainViewModel: ShoppingCardViewModel,
     onSellerSingleFoodClick: (Food) -> Unit = {},
     categoryFoodsList: List<List<Food>>,
+    currentLoginUser: User,
 ) {
     Crossfade(targetState = targetState.value) { pageIndex ->
         if (pageIndex < categoryFoodsList.size) {
@@ -53,7 +55,8 @@ fun BottomScrollableContent(
                 foods = foods,
                 scrollState = scrollState,
                 mainViewModel = mainViewModel,
-                onSellerSingleFoodClick = onSellerSingleFoodClick
+                onSellerSingleFoodClick = onSellerSingleFoodClick,
+                currentLoginUser = currentLoginUser
             )
         }
     }
@@ -64,7 +67,8 @@ fun FoodsScrollingSection(
     foods: List<Food>,
     scrollState: MutableState<ScrollState>,
     mainViewModel: ShoppingCardViewModel,
-    onSellerSingleFoodClick: (Food) -> Unit = {}
+    onSellerSingleFoodClick: (Food) -> Unit = {},
+    currentLoginUser: User
 ) {
     scrollState.value = rememberScrollState()
     Column(
@@ -77,10 +81,12 @@ fun FoodsScrollingSection(
             FoodsListItem(
                 food = it,
                 Modifier,
-                mainViewModel = mainViewModel
+                mainViewModel = mainViewModel,
+                currentLoginUser
             ) {
                 onSellerSingleFoodClick(it)
             }
+
         }
         Spacer(modifier = Modifier.height(150.dp))
     }
@@ -90,6 +96,7 @@ fun FoodsScrollingSection(
 fun FoodsListItem(
     food: Food, modifier: Modifier,
     mainViewModel: ShoppingCardViewModel,
+    currentLoginUser: User,
     onClick: () -> Unit = {}
 ) {
     FoodsContainer(
@@ -150,18 +157,20 @@ fun FoodsListItem(
                 }
             }
 
-            CompositionLocalProvider(LocalTintTheme provides
-                    LocalTintTheme.current.copy(iconTint = MaterialTheme.colorScheme.primary)) {
+            CompositionLocalProvider(
+                LocalTintTheme provides
+                        LocalTintTheme.current.copy(iconTint = MaterialTheme.colorScheme.primary)
+            ) {
                 AddAndRemoveFood(
                     modifier = Modifier
                         .align(Alignment.Bottom)
                         .padding(end = 4.dp, bottom = 4.dp),
-                    num = mainViewModel.shoppingCard[food] ?: 0,
+                    num = mainViewModel.getFoodNumInShoppingCart(food.id,currentLoginUser),
                     onAdd = {
-                        mainViewModel.addFoodToShoppingCard(food)
+                        mainViewModel.addFoodToShoppingCard(food, currentLoginUser)
                     },
                     onRemove = {
-                        mainViewModel.removeFoodFromShoppingCard(food)
+                        mainViewModel.removeFoodFromShoppingCard(food,currentLoginUser)
                     }
                 )
             }

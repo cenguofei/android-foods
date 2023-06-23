@@ -18,6 +18,7 @@ dependencies {
 
     implementation(libs.square.retrofit2)
     implementation(libs.square.retrofit2.converter.gson)
+    implementation(libs.okhttp.logging)
 
     implementation(project(":core:common"))
     implementation(project(":core:model"))

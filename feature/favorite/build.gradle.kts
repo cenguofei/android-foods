@@ -23,6 +23,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.constraintlayout.core)
+    implementation(libs.androidx.compose.constraintlayout)
     implementation(project(":core:designsystem"))
     implementation(project(mapOf("path" to ":core:common")))
     implementation(project(mapOf("path" to ":core:model")))

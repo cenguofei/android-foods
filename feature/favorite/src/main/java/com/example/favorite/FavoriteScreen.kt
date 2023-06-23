@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,12 +18,11 @@ import com.example.model.remoteModel.User
 @Composable
 fun FavoriteScreen(
     onBack: () -> Unit,
-    currentUser: User,
     favoriteViewModel: FavoriteViewModel,
 ) {
-    LaunchedEffect(key1 = currentUser, block = {
-        favoriteViewModel.getFavorites(currentUser.username)
-    })
+//    LaunchedEffect(key1 = currentUser, block = {
+//        favoriteViewModel.getFavorites(currentUser.username)
+//    })
 
     val uiState = favoriteViewModel.myFavorites.collectAsState()
 
@@ -39,7 +37,7 @@ fun FavoriteScreen(
                 onBack = onBack,
             )
         }
-        item { ActionsRow() }
+        item { ActionsRow(title = "我的喜欢") }
 
         when (uiState.value) {
             is NetworkResult.Loading -> {
@@ -52,8 +50,11 @@ fun FavoriteScreen(
             }
 
             is NetworkResult.Success -> {
-                uiState.value.data?.forEach {
-                    item(key = it.id) { FavoriteItem(favorite = it) }
+                favoriteViewModel.favorites.forEach {
+                    item(key = it.id) { FoodFavoriteListItem(
+                        item = it,
+                        onClick = {}
+                    ) }
                 }
             }
 

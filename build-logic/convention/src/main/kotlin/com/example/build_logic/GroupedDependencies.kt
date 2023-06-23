@@ -12,8 +12,6 @@ inline val DependencyHandlerScope.composeOfficialDependencies:List<Optional<Prov
         val dependencies = mutableListOf<Optional<Provider<MinimalExternalModuleDependency>>>()
         extensions.getByType<VersionCatalogsExtension>().named("libs").apply {
             dependencies.apply {
-                val get = findLibrary("").get()
-                val get1 = findLibrary("")
                 add(findLibrary("androidx.compose.bom"))
                 add(findLibrary("androidx.compose.runtime"))
                 add(findLibrary("androidx.compose.foundation"))

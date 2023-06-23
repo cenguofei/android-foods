@@ -26,8 +26,10 @@ import com.example.model.remoteModel.User
 fun AnimatedToolBar(
     scrollState: MutableState<ScrollState>,
     seller: User,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    toolBarContentColor: Int
 ) {
+    val contentColor = Color(toolBarContentColor)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -39,19 +41,20 @@ fun AnimatedToolBar(
         IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = contentColor,
                 contentDescription = null
             )
         }
         Text(
             text = seller.canteenName,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = contentColor,
             modifier = Modifier
                 .padding(16.dp)
                 .alpha(((scrollState.value.value + 0.001f) / 1000).coerceIn(0f, 1f))
         )
         Icon(
-            imageVector = Icons.Default.MoreVert, tint = MaterialTheme.colorScheme.onSurface,
+            imageVector = Icons.Default.MoreVert,
+            tint = contentColor,
             contentDescription = null
         )
     }

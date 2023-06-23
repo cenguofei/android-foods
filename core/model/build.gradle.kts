@@ -1,7 +1,7 @@
 plugins {
     id("foods.android.library")
     id("kotlin-parcelize")
-//    id("kotlin-kapt")
+    id("foods.android.room")
 }
 
 android {
@@ -11,12 +11,4 @@ android {
 dependencies {
 
     implementation(libs.kotlinx.datetime)
-
-//    implementation(libs.androidx.room.runtime)
-//    annotationProcessor(libs.androidx.room.compiler)
-
-//    kapt(libs.androidx.room.compiler)
-//    ksp(libs.androidx.room.compiler)
-
-//    implementation(libs.androidx.room.ktx)
 }

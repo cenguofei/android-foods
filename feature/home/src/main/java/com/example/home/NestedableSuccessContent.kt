@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.component.FoodCard
@@ -31,12 +30,10 @@ fun MainSuccessContent(
     deleteFavorite: (food: Food, seller: User) -> Unit,
     onFoodClick: (foods: List<Food>, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
-    shoppingCard: SnapshotStateMap<Food, Int>,
+    shoppingCard: SnapshotStateList<Food>,
     homeViewModel: HomeViewModel
 ) {
-    val isTypesAllVisible = remember {
-        mutableStateOf(false)
-    }
+    val isTypesAllVisible = remember { mutableStateOf(false) }
     val state: CollapsableLayoutState = rememberCollapsableLayoutState(0.dp)
 
     CollapsableLayout(
@@ -88,7 +85,6 @@ fun MainSuccessContent(
                 }
             )
         },
-        isTypesAllVisible = isTypesAllVisible
     )
 }
 

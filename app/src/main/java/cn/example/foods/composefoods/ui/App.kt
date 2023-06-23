@@ -1,6 +1,7 @@
 package cn.example.foods.composefoods.ui
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
@@ -84,6 +85,7 @@ fun FoodsApp(
                         message = notConnectedMessage,
                         duration = SnackbarDuration.Indefinite,
                     )
+                    Log.v("notConnectedMessage","notConnectedMessage=$notConnectedMessage")
                 }
             }
 

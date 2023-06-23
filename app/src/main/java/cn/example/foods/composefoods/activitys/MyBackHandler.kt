@@ -40,6 +40,11 @@ fun MyBackHandler(
                 drawerState.close()
             }
         } else {
+            /**
+             * 返回桌面
+             * 调用 onBackPressed() 之前先移除callback
+             * 不然会循环调用，导致应用崩溃
+             */
             callback.remove()
             backDispatcher.onBackPressed()
             backDispatcher.addCallback(callback)

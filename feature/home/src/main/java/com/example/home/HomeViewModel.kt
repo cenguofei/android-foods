@@ -50,6 +50,9 @@ class HomeViewModel @Inject constructor(
         sellerHolder.value = SellerHolder(foods,seller)
     }
 
+    /**
+     * 导航到商品详情页
+     */
     fun updateClickedFood(clickedFood: Food) {
         sellerHolder.value = sellerHolder.value.copy(clickedFood = clickedFood)
     }
@@ -63,6 +66,11 @@ class HomeViewModel @Inject constructor(
      */
     var userToFoodsMap:MutableMap<User,List<Food>> = mutableMapOf()
         private set
+
+    /**
+     * 根据商家获取对应的foods
+     * 从首页店家商家card导航到商家详情页使用
+     */
     fun sellerFoods(seller: User) : List<Food> = userToFoodsMap[seller]!!
 
     /**
@@ -82,10 +90,8 @@ class HomeViewModel @Inject constructor(
                         homeUiState.emit(NetworkResult.Error(it.cause))
                     }
                     .collect {
-                        val foodList = it
+                        val foodList = it.map { m -> m.copy(count = 0) }
                         val users = allUser.await()
-                        Log.v("cgf","wait users:$users")
-                        Log.v("cgf", "getAllFoods foods:$foodList")
                         val map = users.map { user ->
                             user.headImg = ApiParam.IMAGE_USER_URL + user.headImg
                             user.score = Random.nextInt(0, 9).toDouble()
@@ -96,7 +102,6 @@ class HomeViewModel @Inject constructor(
                         }.filter { pair ->
                             pair.second.isNotEmpty()
                         }.toMap().toMutableMap()
-                        Log.v("cgf", "过滤后的数据:$map")
 
                         userToFoodsMap = map
                         userToFoodsMap.forEach { entry ->
@@ -106,7 +111,6 @@ class HomeViewModel @Inject constructor(
                                 userToFoodsMap -= entry.key
                             }
                         }
-                        Log.v("cgf", "getAllUser users:$users")
                         homeUiState.emit(NetworkResult.Success(Any()))
                     }
             } catch (e: Exception) {

@@ -3,7 +3,6 @@ package com.example.sellerdetail
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +13,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -56,7 +54,7 @@ fun BoxTopSection(
         Text(
             text = seller.canteenName.ifEmpty { "Foods商家" },
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
-            modifier = Modifier.padding(8.dp).alpha(dynamicAlpha),
+            modifier = Modifier.padding(8.dp)/*.alpha(dynamicAlpha)*/,
             color = MaterialTheme.colorScheme.onSurface,
         )
         Text(

@@ -1,11 +1,9 @@
 package com.example.database.db
 
 import android.content.Context
-import com.example.common.di.Dispatcher
-import com.example.common.di.FoodsDispatchers
-import com.example.database.db.di.FavoriteTable
+import com.example.model.localmodel.LocalFood
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -13,22 +11,39 @@ import javax.inject.Singleton
 
 @Singleton
 class FoodsDatabaseRepository @Inject constructor(
-    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
     @ApplicationContext private val context:Context
 ) {
-    private val foodDao: FavoriteDao = FoodsDatabase.getInstance(context).getFoodDao()
+    private val dispatcher = Dispatchers.IO
+    private val foodDao: ShoppingCartDao = FoodsDatabase.getInstance(context).getFoodDao()
 
-    suspend fun addFoods(favorite: FavoriteTable) {
+    suspend fun addFoodToShoppingCart(food: LocalFood) {
         withContext(dispatcher) {
-            foodDao.insert(favorite)
+            foodDao.addFoodToShoppingCart(food)
         }
     }
 
-    suspend fun deleteFoods(favorite: FavoriteTable) {
+    suspend fun updateFoodFromShoppingCart(food: LocalFood) {
         withContext(dispatcher) {
-            foodDao.delete(favorite)
+            foodDao.updateFoodFromShoppingCart(food)
         }
     }
 
-    fun queryAllFavorites(username:String) : Flow<List<FavoriteTable>> = foodDao.queryFavorites(username)
+    suspend fun delete(food: LocalFood) {
+        withContext(dispatcher) {
+            foodDao.delete(food)
+        }
+    }
+
+    fun getAllCartFoods(username:String) : Flow<List<LocalFood>> = foodDao.queryAllCartFood(username)
+
+    suspend fun clearAllShoppingCart(username: String) {
+        withContext(dispatcher) {
+            foodDao.clearAllShoppingCart(username)
+        }
+    }
+    suspend fun deleteWhereCountLessThanZero() {
+        withContext(dispatcher) {
+            foodDao.deleteWhereCountLessThanZero()
+        }
+    }
 }

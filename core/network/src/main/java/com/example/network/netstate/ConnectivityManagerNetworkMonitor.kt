@@ -16,6 +16,7 @@
 
 package com.example.network.netstate
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
@@ -79,14 +80,14 @@ class ConnectivityManagerNetworkMonitor @Inject constructor(
         }
     }
         .conflate()
-
-    @Suppress("DEPRECATION")
-    private fun ConnectivityManager.isCurrentlyConnected() = when {
-        VERSION.SDK_INT >= VERSION_CODES.M ->
-            activeNetwork
-                ?.let(::getNetworkCapabilities)
-                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-
-        else -> activeNetworkInfo?.isConnected
-    } ?: false
 }
+@SuppressLint("ObsoleteSdkInt")
+@Suppress("DEPRECATION")
+fun ConnectivityManager.isCurrentlyConnected() = when {
+    VERSION.SDK_INT >= VERSION_CODES.M ->
+        activeNetwork
+            ?.let(::getNetworkCapabilities)
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+
+    else -> activeNetworkInfo?.isConnected
+} ?: false

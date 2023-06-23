@@ -11,7 +11,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.android.material)
-    implementation(libs.androidx.constraintlayout)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

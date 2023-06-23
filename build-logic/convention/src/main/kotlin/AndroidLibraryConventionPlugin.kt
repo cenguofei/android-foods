@@ -44,7 +44,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     }
                 }
             }
-            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+//            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
                 add("androidTestImplementation", kotlin("test"))
                 add("testImplementation", kotlin("test"))

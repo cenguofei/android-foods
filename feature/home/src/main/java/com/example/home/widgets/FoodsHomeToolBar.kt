@@ -20,7 +20,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +33,7 @@ import com.example.model.remoteModel.Food
 fun FoodsHomeToolBar(
     position: Position,
     onSearchClick: () -> Unit,
-    shoppingCard: SnapshotStateMap<Food, Int>,
+    shoppingCard: SnapshotStateList<Food>,
     modifier: Modifier = Modifier
 ) {
     FoodsTopAppBar(
@@ -76,8 +76,16 @@ fun FoodsHomeToolBar(
                         )
                     }
                     Text(
-                        text = if (shoppingCard.size == 0) "" else shoppingCard.size.toString(),
-                        modifier = Modifier.align(Alignment.TopEnd).padding(top = 2.dp, end = 5.dp),
+                        text = if (shoppingCard.size == 0) "" else if (shoppingCard.size > 99) "99+" else {
+                            var count = 0L
+                            shoppingCard.forEach {
+                                count += it.count
+                            }
+                            count.toString()
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(end = 5.dp),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Medium

@@ -67,9 +67,10 @@ fun MyOrderItem(order: Order) {
             ) {
                 Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
                     if (order.orderDetailList.size == 1) {
+                        Spacer(modifier = Modifier.width(8.dp))
                         FoodSmallImage(model = order.orderDetailList[0].foodPic)
                         Column(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f).padding(start = 8.dp),
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(

@@ -30,7 +30,8 @@ fun FoodsSheetBillContent(
     onSellerSingleFoodClick: (Food) -> Unit = {},
     seller: User,
     drawerState: DrawerState,
-    onCloseDrawer: () -> Unit
+    onCloseDrawer: () -> Unit,
+    currentLoginUser: User
 ) {
     Column(
         modifier = Modifier
@@ -70,7 +71,8 @@ fun FoodsSheetBillContent(
             FoodsListItem(
                 food = it,
                 modifier = Modifier,
-                mainViewModel = mainViewModel
+                mainViewModel = mainViewModel,
+                currentLoginUser = currentLoginUser
             ) {
                 onSellerSingleFoodClick(it)
             }

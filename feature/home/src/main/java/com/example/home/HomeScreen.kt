@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.res.stringResource
 import com.example.designsystem.component.ErrorScreen
 import com.example.designsystem.component.ShimmerList
@@ -21,7 +20,7 @@ fun HomeScreen(
     deleteFavorite: (food: Food, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
     onSearchClick: () -> Unit,
-    shoppingCard: SnapshotStateMap<Food, Int>,
+    shoppingCard: SnapshotStateList<Food>,
 ) {
     val foods by homeViewModel.homeUiState.collectAsState()
 

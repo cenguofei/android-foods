@@ -3,8 +3,6 @@ package com.example.sellerdetail
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.di.Dispatcher
@@ -13,7 +11,6 @@ import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
 import com.example.model.remoteModel.User
-import com.example.network.remote.repository.FoodRepository
 import com.example.network.remote.repository.OrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -31,10 +28,13 @@ class SellerDetailViewModel @Inject constructor(
     private val remoteRepository: OrderRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun commitOrder(
-        selectedFood: Map<Food, Int>,
-        currentLoginUser: MutableState<User>,
+        selectedFood: List<Food>,
+        currentLoginUser: User,
         address: String,
         tel: String,
         onInputError: () -> Unit,
@@ -49,22 +49,25 @@ class SellerDetailViewModel @Inject constructor(
 
         val orderNum = System.currentTimeMillis().toString()
 
-        val foodsDetails = selectedFood.keys.map { food: Food ->
+        val foodsDetails = selectedFood.map { food: Food ->
             OrderDetail(
                 foodName = food.foodName,
-                price = food.price * (selectedFood[food]?.toDouble() ?: 0.0),
+                price = food.price * food.count.toInt(),
                 ordernum = orderNum,
                 foodPic = food.foodPic,
-                num = selectedFood[food]?.toDouble() ?: 0.0,
-                username = currentLoginUser.value.username
+                num = food.count.toDouble(),
+                username = currentLoginUser.username
             )
         }
 
-        val totalPrice = calculatePrice(selectedFood) + selectedFood.size * 1 + 0.5
+        val map = selectedFood.associateWith {
+            it.count.toInt()
+        }
+        val totalPrice = calculatePrice(map) + selectedFood.size * 1 + 0.5
         val order = Order(
             price = totalPrice,
             address = address,
-            username = currentLoginUser.value.username,
+            username = currentLoginUser.username,
             orderDetailList = foodsDetails,
             ordernum = orderNum,
             tel = tel,
@@ -75,8 +78,6 @@ class SellerDetailViewModel @Inject constructor(
 
         viewModelScope.launch(dispatcher) {
             val postOrder: HashMap<String, Any> = remoteRepository.postOrder(order)
-            postOrder.string()
-
             try {
                 val isSuccess = postOrder["isSuccess"] as Boolean
                 if (isSuccess) {
@@ -103,16 +104,5 @@ class SellerDetailViewModel @Inject constructor(
         }.reduce { acc, d ->
             acc + d
         }
-    }
-
-    private fun <K, V> Map<K, V>.string() {
-        val builder = StringBuilder()
-        builder.append("{")
-        keys.forEach {
-            val item = get(it)
-            builder.append(it).append(":").append(item).append(",")
-        }
-        builder.append("}")
-        Log.v("post_order_test", builder.toString())
     }
 }

@@ -39,7 +39,7 @@ android {
 dependencies {
 
     implementation(libs.google.android.material)
-    implementation(libs.androidx.constraintlayout)
+//    implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.test.espresso.core)

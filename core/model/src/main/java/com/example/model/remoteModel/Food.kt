@@ -1,6 +1,9 @@
 package com.example.model.remoteModel
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.model.localmodel.LocalFood
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -47,7 +50,7 @@ data class Food(
     /**
      * 添加到购物车中的数量
      */
-    val count: Long = 0,
+    var count: Long = 0,
 
     /**
      * 菜的图片
@@ -64,9 +67,26 @@ data class Food(
 
     val foodCategory:String = "",
 
-//    val createTime: Date? = null
+    val createTime: String = "",
+
 ) : Parcelable {
     companion object {
         val NONE: Food = Food(id = -1)
     }
+
+    fun toLocalFood(username:String) : LocalFood =
+        LocalFood(
+            id = id,
+            createUserId = createUserId,
+            foodName = foodName,
+            taste = taste,
+            price = price,
+            count = count,
+            foodPic = foodPic,
+            foodImg = foodImg,
+            foodType = foodType,
+            foodCategory = foodCategory,
+            createTime = createTime,
+            username = username
+        )
 }

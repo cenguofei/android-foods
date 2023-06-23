@@ -85,7 +85,6 @@ fun FoodsNavHost(
         startScreen(appState = appState)
         homeScreen(
             appState = appState,
-            homeViewModel = appState.homeViewModel,
             favoriteViewModel = favoriteViewModel,
             onSearchClick = {
                 appState.navigateToSearch()
@@ -111,7 +110,6 @@ fun FoodsNavHost(
 
 private fun NavGraphBuilder.homeScreen(
     appState: FoodsAppState,
-    homeViewModel: HomeViewModel,
     favoriteViewModel: FavoriteViewModel,
     onSearchClick: () -> Unit,
 ) {
@@ -122,7 +120,7 @@ private fun NavGraphBuilder.homeScreen(
                 appState.settingsViewModel.updateUseState(false)
             }
         }
-
+        val homeViewModel = appState.homeViewModel
         HomeScreen(
             homeViewModel = homeViewModel,
             onSellerFoodClick = { foods: List<Food>, seller: User ->
@@ -153,7 +151,7 @@ private fun NavGraphBuilder.homeScreen(
             },
             favoriteFoodIds = favoriteViewModel.favoriteFoodIds,
             onSearchClick = onSearchClick,
-            shoppingCard = appState.mainViewModel.shoppingCard
+            shoppingCard = appState.mainViewModel.shoppingCard,
         )
     }
 }
@@ -200,18 +198,17 @@ private fun NavGraphBuilder.sellerDetailScreen(
                 navBack = true
                 appState.navController.popBackStack()
             },
-            currentLoginUser = appState.currentUser,
+            currentLoginUser = appState.currentUser.value,
             mainViewModel = appState.mainViewModel,
             onSellerSingleFoodClick = {
                 homeViewModel.updateClickedFood(it)
                 appState.navigateToFoodDetail()
             },
-            shouldShowDialogForNav = shouldShowDialog,
-            shouldStatusBarContentDark = {
-                Log.v("darkTheme","Seller Detail darkTheme=$it")
-                appState.shouldStatusBarContentDark.value = it
-            }
-        )
+            shouldShowDialogForNav = shouldShowDialog
+        ) {
+            Log.v("darkTheme", "Seller Detail darkTheme=$it")
+            appState.shouldStatusBarContentDark.value = it
+        }
         val uiState: State<SettingsUiState> = appState.settingsViewModel.settingsUiState.collectAsState()
         val darkTheme = shouldUseDarkTheme(uiState = uiState.value)
 
@@ -282,7 +279,6 @@ private fun NavGraphBuilder.favoriteScreen(
     composable(Screens.Favorite.route) {
         FavoriteScreen(
             onBack = appState.navController::popBackStack,
-            currentUser = appState.currentUser.value,
             favoriteViewModel = favoriteViewModel
         )
     }
@@ -319,7 +315,8 @@ private fun NavGraphBuilder.foodDetailScreen(
             mainViewModel = appState.mainViewModel,
             onCommitOrder = {
                 appState.navigateToSellerDetail(true)
-            }
+            },
+            currentUser = appState.currentUser.value
         )
     }
 }

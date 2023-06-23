@@ -1,7 +1,7 @@
 package com.example.database.db.di
 
 import android.content.Context
-import com.example.database.db.FavoriteDao
+import com.example.database.db.ShoppingCartDao
 import com.example.database.db.FoodsDatabase
 import dagger.Module
 import dagger.Provides
@@ -17,5 +17,5 @@ object DatabaseModule {
     @Singleton
     fun bindsFoodsDao(
         @ApplicationContext context: Context
-    ) : FavoriteDao = FoodsDatabase.getInstance(context).getFoodDao()
+    ) : ShoppingCartDao = FoodsDatabase.getInstance(context).getFoodDao()
 }

@@ -36,7 +36,7 @@ fun FoodsFAB(
     onCommitClick: () -> Unit,
     coroutineScope: CoroutineScope,
     sellerDetailViewModel: SellerDetailViewModel,
-    selectedFood: Map<Food,Int>,
+    selectedFood: List<Food>,
 ) {
     Surface(
         modifier = modifier
@@ -65,8 +65,11 @@ fun FoodsFAB(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                val map = selectedFood.associateWith {
+                    it.count.toInt()
+                }
                 Text(
-                    text = "￥ "+sellerDetailViewModel.calculatePrice(selectedFood),
+                    text = "￥ "+sellerDetailViewModel.calculatePrice(map),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.surface,
                     fontSize = 20.sp

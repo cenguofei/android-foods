@@ -38,6 +38,11 @@ import com.example.model.remoteModel.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * @param shouldStatusBarContentDark 状态栏内容的颜色
+ *        若为dark：说明应该使用 Light 状态栏
+ *        若为light：说明应该使用 Dark 状态栏
+ */
 @SuppressLint("AutoboxingStateCreation")
 @Composable
 fun SellerDetailContent(
@@ -49,9 +54,11 @@ fun SellerDetailContent(
     categories: List<String>,
     categoryFoodsList: List<List<Food>>,
     shouldStatusBarContentDark: (Boolean) -> Unit,
+    currentLoginUser: User,
 ) {
     var rgb by remember { mutableStateOf(0) }
     val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
+
     var textColor by remember { mutableStateOf(onSurface) }
     val resource = LocalContext.current.resources
     val bitmap = remember {
@@ -64,6 +71,8 @@ fun SellerDetailContent(
     }
     val darkTheme = isSystemInDarkTheme()
 
+    var toolBarContentColor by remember { mutableStateOf(onSurface) }
+
     val scope = rememberCoroutineScope()
     val request = ImageRequest.Builder(LocalContext.current)
         .data(seller.headImg)
@@ -72,14 +81,19 @@ fun SellerDetailContent(
             // java.lang.IllegalStateException: unable to getPixels(), pixel access is not supported on Config#HARDWARE bitmaps
             val notMutableBitmap = drawable.toBitmap()/*.asImageBitmap()*/
             // 转换为可变bitmap
-            val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888,true)
+            val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888, true)
             bitmap.value = mutableBitmap
             Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
 
             scope.launch(Dispatchers.Default) {
+                /**
+                 * generateDominantColorState 耗时操作，计算密集型
+                 * 应在[Dispatchers.Default]调度器下执行
+                 */
                 val swatch = mutableBitmap.generateDominantColorState()
                 rgb = swatch.rgb
                 textColor = swatch.bodyTextColor
+                toolBarContentColor = swatch.titleTextColor
 
                 val luminance = ColorUtils.calculateLuminance(swatch.rgb)
                 if (darkTheme && luminance <= 0.5) {
@@ -87,30 +101,15 @@ fun SellerDetailContent(
                 } else if (!darkTheme && luminance <= 0.5) {
                     //之前为亮色，计算得暗色
                     shouldStatusBarContentDark(false)
-                    Log.v("darkTheme","darkTheme=false")
+                    Log.v("darkTheme", "darkTheme=false")
                 } else if (darkTheme && luminance > 0.5) {
                     //之前为暗色，计算得亮色
                     shouldStatusBarContentDark(true)
-                    Log.v("darkTheme","darkTheme=true")
+                    Log.v("darkTheme", "darkTheme=true")
                 } else if (!darkTheme && luminance > 0.5) {
                     //之前为亮色，计算得亮色
                     //不变
                 }
-//                val grey = color.red * 0.299 + color.green * 0.587 + color.blue * 0.114
-//                val dark = grey >= 192
-//                if (darkTheme && !dark) { //之前是 暗，现在是 明
-//                    Log.v("darkTheme","shouldUseDarkTheme(true)")
-//                    shouldUseDarkTheme(true)
-//                } else if (darkTheme && dark) {
-//                    // 不变
-//                    Log.v("darkTheme","不变")
-//                } else if (!darkTheme && dark) { //之前是明，现在是 dark
-//                    Log.v("darkTheme","shouldUseDarkTheme(false)")
-//                    shouldUseDarkTheme(false)
-//                } else if (!darkTheme && !dark) { //之前是明，现在是明
-//                    //不变
-//                    Log.v("darkTheme","不变")
-//                }
                 Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
             }
         }
@@ -119,6 +118,9 @@ fun SellerDetailContent(
 
 
     LaunchedEffect(key1 = seller.headImg) {
+        /**
+         * 异步加载图片
+         */
         context.imageLoader.enqueue(request)
     }
 
@@ -132,7 +134,8 @@ fun SellerDetailContent(
         AnimatedToolBar(
             seller = seller,
             scrollState = scrollState,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            toolBarContentColor = toolBarContentColor
         )
         Row(
             modifier = Modifier
@@ -167,13 +170,9 @@ fun SellerDetailContent(
                     scrollState = scrollState,
                     mainViewModel = mainViewModel,
                     onSellerSingleFoodClick = onSellerSingleFoodClick,
+                    currentLoginUser = currentLoginUser
                 )
             }
         }
     }
 }
-
-private fun Color.contraryColor(): Int {
-    return Color(red - 255,green-255,blue-255).toArgb()
-}
-

@@ -21,7 +21,7 @@ fun SellerDetailScreen(
     seller: User,
     foods: List<Food>,
     onBackClick: () -> Unit,
-    currentLoginUser: MutableState<User>,
+    currentLoginUser: User,
     mainViewModel: ShoppingCardViewModel,
     onSellerSingleFoodClick: (Food) -> Unit = {},
     shouldShowDialogForNav: MutableState<Boolean>,

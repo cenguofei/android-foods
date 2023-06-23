@@ -5,7 +5,6 @@ import com.example.common.di.FoodsDispatchers
 import com.example.model.page.PageList
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.Order
-import com.example.network.remote.repository.ApiParam.Companion.retrofit
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,11 +14,13 @@ import javax.inject.Singleton
 
 @Singleton
 class FoodRepository @Inject constructor(
-    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
+    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
+    private val apiParam: ApiParam
 ) {
 //    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-    private val remoteService: FoodApi = retrofit.create(FoodApi::class.java)
+    private val remoteService: FoodApi = apiParam.retrofit.create(FoodApi::class.java)
 
+    // TODO 使用Paging进行分页下载
     suspend fun getAllFood(): Flow<List<Food>> = flow {
         val result = withContext(dispatcher) {
             remoteService.getAllFood()

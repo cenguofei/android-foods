@@ -13,9 +13,10 @@ import javax.inject.Singleton
 
 @Singleton
 class OrderRepository @Inject constructor(
-    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
+    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
+    private val apiParam: ApiParam
 ) {
-    private val orderApi:OrderApi = ApiParam.retrofit.create(OrderApi::class.java)
+    private val orderApi:OrderApi = apiParam.retrofit.create(OrderApi::class.java)
 
     suspend fun postOrder(order: Order) : HashMap<String,Any> {
         return withContext(dispatcher) {

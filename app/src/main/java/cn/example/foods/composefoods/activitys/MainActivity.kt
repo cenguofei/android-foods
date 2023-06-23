@@ -71,6 +71,11 @@ class MainActivity : ComponentActivity() {
                 systemUiController = systemUiController
             )
 
+            LaunchedEffect(key1 = appState.currentUser.value, block = {
+//                mainViewModel.deleteZeroCount()
+                mainViewModel.getAllShoppingCartFood(appState.currentUser.value)
+            })
+
             val uiState: State<SettingsUiState> = settingsViewModel.settingsUiState.collectAsState()
 
 
@@ -94,10 +99,8 @@ class MainActivity : ComponentActivity() {
                         }
                         is SettingsUiState.Success -> {
                             if ((settingsState.value as SettingsUiState.Success).settings.isFirstUse) {
-                                Log.v("SettingsUiState","isFirstUse:true")
                                 FoodsApp(appState = appState, startScreen = Screens.Start)
                             } else {
-                                Log.v("SettingsUiState","isFirstUse:false")
                                 FoodsApp(appState = appState, startScreen = Screens.Home)
                             }
                         }

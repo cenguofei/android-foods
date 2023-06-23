@@ -38,7 +38,8 @@ fun FoodDetailScreen(
     isFavoriteFood: Boolean,
     seller: User,
     mainViewModel: ShoppingCardViewModel,
-    onCommitOrder:() -> Unit
+    onCommitOrder: () -> Unit,
+    currentUser: User
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -82,14 +83,15 @@ fun FoodDetailScreen(
         FoodDetailContent(
             food = food,
             mainViewModel = mainViewModel,
-            onCommitOrder = onCommitOrder
+            onCommitOrder = onCommitOrder,
+            currentUser = currentUser
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 380.dp - scoreSize/2)
+                .padding(top = 380.dp - scoreSize / 2)
         ) {
             Surface(
                 modifier = Modifier
@@ -97,10 +99,7 @@ fun FoodDetailScreen(
                     .border(
                         width = 3.dp,
                         brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.surface,
-                                MaterialTheme.colorScheme.onPrimary
-                            )
+                            colors = ImageBorderGradient.borderGradient()
                         ),
                         shape = RoundedCornerShape(50)
                     ),
@@ -123,7 +122,8 @@ fun FoodDetailScreen(
                 text = "评分",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = 8.dp),
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 

@@ -15,7 +15,11 @@ data class Favorite(
 
     val canteenName:String = "", //餐厅名
 
+    val foodName:String = "",
+
     val score:Double = 0.0, //商家评分
 
     val foodType:String = "", //商家经营食物类型
+
+    val foodPic: String = ""
 )

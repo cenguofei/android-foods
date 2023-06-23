@@ -19,14 +19,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ActionsRow(
     onSelectAll:() -> Unit = {},
-    onEdit:() -> Unit = {}
+    onEdit:() -> Unit = {},
+    title:String = ""
 ) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         val contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surface else
             MaterialTheme.colorScheme.onSurface
 
         Text(
-            text = "我的订单",
+            text = title,
             style = MaterialTheme.typography.titleLarge,
             color = contentColor
         )

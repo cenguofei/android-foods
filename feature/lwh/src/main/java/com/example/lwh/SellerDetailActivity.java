@@ -53,15 +53,15 @@ public class SellerDetailActivity extends AppCompatActivity {
         }
 
 
-        RecyclerView leftRecyclerView = findViewById(R.id.leftRecyclerView);
-        RecyclerView rightRecyclerView = findViewById(R.id.rightRecyclerView);
-
-        leftRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        rightRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-
-
-        leftRecyclerView.setAdapter(new MyAdapter(5));
-        rightRecyclerView.setAdapter(new MyAdapter(250));
+//        RecyclerView leftRecyclerView = findViewById(R.id.leftRecyclerView);
+//        RecyclerView rightRecyclerView = findViewById(R.id.rightRecyclerView);
+//
+//        leftRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+//        rightRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+//
+//
+//        leftRecyclerView.setAdapter(new MyAdapter(5));
+//        rightRecyclerView.setAdapter(new MyAdapter(250));
 
 
     }

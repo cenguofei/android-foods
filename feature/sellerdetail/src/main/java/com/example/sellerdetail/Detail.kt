@@ -57,7 +57,7 @@ fun FoodsDetailContent(
     scaffoldState: BottomSheetScaffoldState,
     selectedFood: List<Food>,
     onBackClick: () -> Unit,
-    currentLoginUser: MutableState<User>,
+    currentLoginUser: User,
     sellerDetailViewModel: SellerDetailViewModel,
     mainViewModel: ShoppingCardViewModel,
     onSellerSingleFoodClick: (Food) -> Unit = {},
@@ -166,7 +166,8 @@ fun FoodsDetailContent(
 //                            scaffoldState.bottomSheetState.collapse()
 //                        }
 //                    }
-                }
+                },
+                currentLoginUser = currentLoginUser
             )
         },
         sheetElevation = 8.dp,
@@ -183,7 +184,8 @@ fun FoodsDetailContent(
                 categoryFoodsList = categoryFoodsList,
                 mainViewModel = mainViewModel,
                 onSellerSingleFoodClick = onSellerSingleFoodClick,
-                shouldStatusBarContentDark = shouldStatusBarContentDark
+                shouldStatusBarContentDark = shouldStatusBarContentDark,
+                currentLoginUser = currentLoginUser
             )
 
             FoodsFAB(

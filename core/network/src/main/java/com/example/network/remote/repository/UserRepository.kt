@@ -10,10 +10,11 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(
-    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher
+    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
+    private val apiParam: ApiParam
 ) {
 
-    private val remoteService: UserApi = ApiParam.retrofit.create(UserApi::class.java)
+    private val remoteService: UserApi = apiParam.retrofit.create(UserApi::class.java)
 
     suspend fun getAllUser(): List<User> = withContext(dispatcher) {
         return@withContext remoteService.getAllUser()

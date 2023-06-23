@@ -158,26 +158,10 @@ fun CollapsableLayout(
     bottomContent: @Composable () -> Unit,
     bottomContentScrolled: State<Boolean> = mutableStateOf(false),
     state: CollapsableLayoutState = rememberCollapsableLayoutState(0.dp),
-    isTypesAllVisible: MutableState<Boolean>
 ) {
-
     val connection: CollapsableScrollConnection = remember {
         CollapsableScrollConnection(bottomContentScrolled, state)
     }
-
-//    val coroutineScope = rememberCoroutineScope()
-//    val lineHeight = remember { Animatable(0f) }
-//    LaunchedEffect(key1 = isTypesAllVisible.value, block = {
-//        if (isTypesAllVisible.value) {
-//            coroutineScope.launch {
-//                lineHeight.animateTo(foodsTypesLineHeight.value + 12)
-//            }
-//        } else {
-//            coroutineScope.launch {
-//                lineHeight.animateTo(0f)
-//            }
-//        }
-//    })
 
     val heightModifier = if (state.maxTopHeightPx != -1) {
         Modifier.height(with(LocalDensity.current) {
@@ -203,7 +187,6 @@ fun CollapsableLayout(
                     }
                 }
         ) { topContent() }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
