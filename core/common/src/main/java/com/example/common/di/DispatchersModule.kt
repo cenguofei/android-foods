@@ -7,29 +7,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
-
-
-//@Qualifier
-//@Retention(AnnotationRetention.BINARY)
-//annotation class IODispatcher
-//
-//@Qualifier
-//@Retention(AnnotationRetention.BINARY)
-//annotation class MainDispatcher
-//
-//@Module
-//@InstallIn(ActivityComponent::class)
-//object DispatchersModule {
-//
-//    @IODispatcher
-//    @Provides
-//    fun providesDispatcherIO():CoroutineDispatcher = Dispatchers.IO
-//
-//    @MainDispatcher
-//    @Provides
-//    fun providesDispatcherMain():CoroutineDispatcher = Dispatchers.Main
-//}
-
 @Module
 @InstallIn(SingletonComponent::class)
 object DispatchersModule {

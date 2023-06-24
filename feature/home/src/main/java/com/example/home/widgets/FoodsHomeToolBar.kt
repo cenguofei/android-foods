@@ -1,6 +1,8 @@
 package com.example.home.widgets
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,10 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -23,8 +29,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.designsystem.component.FoodsTopAppBar
 import com.example.home.Position
 import com.example.model.remoteModel.Food
@@ -34,6 +43,7 @@ fun FoodsHomeToolBar(
     position: Position,
     onSearchClick: () -> Unit,
     shoppingCard: SnapshotStateList<Food>,
+    onShoppingCartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FoodsTopAppBar(
@@ -52,7 +62,6 @@ fun FoodsHomeToolBar(
                             .fillMaxSize()
                             .align(Alignment.Center),
                         onClick = {
-                            // TODO 消息通知
                         }) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
@@ -66,30 +75,28 @@ fun FoodsHomeToolBar(
                     IconButton(
                         modifier = Modifier
                             .fillMaxSize()
-                            .align(Alignment.Center), onClick = {
-                            // TODO 购物车
-                        }) {
+                            .align(Alignment.Center), onClick = onShoppingCartClick
+                    ) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    Text(
-                        text = if (shoppingCard.size == 0) "" else if (shoppingCard.size > 99) "99+" else {
-                            var count = 0L
-                            shoppingCard.forEach {
-                                count += it.count
-                            }
-                            count.toString()
-                        },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(end = 5.dp),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
-                    )
+                    FoodsMessage(modifier = Modifier.align(Alignment.TopEnd)) {
+                        Text(
+                            text = if (shoppingCard.size == 0) "" else if (shoppingCard.size > 99) "99+" else {
+                                var count = 0L
+                                shoppingCard.forEach {
+                                    count += it.count
+                                }
+                                count.toString()
+                            },
+                            color = MaterialTheme.colorScheme.surface,
+                            fontSize = 8.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
 
                 Box(modifier = Modifier.size(45.dp)) {
@@ -109,6 +116,29 @@ fun FoodsHomeToolBar(
         }
     )
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun FoodsMessage(
+    modifier: Modifier = Modifier,
+    text:@Composable () -> Unit
+) {
+    Surface(
+        modifier = modifier
+            .size(15.dp),
+        shape = RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.primary,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            text()
+        }
+    }
+}
+
 
 @Composable
 private fun StartContent(position: Position) {

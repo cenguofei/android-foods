@@ -21,6 +21,8 @@ fun HomeScreen(
     favoriteFoodIds: SnapshotStateList<Long>,
     onSearchClick: () -> Unit,
     shoppingCard: SnapshotStateList<Food>,
+    onUsersLoaded:(List<User>) -> Unit,
+    onShoppingCartClick:() -> Unit
 ) {
     val foods by homeViewModel.homeUiState.collectAsState()
 
@@ -29,6 +31,7 @@ fun HomeScreen(
             ShimmerList()
         }
         is NetworkResult.Success<*> ->{
+            onUsersLoaded(homeViewModel.userToFoodsMap.keys.toList())
             SuccessContent(
                 onSearchClick = onSearchClick,
                 saveFavorite = saveFavorite,
@@ -36,7 +39,8 @@ fun HomeScreen(
                 onFoodClick = onSellerFoodClick,
                 favoriteFoodIds = favoriteFoodIds,
                 shoppingCard = shoppingCard,
-                homeViewModel = homeViewModel
+                homeViewModel = homeViewModel,
+                onShoppingCartClick = onShoppingCartClick
             )
         }
         is NetworkResult.Error -> {

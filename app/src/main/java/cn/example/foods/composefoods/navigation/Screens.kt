@@ -15,5 +15,7 @@ enum class Screens(val route: String) {
 
     Search("search"),
 
-    FoodDetail("food_detail")
+    FoodDetail("food_detail"),
+
+    ShoppingCartScreen("shopping_cart")
 }

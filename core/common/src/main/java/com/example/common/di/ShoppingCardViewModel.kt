@@ -73,4 +73,9 @@ class ShoppingCardViewModel @Inject constructor(
             foodsDatabaseRepository.deleteWhereCountLessThanZero()
         }
     }
+
+    val shoppingCartUsers = mutableStateListOf<User>()
+    fun setUsers(users: List<User>) {
+        shoppingCartUsers.addAll(users.distinctBy { it.id })
+    }
 }

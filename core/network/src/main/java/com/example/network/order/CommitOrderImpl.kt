@@ -1,38 +1,18 @@
-package com.example.sellerdetail
+package com.example.network.order
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.common.di.Dispatcher
-import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
 import com.example.model.remoteModel.User
 import com.example.network.remote.repository.OrderRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-
-data class InputInfo(
-    val address: String,
-    val tel:String
-)
-
-@HiltViewModel
-class SellerDetailViewModel @Inject constructor(
-    private val remoteRepository: OrderRepository,
-    @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
-) : ViewModel() {
-
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun commitOrder(
+class CommitOrderImpl constructor(
+    private val orderRepository: OrderRepository
+)  {
+    fun CoroutineScope.commitOrder(
         selectedFood: List<Food>,
         currentLoginUser: User,
         address: String,
@@ -42,11 +22,10 @@ class SellerDetailViewModel @Inject constructor(
         onCommitError: (msg: String) -> Unit,
         seller: User
     ) {
-        if (address.isEmpty()) {
+        if (address.isBlank() || tel.isBlank()) {
             onInputError()
             return
         }
-
         val orderNum = System.currentTimeMillis().toString()
 
         val foodsDetails = selectedFood.map { food: Food ->
@@ -73,11 +52,10 @@ class SellerDetailViewModel @Inject constructor(
             tel = tel,
             canteenName = seller.canteenName,
         )
-
         Log.v("cgf", "提交订单：$order")
 
-        viewModelScope.launch(dispatcher) {
-            val postOrder: HashMap<String, Any> = remoteRepository.postOrder(order)
+        launch {
+            val postOrder: HashMap<String, Any> = orderRepository.postOrder(order)
             try {
                 val isSuccess = postOrder["isSuccess"] as Boolean
                 if (isSuccess) {

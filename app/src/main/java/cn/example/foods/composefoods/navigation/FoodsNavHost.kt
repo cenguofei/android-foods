@@ -55,6 +55,7 @@ import com.example.model.remoteModel.User
 import com.example.myorder.MyOrderScreen
 import com.example.search.SearchScreen
 import com.example.sellerdetail.SellerDetailScreen
+import com.example.shoppingcart.ShoppingCartScreen
 import com.example.start.StartScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,6 +65,7 @@ fun FoodsNavHost(
     appState: FoodsAppState,
     modifier: Modifier = Modifier,
 //   TODO BUG when use: onShowSnackbar: suspend (String, String?) -> Boolean,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
     drawerState: DrawerState,
     startScreen: Screens,
 ) {
@@ -71,11 +73,14 @@ fun FoodsNavHost(
     val navController = appState.navController
     val favoriteViewModel: FavoriteViewModel = viewModel()
 
-
     LaunchedEffect(key1 = appState.currentUser.value, block = {
         favoriteViewModel.getFavorites(appState.currentUser.value.username)
     })
 
+    /**
+     * 在首页，点击返回：
+     *  如果抽屉打开：先关闭抽屉
+     */
     MyBackHandler(appState = appState, drawerState = drawerState, coroutineScope)
     NavHost(
         navController = navController,
@@ -103,7 +108,11 @@ fun FoodsNavHost(
         foodDetailScreen(
             favoriteViewModel = favoriteViewModel,
             homeViewModel = appState.homeViewModel,
-            appState = appState
+            appState = appState,
+        )
+        shoppingCartScreen(
+            appState = appState,
+            onShowSnackbar = onShowSnackbar
         )
     }
 }
@@ -151,7 +160,13 @@ private fun NavGraphBuilder.homeScreen(
             },
             favoriteFoodIds = favoriteViewModel.favoriteFoodIds,
             onSearchClick = onSearchClick,
-            shoppingCard = appState.mainViewModel.shoppingCard,
+            shoppingCard = appState.shoppingCardViewModel.shoppingCard,
+            onUsersLoaded = {
+                appState.shoppingCardViewModel.setUsers(it)
+            },
+            onShoppingCartClick = {
+                appState.navigateToShoppingCart()
+            }
         )
     }
 }
@@ -199,7 +214,7 @@ private fun NavGraphBuilder.sellerDetailScreen(
                 appState.navController.popBackStack()
             },
             currentLoginUser = appState.currentUser.value,
-            mainViewModel = appState.mainViewModel,
+            mainViewModel = appState.shoppingCardViewModel,
             onSellerSingleFoodClick = {
                 homeViewModel.updateClickedFood(it)
                 appState.navigateToFoodDetail()
@@ -312,11 +327,27 @@ private fun NavGraphBuilder.foodDetailScreen(
                 favoriteViewModel.deleteFavorite(food = homeViewModel.clickedFood, currentUser = appState.currentUser.value)
             },
             isFavoriteFood = favoriteViewModel.foodInFavorites(homeViewModel.clickedFood),
-            mainViewModel = appState.mainViewModel,
+            mainViewModel = appState.shoppingCardViewModel,
             onCommitOrder = {
                 appState.navigateToSellerDetail(true)
             },
-            currentUser = appState.currentUser.value
+            currentUser = appState.currentUser.value,
+
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+private fun NavGraphBuilder.shoppingCartScreen(
+    appState: FoodsAppState,
+    onShowSnackbar: suspend (String, String?) -> Boolean
+) {
+    composable(Screens.ShoppingCartScreen.route) {
+        ShoppingCartScreen(
+            onBack = appState.navController::popBackStack,
+            shoppingCardViewModel = appState.shoppingCardViewModel,
+            currentLoginUser = appState.currentUser.value,
+            onShowSnackbar = onShowSnackbar
         )
     }
 }

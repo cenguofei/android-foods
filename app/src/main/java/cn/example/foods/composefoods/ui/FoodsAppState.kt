@@ -72,7 +72,7 @@ class FoodsAppState(
     private val windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
     val settingsViewModel: SettingsViewModel,
-    val mainViewModel: ShoppingCardViewModel,
+    val shoppingCardViewModel: ShoppingCardViewModel,
     val homeViewModel: HomeViewModel,
     val systemUiController: SystemUiController
 ) {
@@ -198,6 +198,10 @@ class FoodsAppState(
 
     fun navigateToFoodDetail() {
         navController.navigate(Screens.FoodDetail.route)
+    }
+
+    fun navigateToShoppingCart() {
+        navController.navigate(Screens.ShoppingCartScreen.route)
     }
 }
 

@@ -31,7 +31,8 @@ fun MainSuccessContent(
     onFoodClick: (foods: List<Food>, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
     shoppingCard: SnapshotStateList<Food>,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    onShoppingCartClick: () -> Unit
 ) {
     val isTypesAllVisible = remember { mutableStateOf(false) }
     val state: CollapsableLayoutState = rememberCollapsableLayoutState(0.dp)
@@ -44,7 +45,8 @@ fun MainSuccessContent(
                     position,
                     onSearchClick = onSearchClick,
                     shoppingCard = shoppingCard,
-                    modifier = Modifier
+                    modifier = Modifier,
+                    onShoppingCartClick = onShoppingCartClick
                 )
                 FoodMainTypes(
                     modifier = Modifier,

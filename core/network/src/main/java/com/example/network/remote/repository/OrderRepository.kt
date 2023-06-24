@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class OrderRepository @Inject constructor(
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
-    private val apiParam: ApiParam
+    apiParam: ApiParam
 ) {
     private val orderApi:OrderApi = apiParam.retrofit.create(OrderApi::class.java)
 
