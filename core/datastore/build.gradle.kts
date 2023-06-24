@@ -14,7 +14,3 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(project(mapOf("path" to ":core:model")))
 }
-
-//kapt {
-//    correctErrorTypes = true
-//}

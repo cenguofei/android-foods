@@ -1,7 +1,5 @@
 package com.example.home
 
-import androidx.compose.runtime.Composable
-
 fun <T> List<T>.toPairs(): MutableList<Pair<T, T?>> {
     if (this.isEmpty()) {
         return mutableListOf()

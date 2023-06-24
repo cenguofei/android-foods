@@ -19,7 +19,6 @@ rootProject.name = "foodsapp"
 include(":app")
 include(":core:network")
 include(":core:designsystem")
-include(":feature:settings")
 include(":core:model")
 include(":core:datastore")
 include(":core:common")

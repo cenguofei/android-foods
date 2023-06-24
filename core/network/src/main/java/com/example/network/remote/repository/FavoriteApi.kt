@@ -1,13 +1,10 @@
 package com.example.network.remote.repository
 
 import com.example.model.remoteModel.Favorite
-import com.example.model.remoteModel.Order
-import com.example.model.remoteModel.User
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface FavoriteApi : IFavoriteApi {

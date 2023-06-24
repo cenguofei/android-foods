@@ -1,11 +1,5 @@
 package com.example.lwh;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.model.remoteModel.Food;
 import com.example.model.remoteModel.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class SellerDetailActivity extends AppCompatActivity {
     private User seller;

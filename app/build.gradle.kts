@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     id("foods.android.application")
     id("foods.android.application.compose")
@@ -7,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "cn.example.foods"
+    namespace = "com.example.foods"
 
     defaultConfig {
         applicationId = "cn.example.foods"
@@ -84,7 +83,6 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
     implementation(project(":feature:start"))
-    implementation(project(":feature:settings"))
     implementation(project(":feature:home"))
     implementation(project(":feature:ysq"))
     implementation(project(":feature:lwh"))

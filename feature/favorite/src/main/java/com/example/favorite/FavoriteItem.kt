@@ -28,7 +28,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.designsystem.component.FoodsCenterRow
-import com.example.designsystem.component.LoadRoundedImageWithBorder
 import com.example.model.remoteModel.Favorite
 
 

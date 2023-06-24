@@ -16,7 +16,5 @@ sealed interface SearchResultUiState {
 
     data class Success(
         val pageList: PageList<Food> = emptyPageList(),
-    ) : SearchResultUiState {
-        fun isEmpty(): Boolean = pageList.isEmpty()
-    }
+    ) : SearchResultUiState
 }

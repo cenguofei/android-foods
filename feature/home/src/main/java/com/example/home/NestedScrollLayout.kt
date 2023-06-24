@@ -1,23 +1,17 @@
 package com.example.home
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -28,8 +22,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.home.widgets.foodsTypesLineHeight
-import kotlinx.coroutines.launch
 
 
 enum class TopStates {
@@ -190,7 +182,7 @@ fun CollapsableLayout(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .scrollable(rememberScrollState(), Orientation.Vertical)
+//                .scrollable(rememberScrollState(), Orientation.Vertical)
         ) { bottomContent() }
     }
 }

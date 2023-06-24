@@ -85,6 +85,7 @@ fun SuccessContent(
     shoppingCard: SnapshotStateList<Food>,
     homeViewModel: HomeViewModel,
     onShoppingCartClick: () -> Unit,
+    onNotificationClick: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val lazyStaggeredState = rememberLazyStaggeredGridState()
@@ -102,7 +103,8 @@ fun SuccessContent(
             shoppingCard = shoppingCard,
             lazyStaggeredState = lazyStaggeredState,
             homeViewModel = homeViewModel,
-            onShoppingCartClick = onShoppingCartClick
+            onShoppingCartClick = onShoppingCartClick,
+            onNotificationClick = onNotificationClick
         )
         ToTopButton(lazyStaggeredState = lazyStaggeredState, modifier = Modifier
             .align(Alignment.BottomEnd)

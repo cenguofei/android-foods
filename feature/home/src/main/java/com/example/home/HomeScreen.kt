@@ -1,5 +1,6 @@
 package com.example.home
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,16 +23,21 @@ fun HomeScreen(
     onSearchClick: () -> Unit,
     shoppingCard: SnapshotStateList<Food>,
     onUsersLoaded:(List<User>) -> Unit,
-    onShoppingCartClick:() -> Unit
+    onShoppingCartClick:() -> Unit,
+    onNotificationClick:() -> Unit
 ) {
+    homeViewModel.getAllFoods()
     val foods by homeViewModel.homeUiState.collectAsState()
+
 
     when(foods) {
         is NetworkResult.Loading -> {
+            Log.v("HomeScreen","NetworkResult.Loading ShimmerList()")
             ShimmerList()
         }
         is NetworkResult.Success<*> ->{
             onUsersLoaded(homeViewModel.userToFoodsMap.keys.toList())
+            Log.v("HomeScreen","NetworkResult.Success<*> SuccessContent")
             SuccessContent(
                 onSearchClick = onSearchClick,
                 saveFavorite = saveFavorite,
@@ -40,10 +46,12 @@ fun HomeScreen(
                 favoriteFoodIds = favoriteFoodIds,
                 shoppingCard = shoppingCard,
                 homeViewModel = homeViewModel,
-                onShoppingCartClick = onShoppingCartClick
+                onShoppingCartClick = onShoppingCartClick,
+                onNotificationClick = onNotificationClick
             )
         }
         is NetworkResult.Error -> {
+            Log.v("HomeScreen","NetworkResult.Error ErrorScreen")
             ErrorScreen(foods.error?.cause?.message ?: stringResource(id = R.string.unkown_erro))
         }
     }

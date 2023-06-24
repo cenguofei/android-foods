@@ -1,15 +1,12 @@
 package com.example.home.widgets
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -44,6 +41,7 @@ fun FoodMainTypes(
     coroutineScope: CoroutineScope,
     visible: MutableState<Boolean> = remember { mutableStateOf(false) },
     onDoubleLine: (Boolean) -> Unit = {},
+    foodTypesHeight:Animatable<Float,AnimationVector1D>
 ) {
     Column(
         modifier = modifier
@@ -91,11 +89,13 @@ fun FoodMainTypes(
                     onDoubleLine(true)
                     coroutineScope.launch {
                         rotation.animateTo(-180f)
+//                        foodTypesHeight.animateTo(foodsTypesLineHeight.value )
                     }
                 } else {
                     onDoubleLine(false)
                     coroutineScope.launch {
                         rotation.animateTo(0f)
+//                        foodTypesHeight.animateTo(0f)
                     }
                 }
             })

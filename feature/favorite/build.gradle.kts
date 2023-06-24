@@ -9,7 +9,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)

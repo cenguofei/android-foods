@@ -10,7 +10,6 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FabPosition
-import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
@@ -22,7 +21,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +32,7 @@ import com.example.designsystem.component.FoodsMaterial3AlertDialog
 import com.example.designsystem.component.FoodsOutlinedTextField
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 object FoodsDataProvider {
@@ -64,10 +63,11 @@ fun FoodsDetailContent(
     categories: List<String>,
     categoryFoodsList: List<List<Food>>,
     shouldShowDialogForNav: MutableState<Boolean>,
-    shouldStatusBarContentDark:(Boolean) -> Unit
+    shouldStatusBarContentDark: (Boolean) -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    coroutineScope: CoroutineScope
 ) {
     val scrollState = remember { mutableStateOf(ScrollState(initial = 0)) }
-    val coroutineScope = rememberCoroutineScope()
     var shouldShowDialog by remember { mutableStateOf(false) }
     val address = remember { mutableStateOf(TextFieldValue("")) }
     val tel = remember { mutableStateOf(TextFieldValue("")) }
@@ -81,26 +81,29 @@ fun FoodsDetailContent(
             seller = seller,
             onInputError = {
                 coroutineScope.launch {
-                    scaffoldState.snackbarHostState
-                        .showSnackbar(
-                            "请输入正确的信息\uD83D\uDC95",
-                            duration = SnackbarDuration.Long
-                        )
+                    onShowSnackbar("请输入正确的信息\uD83D\uDC95","Remove")
+//                    scaffoldState.snackbarHostState
+//                        .showSnackbar(
+//                            "请输入正确的信息\uD83D\uDC95",
+//                            duration = SnackbarDuration.Long
+//                        )
                 }
             },
             onCommitError = {
                 coroutineScope.launch {
-                    scaffoldState.snackbarHostState
-                        .showSnackbar(
-                            "出错啦!错误信息：$it\uD83D\uDE4A",
-                            duration = SnackbarDuration.Long
-                        )
+                    onShowSnackbar("出错啦!错误信息：$it\uD83D\uDE4A","Remove")
+//                    scaffoldState.snackbarHostState
+//                        .showSnackbar(
+//                            "出错啦!错误信息：$it\uD83D\uDE4A",
+//                            duration = SnackbarDuration.Long
+//                        )
                 }
             },
             onCommitSuccess = {
                 coroutineScope.launch {
-                    scaffoldState.snackbarHostState
-                        .showSnackbar("提交成功\uD83E\uDD70", duration = SnackbarDuration.Long)
+                    onShowSnackbar("提交成功\uD83E\uDD70","Remove")
+//                    scaffoldState.snackbarHostState
+//                        .showSnackbar("提交成功\uD83E\uDD70", duration = SnackbarDuration.Long)
                 }
                 shouldShowDialog = false
             }

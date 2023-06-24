@@ -1,23 +1,13 @@
 package com.example.network.remote.repository
 
 import android.content.Context
-import android.net.ConnectivityManager
-import androidx.core.content.getSystemService
 import com.example.network.interceptor.CacheInterceptor
-import com.example.network.netstate.NetworkMonitor
-import com.example.network.netstate.isCurrentlyConnected
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import okhttp3.CacheControl
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

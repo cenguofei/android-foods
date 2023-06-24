@@ -4,11 +4,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
 import com.example.network.netstate.isCurrentlyConnected
-import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
 
 
 class CacheInterceptor(appContext:Context) : Interceptor {

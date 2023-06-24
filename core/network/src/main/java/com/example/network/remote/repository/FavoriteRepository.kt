@@ -3,16 +3,10 @@ package com.example.network.remote.repository
 import com.example.common.di.Dispatcher
 import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.Favorite
-import com.example.model.remoteModel.User
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Query
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 

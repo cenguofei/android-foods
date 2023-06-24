@@ -1,8 +1,8 @@
 package com.example.database.db.di
 
 import android.content.Context
-import com.example.database.db.ShoppingCartDao
 import com.example.database.db.FoodsDatabase
+import com.example.database.db.ShoppingCartDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -36,10 +36,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.designsystem.theme.FoodsTheme
 import com.example.designsystem.theme.GradientColors
 import com.example.designsystem.theme.LocalBackgroundTheme
 import com.example.designsystem.theme.LocalGradientColors
-import com.example.designsystem.theme.FoodsTheme
 import kotlin.math.tan
 
 /**

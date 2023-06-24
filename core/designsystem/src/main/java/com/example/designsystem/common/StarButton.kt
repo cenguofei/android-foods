@@ -1,7 +1,6 @@
 package com.example.designsystem.common
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite

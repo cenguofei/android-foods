@@ -9,7 +9,6 @@ import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
-import com.example.network.remote.repository.FoodRepository
 import com.example.network.remote.repository.OrderRepository
 import com.google.gson.internal.LinkedTreeMap
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.common.di.ShoppingCardViewModel
 import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
+import kotlinx.coroutines.CoroutineScope
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -26,7 +26,9 @@ fun SellerDetailScreen(
     mainViewModel: ShoppingCardViewModel,
     onSellerSingleFoodClick: (Food) -> Unit = {},
     shouldShowDialogForNav: MutableState<Boolean>,
-    shouldStatusBarContentDark:(Boolean) -> Unit
+    onShowSnackbar: suspend (String, String?) -> Boolean,
+    coroutineScope: CoroutineScope,
+    shouldStatusBarContentDark: (Boolean) -> Unit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val selectedFood = mainViewModel.getSelectedFood(seller)
@@ -56,7 +58,9 @@ fun SellerDetailScreen(
         mainViewModel = mainViewModel,
         onSellerSingleFoodClick = onSellerSingleFoodClick,
         shouldShowDialogForNav = shouldShowDialogForNav,
-        shouldStatusBarContentDark = shouldStatusBarContentDark
+        shouldStatusBarContentDark = shouldStatusBarContentDark,
+        onShowSnackbar = onShowSnackbar,
+        coroutineScope = coroutineScope
     )
 }
 

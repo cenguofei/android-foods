@@ -16,7 +16,6 @@
 
 package com.example.designsystem.theme
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color

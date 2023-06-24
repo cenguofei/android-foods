@@ -2,6 +2,7 @@ plugins {
     id("foods.android.library")
     id("foods.android.library.compose")
     id("foods.android.hilt")
+    id("foods.android.room")
 }
 
 android {
@@ -9,7 +10,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
@@ -26,15 +26,4 @@ dependencies {
     implementation(project(mapOf("path" to ":core:network")))
     implementation(project(mapOf("path" to ":core:common")))
     implementation(project(mapOf("path" to ":core:model")))
-
-    val room_version = "2.5.1"
-
-    implementation("androidx.room:room-runtime:$room_version")
-//    annotationProcessor("androidx.room:room-compiler:$room_version")
-
-    // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
-
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
 }

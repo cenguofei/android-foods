@@ -3,7 +3,6 @@ package com.example.favorite
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.model.remoteModel.Favorite
@@ -18,18 +17,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
     private val foodRepository: FoodRepository
 ) : ViewModel() {
-
-    companion object {
-        private const val FAVORITES_KEY = "_my_favorites_key"
-    }
-
 
     private var _myFavorites: MutableStateFlow<NetworkResult<List<Favorite>>> =
         MutableStateFlow(NetworkResult.Loading())

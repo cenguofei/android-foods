@@ -1,7 +1,5 @@
 package com.example.model.page
 
-import com.example.model.remoteModel.Food
-
 data class PageList<T>(
     val total:Long = 0,
 
@@ -10,4 +8,4 @@ data class PageList<T>(
     fun isEmpty(): Boolean = rows.isEmpty()
 }
 
-fun <T>emptyPageList() : PageList<T> = PageList<T>(0,listOf())
+fun <T>emptyPageList() : PageList<T> = PageList(0,listOf())

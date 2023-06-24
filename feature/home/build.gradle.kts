@@ -10,7 +10,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
@@ -24,17 +23,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
-
-//    testImplementation(libs.test.junit)
-//    androidTestImplementation(libs.androidx.test.ext.junit)
-//    androidTestImplementation(libs.androidx.test.espresso.core)
-
     implementation(project(":core:designsystem"))
     implementation(project(mapOf("path" to ":core:network")))
     implementation(project(mapOf("path" to ":core:common")))
     implementation(project(mapOf("path" to ":core:model")))
     implementation(project(mapOf("path" to ":feature:login")))
 }
-//kapt {
-//    correctErrorTypes = true
-//}

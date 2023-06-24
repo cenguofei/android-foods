@@ -2,7 +2,6 @@ package com.example.model.remoteModel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDateTime
 
 @Parcelize
 data class Order(

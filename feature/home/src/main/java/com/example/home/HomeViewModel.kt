@@ -31,13 +31,6 @@ class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
-
-    companion object {
-        const val SELLER_TO_FOODS_KEY = "seller_to_foods"
-
-        const val SELLERS_MAP_BY_ID = "sellers_map_by_id"
-    }
-
     /**
      * 客户点击首页后跳转至商家详情页面应该显示的商家信息
      */
@@ -59,8 +52,6 @@ class HomeViewModel @Inject constructor(
 
     val homeUiState: MutableStateFlow<NetworkResult<Any>> = MutableStateFlow(NetworkResult.Loading())
 
-    init { getAllFoods() }
-
     /**
      * 根据商家获取该商家的 foods
      */
@@ -80,7 +71,10 @@ class HomeViewModel @Inject constructor(
     var showFoods:MutableList<Pair<User,Food>> = mutableListOf()
         private set
 
-    private fun getAllFoods() {
+    fun getAllFoods() {
+        if (homeUiState.value is NetworkResult.Success) {
+            return
+        }
         viewModelScope.launch(dispatcher) {
             try {
                 val allUser = async { userRepository.getAllUser() }

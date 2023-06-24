@@ -13,7 +13,6 @@ import com.example.designsystem.component.ErrorScreen
 import com.example.designsystem.component.FoodsLoadingWheel
 import com.example.designsystem.component.FoodsTopAppBar
 import com.example.model.remoteModel.NetworkResult
-import com.example.model.remoteModel.User
 
 @Composable
 fun FavoriteScreen(

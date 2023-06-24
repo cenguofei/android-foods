@@ -2,8 +2,6 @@ package com.example.model.remoteModel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.Date
-import java.util.Random
 
 
 @Parcelize

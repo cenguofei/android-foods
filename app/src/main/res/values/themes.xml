@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Theme.Foodsapp" parent="android:Theme.Material.Light.NoActionBar" />
 

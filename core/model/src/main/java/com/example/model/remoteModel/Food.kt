@@ -1,11 +1,8 @@
 package com.example.model.remoteModel
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.example.model.localmodel.LocalFood
 import kotlinx.parcelize.Parcelize
-import java.util.Date
 
 /**
     支持的类型
