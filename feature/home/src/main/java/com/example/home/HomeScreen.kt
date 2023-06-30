@@ -32,12 +32,10 @@ fun HomeScreen(
 
     when(foods) {
         is NetworkResult.Loading -> {
-            Log.v("HomeScreen","NetworkResult.Loading ShimmerList()")
             ShimmerList()
         }
         is NetworkResult.Success<*> ->{
             onUsersLoaded(homeViewModel.userToFoodsMap.keys.toList())
-            Log.v("HomeScreen","NetworkResult.Success<*> SuccessContent")
             SuccessContent(
                 onSearchClick = onSearchClick,
                 saveFavorite = saveFavorite,
@@ -51,7 +49,6 @@ fun HomeScreen(
             )
         }
         is NetworkResult.Error -> {
-            Log.v("HomeScreen","NetworkResult.Error ErrorScreen")
             ErrorScreen(foods.error?.cause?.message ?: stringResource(id = R.string.unkown_erro))
         }
     }

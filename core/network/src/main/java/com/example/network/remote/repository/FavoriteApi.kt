@@ -18,5 +18,8 @@ interface FavoriteApi : IFavoriteApi {
 
     @Headers("Content-Type:application/json")
     @POST("frontfavorite/deleteFavorite")
-    override suspend fun deleteFavorite(@Query("username") username: String,@Query("foodId") foodId:Long) : HashMap<String,Any>
+    override suspend fun deleteFavorite(
+        @Query("username") username: String,
+        @Query("foodId") foodId: Long
+    ) : HashMap<String,Any>
 }

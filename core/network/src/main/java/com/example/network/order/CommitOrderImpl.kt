@@ -55,8 +55,8 @@ class CommitOrderImpl constructor(
         Log.v("cgf", "提交订单：$order")
 
         launch {
-            val postOrder: HashMap<String, Any> = orderRepository.postOrder(order)
             try {
+                val postOrder: HashMap<String, Any> = orderRepository.postOrder(order)
                 val isSuccess = postOrder["isSuccess"] as Boolean
                 if (isSuccess) {
                     onCommitSuccess()

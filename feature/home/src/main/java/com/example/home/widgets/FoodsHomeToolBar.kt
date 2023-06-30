@@ -79,19 +79,21 @@ fun FoodsHomeToolBar(
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    FoodsMessage(modifier = Modifier.align(Alignment.TopEnd)) {
-                        Text(
-                            text = if (shoppingCard.size == 0) "" else if (shoppingCard.size > 99) "99+" else {
-                                var count = 0L
-                                shoppingCard.forEach {
-                                    count += it.count
-                                }
-                                count.toString()
-                            },
-                            color = MaterialTheme.colorScheme.surface,
-                            fontSize = 8.sp,
-                            textAlign = TextAlign.Center
-                        )
+                    if (shoppingCard.size > 0) {
+                        FoodsMessage(modifier = Modifier.align(Alignment.TopEnd)) {
+                            Text(
+                                text = if (shoppingCard.size == 0) "" else if (shoppingCard.size > 99) "99+" else {
+                                    var count = 0L
+                                    shoppingCard.forEach {
+                                        count += it.count
+                                    }
+                                    count.toString()
+                                },
+                                color = MaterialTheme.colorScheme.surface,
+                                fontSize = 8.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
 

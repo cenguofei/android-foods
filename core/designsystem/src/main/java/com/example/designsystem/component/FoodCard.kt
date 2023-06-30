@@ -276,7 +276,7 @@ fun rememberImageRequest(
 //                bitmap.value = mutableBitmap
                 Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
 
-                scope.launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.Default) {
                     val swatch = mutableBitmap.generateDominantColorState()
                     onLoaded(swatch.rgb,swatch.bodyTextColor)
 //                    rgb.value = swatch.rgb

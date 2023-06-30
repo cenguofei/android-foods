@@ -89,8 +89,7 @@ class CollapsableLayoutState(
         maxHeightState.value = maxHeight
     }
 
-    /*
-       根据 offsetState 计算当前 top 容器的高度
+    /**根据 offsetState 计算当前 top 容器的高度
      */
     @SuppressLint("AutoboxingStateValueProperty")
     fun calcTopHeight(): Int {

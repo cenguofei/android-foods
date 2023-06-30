@@ -91,7 +91,7 @@ private fun LoginScreen(
         }
     }
 
-    if(isRegister) {
+    if (isRegister) {
         onOpenDrawer()
     }
     BottomSheetScaffold(
@@ -200,19 +200,19 @@ private fun LoginScreen(
             item { Spacer(modifier = Modifier.height(30.dp)) }
 
             item {
-//                var loading by remember { mutableStateOf(false) }
+                var loading by remember { mutableStateOf(false) }
 //                var logIn by remember { mutableStateOf(false) }
                 Button(
                     onClick = {
                         if (email.text.isEmpty() or password.text.isEmpty()) {
                             hasError = true
                         } else {
-//                            loading = true
+                            loading = true
                             loginViewModel.login(
                                 email.text,
                                 password.text,
                                 onSuccess = {
-//                                    loading = true
+                                    loading = false
                                     hasError = false
 //                                    logIn = true
 //                                    coroutineScope.launch {
@@ -224,7 +224,7 @@ private fun LoginScreen(
                                 onError = { msg ->
                                     onError(msg)
                                     hasError = true
-//                                    loading = false
+                                    loading = false
                                 }
                             )
                         }
@@ -236,13 +236,13 @@ private fun LoginScreen(
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary)
                 ) {
-//                    if (loading) {
+                    if (loading) {
 //                        if (!logIn) {
-//                            HorizontalDottedProgressBar()
+                        HorizontalDottedProgressBar()
 //                        }
-//                    } else {
-                    Text(text = "Log In", style = MaterialTheme.typography.labelMedium)
-//                    }
+                    } else {
+                        Text(text = "Log In", style = MaterialTheme.typography.labelMedium)
+                    }
                 }
             }
             item {
@@ -252,7 +252,9 @@ private fun LoginScreen(
                         .background(Color.Transparent)
                 ) {
                     Row(
-                        modifier = Modifier.align(Alignment.Center).padding(bottom = 3.dp),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(bottom = 3.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Spacer(

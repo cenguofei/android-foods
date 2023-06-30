@@ -30,8 +30,8 @@ class LoginViewModel @Inject constructor(
         onError: (msg: String) -> Unit
     ) {
         viewModelScope.launch(dispatcher) {
-            val result = remoteRepository.login(username, password)
             try {
+                val result = remoteRepository.login(username, password)
                 Log.v("login_test","result = ${result.toString()}")
                 val isSuccess = result["isSuccess"] as Boolean
                 if (isSuccess) {
@@ -73,14 +73,15 @@ class LoginViewModel @Inject constructor(
             return
         }
         viewModelScope.launch(dispatcher) {
-            val result = remoteRepository.register(
-                User(
-                    username = username,
-                    password = password,
-                    email = email
-                )
-            )
             try {
+                val result = remoteRepository.register(
+                    User(
+                        username = username,
+                        password = password,
+                        email = email
+                    )
+                )
+
                 val isSuccess = result["isSuccess"] as Boolean
 //                val headImg = result["headImg"] as String
                 val msg = result["msg"] as String

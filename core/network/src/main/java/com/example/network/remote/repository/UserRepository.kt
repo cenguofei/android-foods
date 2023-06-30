@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
-    private val apiParam: ApiParam
+    apiParam: ApiParam
 ) {
 
     private val remoteService: UserApi = apiParam.retrofit.create(UserApi::class.java)

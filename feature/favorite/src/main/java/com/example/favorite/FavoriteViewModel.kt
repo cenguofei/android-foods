@@ -74,15 +74,19 @@ class FavoriteViewModel @Inject constructor(
         if (myFavorites.value is NetworkResult.Success) {
 //            val favorite = favorites.firstOrNull { it.foodId == food.id } ?: return
             viewModelScope.launch {
-                val result = favoriteRepository.deleteFavorite(currentUser.username, food.id)
-                Log.v("myFavorites", "删除结果：$result")
-                val isSuccess = result["isSuccess"] as Boolean
-                if (isSuccess) {
-                    onSuccess()
-                } else {
-                    onError(result["msg"] as String)
+                try {
+                    val result = favoriteRepository.deleteFavorite(currentUser.username, food.id)
+                    Log.v("myFavorites", "删除结果：$result")
+                    val isSuccess = result["isSuccess"] as Boolean
+                    if (isSuccess) {
+                        onSuccess()
+                    } else {
+                        onError(result["msg"] as String)
+                    }
+                    favorites.removeIf { it.foodId == food.id }
+                } catch (e:Exception) {
+                    onError(e.message ?: "未知错误...")
                 }
-                favorites.removeIf { it.foodId == food.id }
             }
         }
     }
@@ -113,12 +117,16 @@ class FavoriteViewModel @Inject constructor(
                 //防止Lazy布局的时候使用id出错
                 favorites.add(it.copy(id = id++))
             }
-            val result = favoriteRepository.addFavorite(favorite)
-            val isSuccess = result["isSuccess"] as Boolean
-            if (isSuccess) {
-                onSuccess()
-            } else {
-                onError(result["msg"] as String)
+            try {
+                val result = favoriteRepository.addFavorite(favorite)
+                val isSuccess = result["isSuccess"] as Boolean
+                if (isSuccess) {
+                    onSuccess()
+                } else {
+                    onError(result["msg"] as String)
+                }
+            } catch (e:Exception) {
+                onError(e.message ?: "未知错误...")
             }
         }
     }
