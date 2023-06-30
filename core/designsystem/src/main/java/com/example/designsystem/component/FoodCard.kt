@@ -215,21 +215,25 @@ private fun SellerRow(
     seller: User,
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        AsyncImage(
-            model = seller.headImg,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        Surface(
             modifier = Modifier
                 .size(
                     width = 48.dp,
                     height = 38.dp
                 )
-                .clip(RoundedCornerShape(16))
                 .padding(start = 8.dp, top = 4.dp),
-            alignment = Alignment.Center
-        )
+            shape = RoundedCornerShape(8)
+        ) {
+            AsyncImage(
+                model = seller.headImg,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                alignment = Alignment.Center
+            )
+        }
         Spacer(modifier = Modifier.width(4.dp))
-        Text(text = seller.username, maxLines = 1, style = MaterialTheme.typography.titleSmall)
+        Text(text = seller.canteenName, maxLines = 1, style = MaterialTheme.typography.titleSmall)
     }
 }
 
