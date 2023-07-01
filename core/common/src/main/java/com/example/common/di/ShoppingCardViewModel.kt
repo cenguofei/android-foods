@@ -41,7 +41,10 @@ class ShoppingCardViewModel @Inject constructor(
     fun addFoodToShoppingCard(food: Food, currentUser: User) {
         viewModelScope.launch {
             val num = getFoodNumInShoppingCart(food.id) + 1
-            foodsDatabaseRepository.addFoodToShoppingCart(food.toLocalFood(currentUser.username).copy(count = num))
+            foodsDatabaseRepository.addFoodToShoppingCart(
+                food.toLocalFood(currentUser.username)
+                    .copy(count = num, createUserId = food.createUserId)
+            )
         }
     }
 
@@ -57,9 +60,9 @@ class ShoppingCardViewModel @Inject constructor(
         }
     }
 
-    fun clearSellerFoods(seller: User) {
+    fun clearSellerFoods(seller: User, currentLoginUser: User) {
         viewModelScope.launch {
-            foodsDatabaseRepository.clearAllShoppingCart(seller.username)
+            foodsDatabaseRepository.clearAllShoppingCart(currentLoginUser.username,seller.id)
         }
     }
 

@@ -51,7 +51,10 @@ data class LocalFood(
 
     val createTime: String = "",
 
-    val username:String = ""
+    /**
+     * 哪一个登录用户加入购物车的
+     */
+    val username:String = "",
 )  {
     fun toFood() : Food = Food(
         id = id,

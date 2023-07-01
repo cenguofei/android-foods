@@ -21,8 +21,8 @@ interface ShoppingCartDao {
     @Update
     suspend fun updateFoodFromShoppingCart(food: LocalFood)
 
-    @Query("DELETE FROM food_table WHERE username = :username")
-    suspend fun clearAllShoppingCart(username: String)
+    @Query("DELETE FROM food_table WHERE username = :username AND createUserId = :sellerId")
+    suspend fun clearAllShoppingCart(username: String, sellerId: Long)
 
     @Query("DELETE FROM food_table WHERE count <= 0")
     suspend fun deleteWhereCountLessThanZero()

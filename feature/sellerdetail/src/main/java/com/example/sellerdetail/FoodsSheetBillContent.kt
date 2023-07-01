@@ -59,7 +59,7 @@ fun FoodsSheetBillContent(
                 }.toString() + "${(selectedFood.size * 2)}"
             )
             TextButton(onClick = {
-                mainViewModel.clearSellerFoods(seller)
+                mainViewModel.clearSellerFoods(seller,currentLoginUser)
                 if (drawerState.isOpen) {
                     onCloseDrawer()
                 }

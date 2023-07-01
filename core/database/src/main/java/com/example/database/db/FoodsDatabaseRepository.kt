@@ -36,9 +36,9 @@ class FoodsDatabaseRepository @Inject constructor(
 
     fun getAllCartFoods(username:String) : Flow<List<LocalFood>> = foodDao.queryAllCartFood(username)
 
-    suspend fun clearAllShoppingCart(username: String) {
+    suspend fun clearAllShoppingCart(currentLoginUsername: String, sellerId: Long) {
         withContext(dispatcher) {
-            foodDao.clearAllShoppingCart(username)
+            foodDao.clearAllShoppingCart(currentLoginUsername,sellerId)
         }
     }
     suspend fun deleteWhereCountLessThanZero() {
