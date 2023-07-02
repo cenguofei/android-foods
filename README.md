@@ -3,17 +3,16 @@
 ---
 ### Screenshot
 
-
-![shot1](https://github.com/cenguofei/android-foods/assets/72325667/7d77ec51-42f0-47df-aad6-a379fba45ea0)
-
-
-![shot2](https://github.com/cenguofei/android-foods/assets/72325667/3e956174-3eab-4eec-a010-ddf84dbde3e2)
+![shot1](https://github.com/cenguofei/android-foods/assets/72325667/3e98a91f-971c-435d-ba76-2abaf67f0dd0)
 
 
-![shot3](https://github.com/cenguofei/android-foods/assets/72325667/658f7cfc-7f5c-40a0-9afe-e13d8b25f4a6)
+![shot2](https://github.com/cenguofei/android-foods/assets/72325667/f857c501-8276-4e4e-8f08-a3e23acd419d)
 
 
-![shot4](https://github.com/cenguofei/android-foods/assets/72325667/eca0f669-2df7-41b1-b0a1-99bec1253291)
+![shot3](https://github.com/cenguofei/android-foods/assets/72325667/d0dae9ca-b077-4f2c-8079-5d96ba5414ff)
+
+
+![shot4](https://github.com/cenguofei/android-foods/assets/72325667/90fbbbcf-1cba-402e-bc45-82f4e2647a32)
 
 
 ### 界面
