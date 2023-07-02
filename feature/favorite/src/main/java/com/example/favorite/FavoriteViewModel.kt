@@ -21,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val favoriteRepository: FavoriteRepository,
-    private val foodRepository: FoodRepository
 ) : ViewModel() {
 
     private var _myFavorites: MutableStateFlow<NetworkResult<List<Favorite>>> =

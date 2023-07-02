@@ -85,6 +85,7 @@ class HomeViewModel @Inject constructor(
                     }
                     .collect {
                         val foodList = it.map { m -> m.copy(count = 0) }
+
                         val users = allUser.await()
                         val map = users.map { user ->
                             user.headImg = ApiParam.IMAGE_USER_URL + user.headImg
@@ -114,4 +115,3 @@ class HomeViewModel @Inject constructor(
         }
     }
 }
-

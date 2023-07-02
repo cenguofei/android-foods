@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class FavoriteRepository @Inject constructor(
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
-    private val apiParam: ApiParam
+    apiParam: ApiParam
 ){
 
     private val remoteService: FavoriteApi = apiParam.retrofit.create(FavoriteApi::class.java)

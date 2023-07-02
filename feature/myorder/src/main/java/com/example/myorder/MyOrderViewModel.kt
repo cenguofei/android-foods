@@ -9,6 +9,7 @@ import com.example.common.di.FoodsDispatchers
 import com.example.model.remoteModel.NetworkResult
 import com.example.model.remoteModel.Order
 import com.example.model.remoteModel.OrderDetail
+import com.example.network.remote.repository.JavaOrderRepository
 import com.example.network.remote.repository.OrderRepository
 import com.google.gson.internal.LinkedTreeMap
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class MyOrderViewModel @Inject constructor(
     private val remoteRepository: OrderRepository,
     @Dispatcher(FoodsDispatchers.IO) private val dispatcher: CoroutineDispatcher,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+//    private val javaOrderRepository:JavaOrderRepository
 ) : ViewModel() {
 
     private var _userOrders: MutableStateFlow<NetworkResult<List<Order>>> =
@@ -64,8 +66,6 @@ class MyOrderViewModel @Inject constructor(
                                 val orderDetailsMap = e["orderDetailList"] as List<LinkedTreeMap<*,*>>
 
                                 val orderDetails = orderDetailsMap.mapIndexed { index, linkedTreeMap ->
-                                    Log.v("cgf", "$index linkedTreeMap.keys=" + linkedTreeMap.keys)
-
                                     OrderDetail(
                                         id = (linkedTreeMap["id"] as Double).toLong(),
                                         foodName = linkedTreeMap["foodName"] as String,
@@ -76,17 +76,6 @@ class MyOrderViewModel @Inject constructor(
                                         username = linkedTreeMap["username"] as String
                                     )
                                 }
-                                Log.v("cgf", "orderDetailsMap=$orderDetailsMap")
-                                Log.v("cgf", "orderDetailsMap.kes=${orderDetailsMap}")
-
-                                if (e["orderDetailList"] is List<*>) {
-                                    Log.v("cgf","e[\"orderDetailList\"] is List<*>")
-                                } else {
-                                    Log.v("cgf","e[\"orderDetailList\"] 不是 List<*>")
-                                }
-
-//                            val orderDetailList = e["orderDetailList"] as LinkedTreeMap<*, *>
-
                                 Order(
                                     ordernum = orderNum,
                                     isPay = isPay,
@@ -115,6 +104,11 @@ class MyOrderViewModel @Inject constructor(
             }
         }
 
+//        Log.v("javaOrderRepository","javaOrderRepository test start")
+//        javaOrderRepository.getUserOrders(username) { response ->
+//            Log.v("javaOrderRepository","javaOrderRepository 响应：$response")
+//        }
+//        Log.v("javaOrderRepository","javaOrderRepository test end")
     }
 
     fun setUsername(username: String) {
