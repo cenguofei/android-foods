@@ -1,6 +1,5 @@
 package com.example.home
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,10 +20,11 @@ fun HomeScreen(
     deleteFavorite: (food: Food, seller: User) -> Unit,
     favoriteFoodIds: SnapshotStateList<Long>,
     onSearchClick: () -> Unit,
-    shoppingCard: SnapshotStateList<Food>,
-    onUsersLoaded:(List<User>) -> Unit,
-    onShoppingCartClick:() -> Unit,
-    onNotificationClick:() -> Unit
+    shoppingCard: List<Food>,
+    onUsersLoaded: (List<User>) -> Unit,
+    onShoppingCartClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean
 ) {
     homeViewModel.getAllFoods()
     val foods by homeViewModel.homeUiState.collectAsState()
@@ -45,7 +45,8 @@ fun HomeScreen(
                 shoppingCard = shoppingCard,
                 homeViewModel = homeViewModel,
                 onShoppingCartClick = onShoppingCartClick,
-                onNotificationClick = onNotificationClick
+                onNotificationClick = onNotificationClick,
+                onShowSnackbar = onShowSnackbar
             )
         }
         is NetworkResult.Error -> {

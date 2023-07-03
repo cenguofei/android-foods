@@ -74,7 +74,7 @@ fun FoodsDetailContent(
 
     val commitOrder = {
         sellerDetailViewModel.commitOrder(
-            selectedFood = mainViewModel.getSellerFoods(seller),
+            selectedFood = selectedFood,
             currentLoginUser = currentLoginUser,
             address = address.value.text,
             tel = tel.value.text,
@@ -188,9 +188,9 @@ fun FoodsDetailContent(
                 mainViewModel = mainViewModel,
                 onSellerSingleFoodClick = onSellerSingleFoodClick,
                 shouldStatusBarContentDark = shouldStatusBarContentDark,
-                currentLoginUser = currentLoginUser
+                currentLoginUser = currentLoginUser,
+                selectedFood = selectedFood
             )
-
             FoodsFAB(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -200,7 +200,7 @@ fun FoodsDetailContent(
                 onCommitClick = {
                     shouldShowDialog = !shouldShowDialog
                 },
-                selectedFood = mainViewModel.getSellerFoods(seller),
+                selectedFood = selectedFood,
                 sellerDetailViewModel = sellerDetailViewModel,
             )
             Image(

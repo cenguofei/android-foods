@@ -38,7 +38,7 @@ import com.example.model.remoteModel.Food
 fun FoodsHomeToolBar(
     position: Position,
     onSearchClick: () -> Unit,
-    shoppingCard: SnapshotStateList<Food>,
+    shoppingCard: List<Food>,
     onShoppingCartClick: () -> Unit,
     onNotificationClick:() -> Unit,
     modifier: Modifier = Modifier
@@ -79,10 +79,10 @@ fun FoodsHomeToolBar(
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
-                    if (shoppingCard.size > 0) {
+                    if (shoppingCard.isNotEmpty()) {
                         FoodsMessage(modifier = Modifier.align(Alignment.TopEnd)) {
                             Text(
-                                text = if (shoppingCard.size == 0) "" else if (shoppingCard.size > 99) "99+" else {
+                                text = if (shoppingCard.isEmpty()) "" else if (shoppingCard.size > 99) "99+" else {
                                     var count = 0L
                                     shoppingCard.forEach {
                                         count += it.count

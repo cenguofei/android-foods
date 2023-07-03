@@ -55,6 +55,7 @@ fun SellerDetailContent(
     categoryFoodsList: List<List<Food>>,
     shouldStatusBarContentDark: (Boolean) -> Unit,
     currentLoginUser: User,
+    selectedFood: List<Food>,
 ) {
     var rgb by remember { mutableStateOf(0) }
     val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
@@ -170,7 +171,8 @@ fun SellerDetailContent(
                     scrollState = scrollState,
                     mainViewModel = mainViewModel,
                     onSellerSingleFoodClick = onSellerSingleFoodClick,
-                    currentLoginUser = currentLoginUser
+                    currentLoginUser = currentLoginUser,
+                    selectedFood = selectedFood
                 )
             }
         }

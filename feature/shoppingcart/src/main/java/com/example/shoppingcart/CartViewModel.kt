@@ -28,13 +28,15 @@ class CartViewModel @Inject constructor(
 
     val sellerWithSelectedFoodIds = mutableStateListOf<Long>()
 
-    var isFirstSetSellersFoods = false
+//    var isFirstSetSellersFoods = false
     fun setSellersFoods(
-        shoppingCard: SnapshotStateList<Food>,
+        shoppingCard: List<Food>,
         shoppingCartUsers: SnapshotStateList<User>
     ) {
-        if (isFirstSetSellersFoods) return
-        isFirstSetSellersFoods = true
+        Log.v("setSellersFoods","shoppingCard = $shoppingCard")
+        Log.v("setSellersFoods","shoppingCartUsers = ${shoppingCartUsers.toList()}")
+//        if (isFirstSetSellersFoods) return
+//        isFirstSetSellersFoods = true
 
         val map = shoppingCartUsers.map { user ->
             user to shoppingCard.filter { food ->

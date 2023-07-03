@@ -69,6 +69,7 @@ fun FoodsSheetBillContent(
         }
         selectedFood.forEach {
             FoodsListItem(
+                selectedFood = selectedFood,
                 food = it,
                 modifier = Modifier,
                 mainViewModel = mainViewModel,

@@ -41,7 +41,8 @@ fun FoodDetailContent(
     food: Food,
     mainViewModel: ShoppingCardViewModel,
     onCommitOrder: () -> Unit,
-    currentUser: User
+    currentUser: User,
+    selectedFood: List<Food>
 ) {
     Column(
         modifier = Modifier
@@ -109,12 +110,12 @@ fun FoodDetailContent(
                 AddAndRemoveFood(
                     modifier = Modifier
                         .padding(end = 4.dp, bottom = 4.dp),
-                    num = mainViewModel.getFoodNumInShoppingCart(food.id,currentUser),
+                    num = mainViewModel.getFoodNumInShoppingCart(selectedFood,food.id),
                     onAdd = {
-                        mainViewModel.addFoodToShoppingCard(food,currentUser)
+                        mainViewModel.addFoodToShoppingCard(selectedFood,food,currentUser)
                     },
                     onRemove = {
-                        mainViewModel.removeFoodFromShoppingCard(food,currentUser)
+                        mainViewModel.removeFoodFromShoppingCard(selectedFood,food,currentUser)
                     }
                 )
             }
@@ -147,7 +148,11 @@ fun FoodDetailContent(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = { mainViewModel.addFoodToShoppingCard(food,currentUser) },
+                        onClick = { mainViewModel.addFoodToShoppingCard(
+                            selectedFood,
+                            food,
+                            currentUser
+                        ) },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .padding(end = 16.dp)
@@ -162,11 +167,11 @@ fun FoodDetailContent(
                                 color = MaterialTheme.colorScheme.surface,
                                 style = MaterialTheme.typography.labelLarge
                             )
-                            Text(
-                                text = "￥${food.price}",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
-                            )
+//                            Text(
+//                                text = "￥${food.price}",
+//                                style = MaterialTheme.typography.labelMedium,
+//                                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+//                            )
                         }
                     }
                 }

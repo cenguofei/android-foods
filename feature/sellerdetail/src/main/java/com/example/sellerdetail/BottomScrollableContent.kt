@@ -47,6 +47,7 @@ fun SellerPager(
     onSellerSingleFoodClick: (Food) -> Unit = {},
     categoryFoodsList: List<List<Food>>,
     currentLoginUser: User,
+    selectedFood: List<Food>,
 ) {
     Crossfade(targetState = targetState.value) { pageIndex ->
         if (pageIndex < categoryFoodsList.size) {
@@ -56,7 +57,8 @@ fun SellerPager(
                 scrollState = scrollState,
                 mainViewModel = mainViewModel,
                 onSellerSingleFoodClick = onSellerSingleFoodClick,
-                currentLoginUser = currentLoginUser
+                currentLoginUser = currentLoginUser,
+                selectedFood = selectedFood
             )
         }
     }
@@ -68,7 +70,8 @@ fun FoodsScrollingSection(
     scrollState: MutableState<ScrollState>,
     mainViewModel: ShoppingCardViewModel,
     onSellerSingleFoodClick: (Food) -> Unit = {},
-    currentLoginUser: User
+    currentLoginUser: User,
+    selectedFood: List<Food>
 ) {
     scrollState.value = rememberScrollState()
     Column(
@@ -79,10 +82,11 @@ fun FoodsScrollingSection(
         Spacer(modifier = Modifier.height(400.dp))
         foods.forEach {
             FoodsListItem(
+                selectedFood = selectedFood,
                 food = it,
                 Modifier,
                 mainViewModel = mainViewModel,
-                currentLoginUser
+                currentLoginUser,
             ) {
                 onSellerSingleFoodClick(it)
             }
@@ -94,6 +98,7 @@ fun FoodsScrollingSection(
 
 @Composable
 fun FoodsListItem(
+    selectedFood: List<Food>,
     food: Food, modifier: Modifier,
     mainViewModel: ShoppingCardViewModel,
     currentLoginUser: User,
@@ -102,8 +107,8 @@ fun FoodsListItem(
     FoodsContainer(
         modifier = modifier
             .fillMaxSize()
-            .padding(4.dp), size = DpSize(0.dp, 100.dp),
-        onClick = onClick
+            .padding(4.dp), size = DpSize(0.dp, 110.dp),
+        onClick = onClick,
     ) {
         Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
             Row(
@@ -145,7 +150,7 @@ fun FoodsListItem(
                         text = food.taste,
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(vertical = 4.dp),
-                        maxLines = 5,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Bold
                     )
@@ -165,12 +170,16 @@ fun FoodsListItem(
                     modifier = Modifier
                         .align(Alignment.Bottom)
                         .padding(end = 4.dp, bottom = 4.dp),
-                    num = mainViewModel.getFoodNumInShoppingCart(food.id,currentLoginUser),
+                    num = mainViewModel.getFoodNumInShoppingCart(selectedFood, food.id),
                     onAdd = {
-                        mainViewModel.addFoodToShoppingCard(food, currentLoginUser)
+                        mainViewModel.addFoodToShoppingCard(selectedFood, food, currentLoginUser)
                     },
                     onRemove = {
-                        mainViewModel.removeFoodFromShoppingCard(food,currentLoginUser)
+                        mainViewModel.removeFoodFromShoppingCard(
+                            selectedFood,
+                            food,
+                            currentLoginUser
+                        )
                     }
                 )
             }

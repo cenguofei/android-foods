@@ -27,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import coil.imageLoader
@@ -67,9 +69,10 @@ fun FoodCard(
     deleteFavorite: (food: Food, seller: User) -> Unit,
     isFavoriteFood: Boolean
 ) {
-    val rgb = remember { mutableStateOf(0) }
+    val rgb = remember(food.foodPic,seller.id) { mutableStateOf(0) }
     val resource = LocalContext.current.resources
-    val bitmap = remember {
+    var loaded by remember { mutableStateOf(false) }
+    val bitmap = remember(food.foodPic,seller.id) {
         mutableStateOf(
             BitmapFactory.decodeResource(
                 resource,
@@ -77,13 +80,16 @@ fun FoodCard(
             )
         )
     }
-    val gradientModifier = modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp, vertical = 16.dp)
-        .height(250.dp)
-        .clip(RoundedCornerShape(10))
-        .clickable(onClick = onClick)
-        .verticalGradientBackground(listOf(Color(rgb.value), MaterialTheme.colorScheme.surface))
+    val surface = MaterialTheme.colorScheme.surface
+    val gradientModifier =
+        modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 16.dp)
+            .height(250.dp)
+            .clip(RoundedCornerShape(10))
+            .clickable(onClick = onClick)
+            .verticalGradientBackground(listOf(Color(rgb.value), surface))
+
 
     Surface(
         modifier = gradientModifier, color = Color.Transparent
@@ -103,12 +109,40 @@ fun FoodCard(
                     SellerRow(seller)
                     FoodSpacer()
 
-                    FoodCardImage(
-                        model = food.foodPic,
-                        rgb = rgb,
-                        bitmap = bitmap
-                    )
-
+//                    val context = LocalContext.current
+//                    val scope = rememberCoroutineScope()
+//                    LaunchedEffect(key1 = food.foodPic) {
+//                        val request = ImageRequest.Builder(context)
+//                            .data(food.foodPic)
+//                            .target { drawable ->
+//                                val notMutableBitmap = drawable.toBitmap()/*.asImageBitmap()*/
+//                                val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888, true)
+//                                bitmap.value = mutableBitmap
+//                                loaded = true
+//                                Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
+//                                scope.launch(Dispatchers.Default) {
+//                                    val swatch = mutableBitmap.generateDominantColorState()
+//                                    rgb.value = swatch.rgb
+//                                }
+//                            }
+//                            .build()
+//                        /**
+//                         * 异步加载图片
+//                         */
+//                        context.imageLoader.enqueue(request)
+//                    }
+//
+//                    if (loaded) {
+                        AsyncImage(
+                            model = food.foodPic,
+//                            bitmap = bitmap.value.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
+                            contentScale = ContentScale.Crop,
+                        )
+//                    }
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -160,30 +194,57 @@ fun FoodCardImage(
     rgb: MutableState<Int>,
     bitmap: MutableState<Bitmap>,
 ) {
-    val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
-    var textColor by remember { mutableStateOf(onSurface) }
-    val request = rememberImageRequest(
-        model = model,
-        onLoaded = { dominantRgb, tc ->
-            rgb.value = dominantRgb
-            textColor = tc
-        }, onBitmapLoaded = {
-            bitmap.value = it
-        }
-    )
     val context = LocalContext.current
+//    val onSurface = MaterialTheme.colorScheme.onSurface.toArgb()
+
+//    var textColor by remember { mutableStateOf(onSurface) }
+
+//    val request = rememberImageRequest(
+//        model = model,
+//        onLoaded = { dominantRgb, tc ->
+//            rgb.value = dominantRgb
+//            textColor = tc
+//        }, onBitmapLoaded = {
+//            bitmap.value = it
+//        }
+//    )
+//
+//    LaunchedEffect(key1 = model) {
+//        context.imageLoader.execute(request)
+//    }
+
+
+    val scope = rememberCoroutineScope()
+    val request = ImageRequest.Builder(LocalContext.current)
+        .data(model)
+        .target { drawable ->
+            // Handle the result.
+            // java.lang.IllegalStateException: unable to getPixels(), pixel access is not supported on Config#HARDWARE bitmaps
+            val notMutableBitmap = drawable.toBitmap()/*.asImageBitmap()*/
+            // 转换为可变bitmap
+            val mutableBitmap = notMutableBitmap.copy(Bitmap.Config.ARGB_8888, true)
+            bitmap.value = mutableBitmap
+            Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
+
+            scope.launch(Dispatchers.Default) {
+                /**
+                 * generateDominantColorState 耗时操作，计算密集型
+                 * 应在[Dispatchers.Default]调度器下执行
+                 */
+                val swatch = mutableBitmap.generateDominantColorState()
+                rgb.value = swatch.rgb
+//                textColor = swatch.bodyTextColor
+                Log.v("coil", "下载drawable, bitmap=$mutableBitmap")
+            }
+        }
+        .build()
 
     LaunchedEffect(key1 = model) {
-        context.imageLoader.execute(request)
+        /**
+         * 异步加载图片
+         */
+        context.imageLoader.enqueue(request)
     }
-    Image(
-        bitmap = bitmap.value.asImageBitmap(),
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        contentScale = ContentScale.Crop,
-    )
 }
 
 @Composable

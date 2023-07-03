@@ -7,6 +7,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.di.ShoppingCardViewModel
@@ -31,7 +32,10 @@ fun SellerDetailScreen(
     shouldStatusBarContentDark: (Boolean) -> Unit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
-    val selectedFood = mainViewModel.getSelectedFood(seller)
+    val shoppingCart =
+        mainViewModel.getAllShoppingCartFood(currentLoginUser).collectAsState(listOf())
+    val selectedFood = shoppingCart.value.filter { it.createUserId == seller.id }.map { it.toFood() }
+    Log.v("ShoppingCardViewModel","collect:$selectedFood")
 
     Log.v("BottomScrollableContent","foods=$foods")
     val sellerDetailViewModel: SellerDetailViewModel = hiltViewModel()

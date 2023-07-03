@@ -7,16 +7,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.di.ShoppingCardViewModel
 import com.example.designsystem.common.UserInfoDialog
+import com.example.model.remoteModel.Food
 import com.example.model.remoteModel.User
 import kotlinx.coroutines.launch
 
@@ -34,8 +37,13 @@ fun ShoppingCartScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         CartTopBar(onBack)
 
-        val shoppingCard = shoppingCardViewModel.shoppingCard
-        viewModel.setSellersFoods(shoppingCard, shoppingCardViewModel.shoppingCartUsers)
+        val shoppingCard = shoppingCardViewModel.getAllShoppingCartFood(currentLoginUser).collectAsState(
+            initial = listOf()
+        )
+        viewModel.setSellersFoods(
+            shoppingCard.value.map { it.toFood() },
+            shoppingCardViewModel.shoppingCartUsers
+        )
 
         var address by remember { mutableStateOf(TextFieldValue("")) }
         var phoneNumber by remember { mutableStateOf(TextFieldValue("")) }

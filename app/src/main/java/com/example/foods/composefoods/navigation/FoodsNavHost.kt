@@ -4,7 +4,6 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -25,7 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import androidx.navigation.navOptions
 import com.example.datastore.SettingsUiState
 import com.example.favorite.FavoriteScreen
 import com.example.favorite.FavoriteViewModel
@@ -93,7 +91,8 @@ fun FoodsNavHost(
             favoriteViewModel = favoriteViewModel,
             onSearchClick = {
                 appState.navigateToSearch()
-            }
+            },
+            onShowSnackbar = onShowSnackbar
         )
         searchScreen(
             onBack = backToHome
@@ -133,6 +132,7 @@ private fun NavGraphBuilder.homeScreen(
     appState: FoodsAppState,
     favoriteViewModel: FavoriteViewModel,
     onSearchClick: () -> Unit,
+    onShowSnackbar: suspend (String, String?) -> Boolean,
 ) {
     composable(Screens.Home.route) {
         val settingsUiStateState = appState.settingsViewModel.settingsUiState.collectAsState()
@@ -142,6 +142,11 @@ private fun NavGraphBuilder.homeScreen(
             }
         }
         val homeViewModel = appState.homeViewModel
+
+        val shoppingCart =
+            appState.shoppingCardViewModel.getAllShoppingCartFood(appState.currentUser.value).collectAsState(listOf())
+        Log.v("ShoppingCardViewModel","collect:${shoppingCart.value}")
+
         HomeScreen(
             homeViewModel = homeViewModel,
             onSellerFoodClick = { foods: List<Food>, seller: User ->
@@ -172,7 +177,7 @@ private fun NavGraphBuilder.homeScreen(
             },
             favoriteFoodIds = favoriteViewModel.favoriteFoodIds,
             onSearchClick = onSearchClick,
-            shoppingCard = appState.shoppingCardViewModel.shoppingCard,
+            shoppingCard = shoppingCart.value.map { it.toFood() },
             onUsersLoaded = {
                 appState.shoppingCardViewModel.setUsers(it)
             },
@@ -181,7 +186,8 @@ private fun NavGraphBuilder.homeScreen(
             },
             onNotificationClick = {
 
-            }
+            },
+            onShowSnackbar = onShowSnackbar
         )
     }
 }
@@ -190,14 +196,16 @@ private fun NavGraphBuilder.startScreen(appState: FoodsAppState) {
     composable(route = Screens.Start.route) {
         StartScreen(
             onSignUpClick = {
-                appState.settingsViewModel.updateUserInitialThemeBehavior()
                 appState.navigateToLoginOrSignUp(true)
             },
             onBeginClick = {
-                appState.settingsViewModel.updateUserInitialThemeBehavior()
                 appState.navigateToTopLevelDestination(from = Screens.Start)
             }
         )
+
+        LaunchedEffect(key1 = Unit, block = {
+            appState.settingsViewModel.updateUserInitialThemeBehavior()
+        })
     }
 }
 

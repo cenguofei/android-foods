@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(key1 = appState.currentUser.value, block = {
 //                mainViewModel.deleteZeroCount()
-                mainViewModel.getAllShoppingCartFood(appState.currentUser.value)
+//                mainViewModel.getAllShoppingCartFood(appState.currentUser.value)
             })
 
             val uiState: State<SettingsUiState> = settingsViewModel.settingsUiState.collectAsState()

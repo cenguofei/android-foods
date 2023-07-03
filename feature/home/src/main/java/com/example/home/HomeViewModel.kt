@@ -2,7 +2,11 @@ package com.example.home
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.di.Dispatcher
@@ -55,20 +59,20 @@ class HomeViewModel @Inject constructor(
     /**
      * 根据商家获取该商家的 foods
      */
-    var userToFoodsMap:MutableMap<User,List<Food>> = mutableMapOf()
+    var userToFoodsMap: SnapshotStateMap<User, List<Food>> = mutableStateMapOf()
         private set
 
     /**
      * 根据商家获取对应的foods
      * 从首页店家商家card导航到商家详情页使用
      */
-    fun sellerFoods(seller: User) : List<Food> = userToFoodsMap[seller]!!
+    fun sellerFoods(seller: User) : List<Food> = userToFoodsMap[seller] ?: listOf()
 
     /**
      * HomeScreen展示的内容，
      * 只展示每一个商家的一个Food
      */
-    var showFoods:MutableList<Pair<User,Food>> = mutableListOf()
+    var showFoods: SnapshotStateList<Pair<User, Food>> = mutableStateListOf()
         private set
 
     fun getAllFoods() {
@@ -98,7 +102,10 @@ class HomeViewModel @Inject constructor(
                             pair.second.isNotEmpty()
                         }.toMap().toMutableMap()
 
-                        userToFoodsMap = map
+                        userToFoodsMap.clear()
+                        showFoods.clear()
+
+                        userToFoodsMap.putAll(map)
                         userToFoodsMap.forEach { entry ->
                             if (entry.value.isNotEmpty()) {
                                 showFoods.add(entry.key to entry.value.random())
@@ -106,6 +113,28 @@ class HomeViewModel @Inject constructor(
                                 userToFoodsMap -= entry.key
                             }
                         }
+                        showFoods.sortBy { p -> p.first.canteenName }
+                        val find = showFoods.find { pair -> pair.first.canteenName == "麦当劳" }
+                        val find2 = showFoods.find { pair -> pair.first.canteenName == "星巴克" }
+                        val find3 = showFoods.find { pair -> pair.first.canteenName == "大董茶饮" }
+                        val find4 = showFoods.find { pair -> pair.first.canteenName == "坦克" }
+                        if (find != null) {
+                            showFoods.remove(find)
+                            showFoods.add(0,find)
+                        }
+                        if (find2 != null) {
+                            showFoods.remove(find2)
+                            showFoods.add(0,find2)
+                        }
+                        if (find3 != null) {
+                            showFoods.remove(find3)
+                            showFoods.add(0,find3)
+                        }
+                        if (find4 != null) {
+                            showFoods.remove(find4)
+                            showFoods.add(0,find4)
+                        }
+
                         homeUiState.emit(NetworkResult.Success(Any()))
                     }
             } catch (e: Exception) {
